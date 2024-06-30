@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
       path: '/index',
       name: 'Layout',
       meta: {
-        title: '首页'
+        title: 'Su Lab'
       },
       component: () => import('@/views/Layout.vue'),
       children: [
@@ -19,21 +19,21 @@ const routes: RouteRecordRaw[] = [
           path: '/index',
           name: 'IndexPage',
           meta: {
-            title: '首页',
+            title: 'Su Lab',
             requireAuth: false,
             keepAlive: false
           },
           component: () => import('@/views/Index/index.vue')
         },
         {
-          path: '/article',
-          name: 'ArticlePage',
+          path: '/software',
+          name: 'SoftWarePage',
           meta: {
-            title: '文章页',
+            title: 'SoftWare',
             requireAuth: false,
             keepAlive: false
           },
-          component: () => import('@/views/Article/index.vue')
+          component: () => import('@/views/SoftWare/index.vue')
         },
         {
           path: '/publication',
