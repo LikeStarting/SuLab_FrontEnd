@@ -1,9 +1,20 @@
-# Vue 3 + TypeScript + Vite
+# SuLab FrontEnd
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+At AHU-Bio-Platform (Anhui University Bioinformatics Laboratory Platform), we are dedicated to creating an efficient bioinformatics platform by combining the most advanced AI-based drug design methods and bioinformatics technologies. Our research focuses on developing new computational biology methods by incorporating artificial intelligence algorithms, such as drug molecule optimization, drug combinations, drug synergy, medical image segmentation, and single-cell sequencing. Using these methods, we investigate the molecular mechanisms underlying the development of serious diseases such as cancer, infectious diseases, and metabolic disorders, and accordingly develop therapeutic agents.
 
-## Recommended Setup
+## Quick Start 
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+### 1. Clone the Repository  
 
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+```bash 
+git clone Repository(https://github.com/LikeStarting/SuLab_FrontEnd.git)
+
+cd SubLab_FrontEnd
+```
+
+### 2. Run the project
+```bash 
+yarn install
+
+yarn run dev
+```
