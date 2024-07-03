@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="about-wrapper common-box">
         About us
     </div>
 </template>

@@ -33,7 +33,47 @@ const routes: RouteRecordRaw[] = [
             requireAuth: false,
             keepAlive: false
           },
-          component: () => import('@/views/SoftWare/index.vue')
+          component: () => import('@/views/SoftWare/index.vue'),
+        },
+        {
+          path: '/software/momo',
+          name: 'SoftWarePage-MOMO',
+          meta: {
+            title: 'SoftWare-MOMO',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/ToolLists/MOMO.vue'),
+        },
+        {
+          path: '/software/cdmo',
+          name: 'SoftWarePage-CDMO',
+          meta: {
+            title: 'SoftWare-CDMO',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/ToolLists/CDMO.vue'),
+        },
+        {
+          path: '/software/casynergy',
+          name: 'SoftWarePage-CASynergy',
+          meta: {
+            title: 'SoftWare-CASynergy',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/ToolLists/CASynergy.vue'),
+        },
+        {
+          path: '/software/transferban',
+          name: 'SoftWarePage-TransferBan',
+          meta: {
+            title: 'SoftWare-TransferBan',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/ToolLists/TransferBan.vue'),
         },
         {
           path: '/publication',

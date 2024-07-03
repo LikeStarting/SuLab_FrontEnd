@@ -1,6 +1,6 @@
 <template>
     <div class="home-wrapper">
-        <div class="introducation">
+        <div class="introducation common-box">
             <a-row>
                 <a-col :span="11">
                     <h2>AHU Bio Platform</h2>
@@ -69,10 +69,6 @@ $h: sqrt(5000);
 }
 
 .introducation {
-    width: 100%;
-    max-width: 1340px;
-    margin: 0 auto;
-    padding: 20px 50px;
     height: calc(100vh - 86px);
     h2 {
         margin: 0;

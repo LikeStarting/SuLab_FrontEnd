@@ -1,5 +1,5 @@
 <template>
-    <div class="publication-wrapper">
+    <div class="publication-wrapper common-box">
         <div class="search">
             <a-row justify="space-between">
                 <a-col :span="6">
@@ -72,10 +72,6 @@
 
 <style lang="scss" scoped>
 .publication-wrapper {
-    width: 100%;
-    max-width: 1340px;
-    margin: 0 auto;
-    padding: 20px 50px;
     .search {
         padding: 20px 0;
         .ant-input-affix-wrapper {

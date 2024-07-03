@@ -1,5 +1,5 @@
 <template>
-    <div class="teams-wrapper">
+    <div class="teams-wrapper common-box">
         <div class="team team-one">
             <a-row>
                 <a-col class="img" :span="8">
