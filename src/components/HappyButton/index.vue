@@ -1,5 +1,5 @@
 <template>
-    <div class="happy-button">
+    <div :class="buttonClass">
         <span v-for="i in 15" key="i" :class="`item item-${i}`">
             
         </span>
@@ -13,9 +13,18 @@
     import { computed, defineProps } from "vue"
 
     const props = defineProps<{
-        text: string
+        text: string,
+        className: string
     }>()
+
+
     const text = computed(() => `${ props.text }`)
+    const buttonClass = computed(() => {
+        if (props.className) {
+            return `happy-button ${ props.className }`
+        }
+        return 'happy-button'
+    })
 </script>
 
 

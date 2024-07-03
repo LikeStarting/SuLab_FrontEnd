@@ -31,7 +31,7 @@
     }
   
     &:visited {
-      color: #9DDBF8;
+      color: #F69C7B;
     }
   }
   
@@ -39,12 +39,11 @@
     font-style: normal;
   }
   
-  //防止tainwind 重置El-button样式 
   input[type="text"],
   input[type="search"],
   input[type="password"],
   input[type="checkbox"] {
-    padding: 0;
+    // padding: 0;
     -webkit-appearance: none;
   
     &::placeholder {

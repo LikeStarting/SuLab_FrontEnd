@@ -48,32 +48,32 @@
         children: [
             {
                 type: 'group',
-                label: 'Direction 1',
+                label: 'Molecular optimization',
                 children: [
                 {
-                    label: h(RouterLink, { to: '/software/1', }, 'Tool1'),
+                    label: h(RouterLink, { to: '/software/momo', }, 'MOMO'),
                     key: 'tool:1',
                 },
                 {
-                    label: h(RouterLink, { to: '/software/2', }, 'Tool2'),
+                    label: h(RouterLink, { to: '/software/cdmo', }, 'CDMO'),
                     key: 'tool:2',
                 },
                 ],
             },
             {
                 type: 'group',
-                label: 'Direction 2',
+                label: 'Drug combinations and Drug synergy',
                 children: [
                 {
-                    label: h(RouterLink, { to: '/software/3', }, 'Tool3'),
-                    key: 'tool:1',
+                    label: h(RouterLink, { to: '/software/casynergy', }, 'CASynergy'),
+                    key: 'tool:3',
                 },
                 {
-                    label: h(RouterLink, { to: '/software/4', }, 'Tool4'),
-                    key: 'tool:2',
+                    label: h(RouterLink, { to: '/software/transferban', }, 'TransferBan'),
+                    key: 'tool:4',
                 },
                 ],
-            },
+            }
         ],
     },
     {
@@ -145,14 +145,36 @@
         justify-content: flex-end;
         :deep(.ant-menu) {
             background-color: transparent;
-            .ant-menu-title-content {
-                a {
-                    font-size: 18px;
-                    font-weight: 600;
-                    color: #fff;
+            border-bottom: none;
+            .ant-menu-submenu {
+                &::after {
+                    display: none;
+                }
+            }
+            .ant-menu-item, .ant-menu-submenu {
+                &::after {
+                    display: none;
+                }
+                &:hover {
+                    .ant-menu-title-content a {
+                        color: antiquewhite;
+                    }
+                }
+                .ant-menu-title-content {
+                    a {
+                        font-size: 18px;
+                        font-weight: 600;
+                        color: #fff;
+                    }
+                }
+            }
+            .ant-menu-item-group-list .ant-menu-item-selected, .ant-menu-submenu-selected {
+                .ant-menu-title-content a {
+                    color: antiquewhite;
                 }
             }
         }
+
         .login {
             a {
                 font-size: 18px;
