@@ -7,3 +7,153 @@
     margin: 0 auto;
     padding: 20px 50px;
 }
+
+.software-wrapper {
+    .AI-tool {
+        margin-top: 30px;
+        .tool-use {
+            display: flex;
+            justify-content: space-between;
+            min-height: 300px;
+            .ant-tabs {
+                .ant-menu-vertical {
+                    border-inline-end: none;
+                }        
+            }
+            .tab-bar {
+                width: 260px;
+                padding: 20px;
+                text-align: center;
+                border-radius: 16px;
+                -webkit-box-shadow: 0 0 8px 0 rgb(68, 190, 98);
+                box-shadow: 0 0 8px 0 rgb(68, 190, 98);
+
+                .tabBar-title {
+                    font-size: 18px;
+                    font-weight: 600;
+                    line-height: 30px;
+                }
+                ul {
+                    margin-top: 20px;
+                    padding: 0 10px;
+                    li {
+                        display: inline-block;
+                        width: 80%;
+                        min-width: 120px;
+                        margin-bottom: 20px;
+                        font-size: 16px;
+                        line-height: 40px;
+                        border-radius: 4px;
+                        color: rgb(102, 102, 102);
+                        transition: all 0.5s ease;
+                        background-color: rgba(102, 102, 102, 0.1);
+                        cursor: pointer;
+                        &:hover {
+                            color: rgb(68, 190, 98);
+                            background-color: rgba(68, 190, 98, 0.1);
+                        }
+                        &.tab-active {
+                            color: rgb(68, 190, 98);
+                            background-color: rgba(68, 190, 98, 0.2);
+                        }
+                        .tabBar-icon {
+                            width: 24px;
+                            height: 24px;
+                            vertical-align: top;
+                            margin-top: 8px;
+                        }
+                        span {
+                            margin-left: 8px;
+                        }
+                    }
+                }
+                .submit-btn {
+                    .ant-btn {
+                        height: 40px;
+                        padding-left: 20px;
+                        padding-right: 20px;
+                    }
+                }
+            }
+            .tab-content {
+                width: 960px;
+                margin-left: 20px;
+                padding: 20px;
+                border-radius: 8px;
+                -webkit-box-shadow: 0 0 18px 0 $theme-color;
+                box-shadow: 0 0 18px 0 $theme-color;
+                .example {
+                    margin-bottom: 20px;
+                    text-align: right;
+                    line-height: 30px;
+                    & > span {
+                        display: inline-block;
+                        cursor: pointer;
+                        &:hover {
+                            color: $theme-color;
+                        }
+                    }
+                    .example-icon {
+                        width: 30px;
+                        height: 30px;
+                        vertical-align: top;
+                    }
+                }
+                .file-icon {
+                    width: 40px;
+                    height: 40px;
+                }
+                .upload-box {
+                    height: 100%;
+                    .ant-upload-wrapper {
+                        display: block;
+                        height: 480px;
+                        padding: 20px;
+                        .ant-upload-drag {
+                            .ant-upload-btn {
+                                .btn-inner {
+                                    display: table-cell;
+                                    vertical-align: middle;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .ant-form {
+                .ant-form-item {
+                    &:nth-child(2) {
+                        margin-top: 10px;
+                    }
+                }
+                .ant-row {
+                    display: block;
+                    .ant-form-item-label {
+                        margin-bottom: 8px;
+                        display: block;
+                        text-align: left;
+                        &>label {
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: #222;
+                        }
+                    }
+                    .ant-input {
+                        font-size: 18px;
+                        line-height: 2;
+                        padding-top: 0;
+                        padding-bottom: 0;
+                    }
+                    .ant-select-selector {
+                        font-size: 18px;
+                        height: 38px;
+                        .ant-select-selection-placeholder {
+                            height: 36px;
+                            line-height: 36px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
