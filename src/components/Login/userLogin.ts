@@ -25,7 +25,7 @@ export function useLoginState() {
 export function useFormRules(formData?: Record) {
   const getUsernameFormRule = computed(() => createRule('请输入用户名'))
   const getPasswordFormRule = computed(() => createRule('请输入密码'))
-  const getSmsFormRule = computed(() => createRule('请输入短信验证码'))
+  // const getSmsFormRule = computed(() => createRule('请输入短信验证码'))
   const getMobileFormRule = computed(() => createRule('请输入手机号码'))
 
   const validatePolicy = async (value: any, _: Rule) => {

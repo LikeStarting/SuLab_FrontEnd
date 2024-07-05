@@ -43,7 +43,7 @@
     {
         key: 'software',
         // icon: () => h(AppstoreOutlined),
-        label: h(RouterLink, { to: '/software', }, 'Software'),
+        label: h(RouterLink, { to: '/software', }, 'Softwares'),
         title: 'Software',
         children: [
             {

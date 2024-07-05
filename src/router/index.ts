@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
           path: '/index',
           name: 'IndexPage',
           meta: {
-            title: 'Su Lab',
+            title: 'Welcome to Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -29,7 +29,7 @@ const routes: RouteRecordRaw[] = [
           path: '/software',
           name: 'SoftWarePage',
           meta: {
-            title: 'SoftWare',
+            title: 'SoftWares | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
           path: '/software/momo',
           name: 'SoftWarePage-MOMO',
           meta: {
-            title: 'SoftWare-MOMO',
+            title: 'MOMO | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -49,7 +49,7 @@ const routes: RouteRecordRaw[] = [
           path: '/software/cdmo',
           name: 'SoftWarePage-CDMO',
           meta: {
-            title: 'SoftWare-CDMO',
+            title: 'CDMO | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -59,7 +59,7 @@ const routes: RouteRecordRaw[] = [
           path: '/software/casynergy',
           name: 'SoftWarePage-CASynergy',
           meta: {
-            title: 'SoftWare-CASynergy',
+            title: 'CASynergy | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -69,7 +69,7 @@ const routes: RouteRecordRaw[] = [
           path: '/software/transferban',
           name: 'SoftWarePage-TransferBan',
           meta: {
-            title: 'SoftWare-TransferBan',
+            title: 'TransferBan | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -79,7 +79,7 @@ const routes: RouteRecordRaw[] = [
           path: '/publication',
           name: 'PublicationPage',
           meta: {
-            title: 'Publication',
+            title: 'Publications | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -89,7 +89,7 @@ const routes: RouteRecordRaw[] = [
           path: '/team',
           name: 'TeamPage',
           meta: {
-            title: 'Team',
+            title: 'Teams| Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -99,7 +99,7 @@ const routes: RouteRecordRaw[] = [
           path: '/about',
           name: 'AboutPage',
           meta: {
-            title: 'About',
+            title: 'About us | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
@@ -115,6 +115,14 @@ const routes: RouteRecordRaw[] = [
     routes
   })
   
+
+  router.beforeEach((to, from ,next) => {
+    const Document:any = document
+    if (to.meta.title) {
+      Document.title = to.meta.title
+    }
+    next()
+  })
   // router.beforeEach((to, from, next) => {
   //   // const token = getItem('user')
   //   // if (to.meta.title) {
