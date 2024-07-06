@@ -35,7 +35,7 @@
                             <div class="example">
                                 <span>
                                     <SvgIcon iconName="icon-lizi" className="example-icon"/>
-                                    File Example
+                                    An Example
                                 </span>
                             </div>
                             <a-form
@@ -69,7 +69,7 @@
                         </div>
                         <div class="upload-box" key="2" v-if="activeKey == 1" tab="Tab 2" force-render>
                             <div class="example">
-                                <span>
+                                <span @click="handleDownloadFile">
                                     <SvgIcon iconName="icon-lizi" className="example-icon"/>
                                     File Example
                                 </span>
@@ -105,8 +105,8 @@
     import { reactive } from 'vue';
     import { message } from 'ant-design-vue';
     import type { UploadProps, UploadChangeParam } from 'ant-design-vue';
-    import { CallAlgorithmApi } from '@/api/algorithm';
-import { File } from 'buffer';
+    import { getAlgorithmFileExample, CallAlgorithmApi } from '@/api/algorithm';
+
 
     interface FormState {
         molecule: string;
@@ -126,6 +126,22 @@ import { File } from 'buffer';
         activeKey.value = key
     }
 
+    const handleDownloadFile = () => {
+        getAlgorithmFileExample({
+            algorithmName
+        }).then((res) => {
+            const fileURL = window.URL.createObjectURL(new Blob([res], {
+                type:'application/vnd.ms-excel',
+            }));
+            const fileLink = document.createElement('a');
+            fileLink.href = fileURL;
+            fileLink.setAttribute('download', 'example.csv');
+            document.body.appendChild(fileLink);
+            fileLink.click();
+            window.URL.revokeObjectURL(fileURL)
+        })
+    }
+
     const uploading = ref<boolean>(false);
     const fileList = ref<UploadProps['fileList']>([]);
 
@@ -143,10 +159,8 @@ import { File } from 'buffer';
 
     const handleUpload = () => {
         const formData = new FormData();
-        fileList.value.forEach((file: UploadProps['fileList'][number]) => {
-            console.log('file', file.originFileObj)
-            
-        });
+        // fileList.value.forEach((file: UploadProps['fileList'][number]) => {
+        // });
         const file = fileList.value[0].originFileObj
         formData.append('file', file);
         formData.append('algorithmName', 'TransferBan');
@@ -156,11 +170,11 @@ import { File } from 'buffer';
         .then(() => {
             fileList.value = [];
             uploading.value = false;
-            message.success('upload successfully.');
+            message.success('Predict successfully.');
         })
         .catch(() => {
             uploading.value = false;
-            message.error('upload failed.');
+            message.error('Predict failed.');
         });
     };
 

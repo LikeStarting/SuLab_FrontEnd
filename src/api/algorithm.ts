@@ -6,11 +6,23 @@ type ListResult = {
     data: object;
 }
 
+export function getAlgorithmFileExample(params: any): Promise<ListResult> {
+  return http.request({
+    headers: {
+      "token": 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyIxIjoiYWRtaW4iLCJleHAiOjE3MjAzMTg1NjR9.c_knRNp5dROn5rxaQQqDVyqhAJb_ogUa--UWJPRubjs',
+    },
+    url: "/algorithm/download",
+    method: "get",
+    // responseType: 'arraybuffer',
+    params
+  });
+}
+
 export function CallAlgorithmApi(data: any): Promise<ListResult> {
     return http.request({
       headers: {
         "Content-Type": "multipart/form-data",
-        "token": 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyIxIjoiYWRtaW4iLCJleHAiOjE3MTk3MzYzOTN9.ibFYAeipK7Vv6t8ehLq89tb_NmGqn0WN5sp-Zu9MNYk',
+        "token": 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyIxIjoiYWRtaW4iLCJleHAiOjE3MjAzMTg1NjR9.c_knRNp5dROn5rxaQQqDVyqhAJb_ogUa--UWJPRubjs',
       },
       url: "/algorithm/dc",
       method: "post",
