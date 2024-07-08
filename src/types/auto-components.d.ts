@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AAvatar: typeof import('ant-design-vue/es')['Avatar']
     AButton: typeof import('ant-design-vue/es')['Button']
     ACard: typeof import('ant-design-vue/es')['Card']
     ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
@@ -22,14 +23,16 @@ declare module 'vue' {
     AlgorithmIntro: typeof import('./../components/AlgorithmIntro/index.vue')['default']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AModal: typeof import('ant-design-vue/es')['Modal']
+    APagination: typeof import('ant-design-vue/es')['Pagination']
     ARow: typeof import('ant-design-vue/es')['Row']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
+    ASkeleton: typeof import('ant-design-vue/es')['Skeleton']
+    ASkeletonImage: typeof import('ant-design-vue/es')['SkeletonImage']
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
     ATabs: typeof import('ant-design-vue/es')['Tabs']
     AUploadDragger: typeof import('ant-design-vue/es')['UploadDragger']
     CardTitle: typeof import('./../components/Login/CardTitle.vue')['default']
-    copy: typeof import('./../components/Login/LoginCard copy.vue')['default']
     HappyButton: typeof import('./../components/HappyButton/index.vue')['default']
     Login: typeof import('./../components/Login/index.vue')['default']
     LoginCard: typeof import('./../components/Login/LoginCard.vue')['default']

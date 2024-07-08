@@ -1,7 +1,7 @@
 <template>
     <div class="publication-wrapper common-box">
         <div class="search">
-            <a-row justify="space-between">
+            <a-row justify="space-between">               
                 <a-col :span="6">
                     <a-input v-model:value="keyWord" placeholder="Search">
                         <template #suffix>
@@ -9,30 +9,10 @@
                         </template>
                     </a-input>
                 </a-col>
-                <!-- <a-col :span="6">
-                    <a-form-item
-                        label="Filter"
-                        name="filter"
-                        >
-                        <a-select>
-                            <a-select-option value="demo">Demo</a-select-option>
-                        </a-select>
-                    </a-form-item>
-                </a-col>
-                <a-col :span="6">
-                    <a-form-item
-                        label="Filter"
-                        name="filter"
-                        >
-                        <a-select>
-                            <a-select-option value="demo">Demo</a-select-option>
-                        </a-select>
-                    </a-form-item>
-                </a-col> -->
             </a-row>
         </div>
         <div class="publications">
-            <div class="list">
+            <div class="publications-lists">
                 <a-row>
                     <a-col class="pic" :span="6">
                         image
@@ -61,13 +41,54 @@
                         </a-row>
                     </a-col>
                 </a-row>
+                <!-- <a-skeleton active :loading="isLoading"> -->
+                    <!-- <a-skeleton-image /> -->
+                    <a-row>
+                        <a-col class="pic" :span="6">
+                            <a-skeleton-image />
+                        </a-col>
+                        <a-col :span="18">
+                            <a-row>
+                                <a-col class="item-left" :span="18">
+                                    <a-skeleton-title />
+                                    <a-skeleton-paragraph />
+                                </a-col>
+                                <a-col class="item-right" :span="6">
+                                    <template>
+                                        <a-skeleton-title />
+                                        <a-skeleton-paragraph />
+                                    </template>
+                                    <template>
+                                        <a-skeleton-title />
+                                        <a-skeleton-paragraph />
+                                    </template>
+                                    <!-- <div>
+                                        <h3>DATE</h3>
+                                        <p>April 2, 2024</p>
+                                    </div>
+                                    <div>
+                                        <h3>JOURNAL</h3>
+                                        <p>Nature Scientific Reports</p> -->
+                                    <!-- </div> -->
+                                </a-col>
+                            </a-row>
+                        </a-col>
+                    </a-row>
+                <!-- </a-skeleton> -->
             </div>
         </div>
+        <a-pagination v-model:current="current" show-quick-jumper :total="500" @change="onChange" />
     </div>
 </template>
 
 <script lang="ts">
-    export default { name: 'PublicationPage' }
+    const current = ref('')
+    const isLoading = ref(true)
+
+
+    const onChange = () => {
+
+    }
 </script>
 
 <style lang="scss" scoped>

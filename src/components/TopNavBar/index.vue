@@ -37,13 +37,13 @@
     {
         key: 'home',
         // icon: () => h(MailOutlined),
-        label: h(RouterLink, { to: '/index', }, 'Home'),
+        label: h(RouterLink, { to: '/index', }, () => 'Home'),
         title: 'Home',
     },
     {
         key: 'software',
         // icon: () => h(AppstoreOutlined),
-        label: h(RouterLink, { to: '/software', }, 'Softwares'),
+        label: h('a', { class: 'softwares-dropmenu', href: 'jascript:;', }, 'Softwares'),
         title: 'Software',
         children: [
             {
@@ -51,11 +51,11 @@
                 label: 'Molecular optimization',
                 children: [
                 {
-                    label: h(RouterLink, { to: '/software/momo', }, 'MOMO'),
+                    label: h(RouterLink, { to: '/software/momo', }, () => 'MOMO'),
                     key: 'tool:1',
                 },
                 {
-                    label: h(RouterLink, { to: '/software/cdmo', }, 'CDMO'),
+                    label: h(RouterLink, { to: '/software/cdmo', }, () => 'CDMO'),
                     key: 'tool:2',
                 },
                 ],
@@ -65,11 +65,11 @@
                 label: 'Drug combinations and Drug synergy',
                 children: [
                 {
-                    label: h(RouterLink, { to: '/software/casynergy', }, 'CASynergy'),
+                    label: h(RouterLink, { to: '/software/casynergy', }, () => 'CASynergy'),
                     key: 'tool:3',
                 },
                 {
-                    label: h(RouterLink, { to: '/software/transferban', }, 'TransferBan'),
+                    label: h(RouterLink, { to: '/software/transferban', }, () => 'TransferBan'),
                     key: 'tool:4',
                 },
                 ],
@@ -79,19 +79,19 @@
     {
         key: 'team',
         // icon: () => h(MailOutlined),
-        label: h(RouterLink, { to: '/team', }, 'Teams'),
+        label: h(RouterLink, { to: '/team', }, () => 'Teams'),
         title: 'Team',
     },
     {
         key: 'publication',
         // icon: () => h(MailOutlined),
-        label: h(RouterLink, { to: '/publication', }, 'Publications'),
+        label: h(RouterLink, { to: '/publication', }, () => 'Publications'),
         title: 'Publication',
     },
     {
         key: 'about',
         // icon: () => h(MailOutlined),
-        label: h(RouterLink, { to: '/about', }, 'About us'),
+        label: h(RouterLink, { to: '/about', }, () => 'About us'),
         title: 'About',
     }
     ]);
@@ -157,7 +157,7 @@
                 }
                 &:hover {
                     .ant-menu-title-content a {
-                        color: antiquewhite;
+                        color: #F7AB60;
                     }
                 }
                 .ant-menu-title-content {
@@ -168,9 +168,15 @@
                     }
                 }
             }
+            .ant-menu-item-selected {
+                .ant-menu-title-content a {
+                    color: #F7AB60;
+                }
+            }
+            
             .ant-menu-item-group-list .ant-menu-item-selected, .ant-menu-submenu-selected {
                 .ant-menu-title-content a {
-                    color: antiquewhite;
+                    color: #F7AB60;
                 }
             }
         }
