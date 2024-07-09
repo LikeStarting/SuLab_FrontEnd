@@ -103,10 +103,17 @@
 
 <script lang="ts" setup>
     import { reactive } from 'vue';
+    import { useRouter } from 'vue-router'
     import { message } from 'ant-design-vue';
     import type { UploadProps, UploadChangeParam } from 'ant-design-vue';
     import { getAlgorithmFileExample, CallAlgorithmApi } from '@/api/algorithm';
+    import { useUserStore } from '@/store/modules/user'
+    import { useSolfWareStore } from '@/store/modules/solfWare'
 
+    const router = useRouter()
+    const userStore = useUserStore()
+    const token = userStore.getToken
+    const solfWareStore =  useSolfWareStore()
 
     interface FormState {
         molecule: string;
@@ -127,9 +134,7 @@
     }
 
     const handleDownloadFile = () => {
-        getAlgorithmFileExample({
-            algorithmName
-        }).then((res) => {
+        getAlgorithmFileExample({ algorithmName }, token).then((res) => {
             const fileURL = window.URL.createObjectURL(new Blob([res], {
                 type:'application/vnd.ms-excel',
             }));
@@ -166,21 +171,25 @@
         formData.append('algorithmName', 'TransferBan');
         uploading.value = true;
 
-        CallAlgorithmApi(formData)
-        .then(() => {
+        solfWareStore.GetAlgorithmResults(formData).then((res) => {
             fileList.value = [];
             uploading.value = false;
             message.success('Predict successfully.');
+            console.log('====', res)
+            const { href } = router.resolve({
+                name: 'SoftWareResultPage',
+            })
+            window.open(href, '_blank')
         })
         .catch(() => {
             uploading.value = false;
-            message.error('Predict failed.');
+            fileList.value = []
         });
     };
 
     function handleDrop(e: DragEvent) {
-  console.log(e);
-}
+        console.log(e);
+    }
 
     // const handleChange = (info: UploadChangeParam) => {
     // const status = info.file.status;

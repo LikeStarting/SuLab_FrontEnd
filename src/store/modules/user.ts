@@ -3,7 +3,7 @@ import { createStorage } from '@/utils/storage'
 import { store } from '@/store'
 import { ACCESS_TOKEN, CURRENT_USER } from '@/store/mutation-types'
 import { ResultEnum } from '@/enums/httpEnum'
-import { doLogout, getUserInfo, login } from '@/api/user'
+import { logout, getUserInfo, login } from '@/api/user'
 // import { PageEnum } from '@/enums/pageEnum'
 import router from '@/router'
 
@@ -13,10 +13,8 @@ interface UserInfo {
   userId: string | number
   username: string
   // avatar: string
-  // gender: number
   phone: string
   sign?: string
-  industry?: number
 }
 
 interface IUserState {
@@ -26,8 +24,10 @@ interface IUserState {
 }
 
 interface LoginParams {
-  username: string
+  userName: string
   password: string
+  captcha: string
+  uuid: string
 }
 
 export const useUserStore = defineStore({
@@ -62,11 +62,8 @@ export const useUserStore = defineStore({
     async Login(params: LoginParams) {
       try {
         const response = await login(params)
-        const { result, code } = response
-        if (code === ResultEnum.SUCCESS) {
-          // save token
-          this.setToken(result.token)
-        }
+        const { token } = response
+        this.setToken(token)
         return Promise.resolve(response)
       }
       catch (error) {

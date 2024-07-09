@@ -6,23 +6,22 @@ type ListResult = {
     data: object;
 }
 
-export function getAlgorithmFileExample(params: any): Promise<ListResult> {
+export function getAlgorithmFileExample(params: any, token: string): Promise<any> {
   return http.request({
     headers: {
-      "token": 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyIxIjoiYWRtaW4iLCJleHAiOjE3MjAzMTg1NjR9.c_knRNp5dROn5rxaQQqDVyqhAJb_ogUa--UWJPRubjs',
+      token: token
     },
     url: "/algorithm/download",
     method: "get",
-    // responseType: 'arraybuffer',
     params
   });
 }
 
-export function CallAlgorithmApi(data: any): Promise<ListResult> {
+export function callAlgorithmApi(data: any, token: string): Promise<ListResult> {
     return http.request({
       headers: {
         "Content-Type": "multipart/form-data",
-        "token": 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyIxIjoiYWRtaW4iLCJleHAiOjE3MjAzMTg1NjR9.c_knRNp5dROn5rxaQQqDVyqhAJb_ogUa--UWJPRubjs',
+        token
       },
       url: "/algorithm/dc",
       method: "post",

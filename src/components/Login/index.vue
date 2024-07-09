@@ -2,9 +2,10 @@
     <a-modal v-model:open="props.showLogin"  @cancel="closeModel">
         <div class="login-container">
             <div class="form">
-                <CardTitle/>
-                <LoginCard />
-                <RegisterCard />
+                <CardTitle />
+                <LoginCard @closeEvent="closeModel"/>
+                <RegisterCard @closeEvent="closeModel"/>
+                <Result title="Registered successfully!" />
             </div>
         </div>
         <template #footer>
@@ -15,11 +16,7 @@
 
 
 <script lang="ts" setup>
-
     import { defineProps } from 'vue';
-    import emitter from '@/utils/mitt'
-
-    const title = ref('login')
     
     const props = defineProps({
         showLogin: Boolean

@@ -36,6 +36,16 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/index.vue'),
         },
         {
+          path: '/software/result',
+          name: 'SoftWareResultPage',
+          meta: {
+            title: 'Result | Su Lab',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/PredictResult.vue'),
+        },
+        {
           path: '/software/momo',
           name: 'SoftWarePage-MOMO',
           meta: {

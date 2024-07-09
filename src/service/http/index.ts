@@ -72,6 +72,7 @@ class Http {
         let msg = "";
         // HTTP 状态码
         const status = error.response?.status;
+        console.log('====', status, error)
         switch (status) {
           case 400:
             msg = "请求错误";

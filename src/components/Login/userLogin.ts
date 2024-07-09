@@ -4,6 +4,7 @@ export enum LoginStateEnum {
   LOGIN,
   REGISTER,
   RESET_PASSWORD,
+  REGISTER_SUCCESS
 }
 
 const currentState = ref(LoginStateEnum.LOGIN)
@@ -23,30 +24,88 @@ export function useLoginState() {
 }
 
 export function useFormRules(formData?: Record) {
-  const getUsernameFormRule = computed(() => createRule('请输入用户名'))
-  const getPasswordFormRule = computed(() => createRule('请输入密码'))
-  // const getSmsFormRule = computed(() => createRule('请输入短信验证码'))
+  const getPasswordFormRule = computed(() => createRule('Please input the password!'))
+  const getEmailVerificationCodeRule = computed(() => createRule('Please input the Verification Code!'))
+  const getSmsFormRule = computed(() => createRule('请输入短信验证码'))
   const getMobileFormRule = computed(() => createRule('请输入手机号码'))
 
-  const validatePolicy = async (value: any, _: Rule) => {
-    return !value ? Promise.resolve('勾选后才能注册') : Promise.resolve(true)
+  const validateUserName = async (_rule: Rule, value: string) => {
+    if (!value) {
+      return Promise.reject('Please input user name or mobile number or email address!')
+    } else {
+      const nameRegex = /^[a-zA-Z0-9]+$/
+      const phoneRegex = /^\d{10,11}$/
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+      if (!(nameRegex.test(value) || phoneRegex.test(value) || emailRegex.test(value))) {
+        return Promise.reject('The format is incorrect!')
+      } else {
+        return Promise.resolve(true)
+      }
+    }
   }
 
+  const validateRegisterUserName = async (_rule: Rule, value: string) => {
+    if (!value) {
+      return Promise.reject('Please input user name!')
+    } else {
+      const nameRegex = /^[a-zA-Z0-9]{6,32}$/
+      if (!nameRegex.test(value)) {
+        return Promise.reject('Username: 6-32 chars, letters & numbers only!')
+      } else {
+        return Promise.resolve(true)
+      }
+    }
+  }
+
+  const validateRegisterEmail = async (_rule: Rule, value: string) => {
+    if (!value) {
+      return Promise.reject('Please input user name!')
+    } else {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+      if (!emailRegex.test(value)) {
+        return Promise.reject('Please enter the correct email format!')
+      } else {
+        return Promise.resolve(true)
+      }
+    }
+  }
+
+  const validateVerificationCode = async (_rule: Rule, value: string) => {
+    if (!value) {
+      return Promise.reject('Please input the Verification Code!')
+    } else {
+      const codeRegex = /^[a-zA-Z0-9]{4}$/
+      if (!codeRegex.test(value)) {
+        return Promise.reject('The format is incorrect!')
+      } else {
+        return Promise.resolve(true)
+      }
+    }
+  }
+
+  // const validatePolicy = async (value: any, _: Rule) => {
+  //   return !value ? Promise.resolve('勾选后才能注册') : Promise.resolve(true)
+  // }
+
   const validateConfirmPassword = (password: string) => {
-    return async (value: string) => {
+    return async (_rule: Rule, value: string) => {
       if (!value) {
-        return Promise.resolve('请输入确认密码')
+        return Promise.reject('Please enter your confirmation password!')
       }
       if (value !== password) {
-        return Promise.resolve('两次输入密码不一致')
+        return Promise.reject('The passwords entered do not match!')
       }
       return Promise.resolve(true)
     }
   }
 
   const getFormRules = computed((): { [k: string]: Rule[] } => {
-    const usernameFormRule = unref(getUsernameFormRule)
+    // const usernameFormRule = unref(getUsernameFormRule)
     const passwordFormRule = unref(getPasswordFormRule)
+
+    const emailVerificationCodeRule = unref(getEmailVerificationCodeRule)
     const smsFormRule = unref(getSmsFormRule)
     const mobileFormRule = unref(getMobileFormRule)
 
@@ -54,31 +113,44 @@ export function useFormRules(formData?: Record) {
       sms: smsFormRule,
       mobile: mobileFormRule,
     }
+
     switch (unref(currentState)) {
       // register form rules
       case LoginStateEnum.REGISTER:
         return {
-          username: usernameFormRule,
+          username: [
+            { validator: validateRegisterUserName, trigger: 'change' }
+          ],
+          email: [
+            { validator: validateRegisterEmail, trigger: 'change' }
+          ],
           password: passwordFormRule,
           confirmPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
           ],
-          policy: [{ validator: validatePolicy, trigger: 'blur' }],
-          ...mobileRule,
+          verificationCode: emailVerificationCodeRule
+          // policy: [{ validator: validatePolicy, trigger: 'change' }]
         }
 
       // reset password form rules
       case LoginStateEnum.RESET_PASSWORD:
         return {
-          username: usernameFormRule,
+          username: [
+            { validator: validateUserName, trigger: 'change' }
+          ],
           ...mobileRule,
         }
 
       // login form rules
       default:
         return {
-          username: usernameFormRule,
+          username: [
+            { validator: validateUserName, trigger: 'change' }
+          ],
           password: passwordFormRule,
+          verificationCode: [
+            { validator: validateVerificationCode, trigger: 'blur' }
+          ],
         }
     }
   })
@@ -90,7 +162,7 @@ function createRule(message: string): Rule[] {
     {
       required: true,
       message,
-      trigger: 'blur',
+      trigger: 'change',
     },
   ]
 }

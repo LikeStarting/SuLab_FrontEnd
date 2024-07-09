@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AAvatar: typeof import('ant-design-vue/es')['Avatar']
     AButton: typeof import('ant-design-vue/es')['Button']
     ACard: typeof import('ant-design-vue/es')['Card']
     ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
@@ -24,11 +23,12 @@ declare module 'vue' {
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AModal: typeof import('ant-design-vue/es')['Modal']
     APagination: typeof import('ant-design-vue/es')['Pagination']
+    AResult: typeof import('ant-design-vue/es')['Result']
     ARow: typeof import('ant-design-vue/es')['Row']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
-    ASkeleton: typeof import('ant-design-vue/es')['Skeleton']
     ASkeletonImage: typeof import('ant-design-vue/es')['SkeletonImage']
+    ATable: typeof import('ant-design-vue/es')['Table']
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
     ATabs: typeof import('ant-design-vue/es')['Tabs']
     AUploadDragger: typeof import('ant-design-vue/es')['UploadDragger']
@@ -37,6 +37,7 @@ declare module 'vue' {
     Login: typeof import('./../components/Login/index.vue')['default']
     LoginCard: typeof import('./../components/Login/LoginCard.vue')['default']
     RegisterCard: typeof import('./../components/Login/RegisterCard.vue')['default']
+    Result: typeof import('./../components/Login/Result.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sider: typeof import('./../components/Sider/index.vue')['default']

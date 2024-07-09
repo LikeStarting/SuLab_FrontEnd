@@ -13,24 +13,15 @@
         :model="wechatLoginForm"
         label-width="0"
       >
-        <TransitionGroup
-          appear
-          mode="out-in"
-          :css="false"
-          @before-enter="beforeEnter"
-          @enter="enter"
-          @leave="leave"
-        >
-          <a-form-item class="mt-2" :data-delay="1">
-            <a-empty>
-              <template #description>
-                <span>
-                  Under development...
-                </span>
-              </template>
-            </a-empty>
-          </a-form-item>
-        </TransitionGroup>
+        <a-form-item class="mt-2" :data-delay="1">
+          <a-empty>
+            <template #description>
+              <span>
+                Under development...
+              </span>
+            </template>
+          </a-empty>
+        </a-form-item>
       </a-form>
 
       <a-form
@@ -38,90 +29,64 @@
         ref="formRef"
         :model="userInfo"
         label-width="0"
+        :rules="getFormRules"
       >
-        <TransitionGroup
-          appear
-          mode="out-in"
-          :css="false"
-          @before-enter="beforeEnter"
-          @enter="enter"
-          @leave="leave"
+        <a-form-item class="mt-2" :data-delay="1" name="username"
         >
-          <a-form-item class="mt-2" :data-delay="1" :rules="[
-              {
-                required: true,
-                message: 'User Name or Mobile Number or Email address',
-                trigger: 'blur'
-              }
-            ]"
+          <a-input v-model:value="userInfo.username" placeholder="User Name or Mobile Number or Email address">
+            <template #prefix>
+              <SvgIcon iconName="icon-denglu-copy" className="icon-account"/>
+            </template>
+          </a-input>
+        </a-form-item>
+
+        <a-form-item class="mt" :data-delay="2" name="password"
+        >
+          <a-input
+            v-model:value="userInfo.password"
+            placeholder="Password"
+            type="password"
           >
-            <a-input v-model="userInfo.username" placeholder="User Name or Mobile Number or Email address">
-              <template #prefix>
-                <SvgIcon iconName="icon-denglu-copy" className="icon-account"/>
-              </template>
-            </a-input>
-          </a-form-item>
-
-          <a-form-item class="mt" :data-delay="2" :rules="[
-              {
-                required: true,
-                message: 'Password',
-                trigger: 'blur'
-              }
-            ]"
+            <template #prefix>
+              <SvgIcon iconName="icon-mima1" className="icon-pwd" />
+            </template>
+          </a-input>
+        </a-form-item>
+        <a-form-item class="mt" :data-delay="2" name="verificationCode"
+        >
+          <a-input
+            v-model:value="userInfo.verificationCode"
+            placeholder="Verification Code"
+            type="text"
           >
-            <a-input
-              v-model="userInfo.password"
-              placeholder="Password"
-              type="password"
-            >
-              <template #prefix>
-                <SvgIcon iconName="icon-mima1" className="icon-pwd" />
-              </template>
-            </a-input>
-          </a-form-item>
-          <a-form-item class="mt" :data-delay="2" :rules="[
-              {
-                required: true,
-                message: 'Password',
-                trigger: 'blur'
-              }
-            ]"
-          >
-            <a-input
-              v-model="userInfo.verificationCode"
-              placeholder="Verification Code"
-              type="text"
-            >
-              <template #prefix>
-                <SvgIcon iconName="icon-yanzhengma" className="icon-code" />
-              </template>
+            <template #prefix>
+              <SvgIcon iconName="icon-yanzhengma" className="icon-code" />
+            </template>
 
-              <template #suffix>
-                <div class="code" @click="getVierificationCode">
-                  <img v-show="codeImgSrc != ''" :src="codeImgSrc" />
-                </div>
-              </template>
-            </a-input>
-          </a-form-item>
+            <template #suffix>
+              <div class="code" @click="getVierificationCode">
+                <img v-show="codeImgSrc != ''" :src="codeImgSrc" />
+              </div>
+            </template>
+          </a-input>
+        </a-form-item>
 
-          <a-form-item class="remember-box">
-            <a-form-item name="remember" no-style>
-              <a-checkbox v-model:checked="userInfo.remember">Remember me</a-checkbox>
-            </a-form-item>
-            <a class="login-form-forgot" href="javascript:;">Forgot password</a>
+        <a-form-item class="remember-box">
+          <a-form-item name="remember" no-style>
+            <a-checkbox v-model:checked="userInfo.remember">Remember me</a-checkbox>
           </a-form-item>
-          <a-form-item :data-delay="3">
-            <a-button type="primary" class="login-btn" size="large" >Login</a-button>
-          </a-form-item>
+          <a class="login-form-forgot" href="javascript:;">Forgot password</a>
+        </a-form-item>
+        <a-form-item :data-delay="3">
+          <a-button type="primary" class="login-btn" size="large" :loading="isLoading" @click="onSubmit">Login</a-button>
+        </a-form-item>
 
-          <div class="bottom-box">
-            Don't have account?
-            <span @click="() => toggleModalTabs('register')">
-              Sign Up!
-            </span>
-          </div>
-        </TransitionGroup>
+        <div class="bottom-box">
+          Don't have account?
+          <span @click="() => toggleModalTabs('register')">
+            Sign Up!
+          </span>
+        </div>
       </a-form>
     </div>
     <!-- <p v-else>邮箱登录</p> -->
@@ -129,27 +94,32 @@
 </template>
 
 <script lang="ts" setup>
-  import emitter from '@/utils/mitt'
   import { ref, reactive } from 'vue'
+  import { message } from 'ant-design-vue'
+  import emitter from '@/utils/mitt'
+  import { useRouter } from 'vue-router'
   import { getVierificationCodeApi } from '@/api/user'
   import { LoginStateEnum, useFormRules, useLoginState } from './userLogin'
   import { useUserStore } from '@/store/modules/user'
+  import { ResultEnum } from '@/enums/httpEnum'
 
   const { setLoginState, getLoginState } = useLoginState()
+  const { getFormRules } = useFormRules()
+  const userStore = useUserStore()
 
-
-  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
+  const router = useRouter()
+  const isLoading = ref(false)
+  const formRef = ref();
   const codeImgSrc = ref('')
   const wechatLoginForm = reactive({
     qr: ''
   })
+  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
   const userInfo = reactive({
     username: '',
-    phone: '',
-    email: '',
     password: '',
-    code: '',
     verificationCode: '',
+    uuid: '',
     remember: false
   })
 
@@ -177,15 +147,44 @@
     tabKey.value = value;
   };
 
+  const emit = defineEmits(['closeEvent'])
 
   const getVierificationCode = () => {
     getVierificationCodeApi({
     }).then((res) => {
       codeImgSrc.value = res.data;
-      // userInfo.UUID = x.uuid;
+      userInfo.uuid = res.uuid;
     });
   };
   getVierificationCode();
+
+  const key = 'updatable';
+  const onSubmit = () => {
+    formRef.value
+    ?.validate().then(async () => {
+      try {
+        isLoading.value = true;
+        message.loading({ content: 'Logging in...', key });
+        const data = await userStore.Login({
+          userName: userInfo.username,
+          password: userInfo.password,
+          captcha: userInfo.verificationCode,
+          uuid: userInfo.uuid
+        })
+        emit('closeEvent');
+        isLoading.value = false;
+        message.success({ content: 'Login successful!', key, duration: 2 });
+        getVierificationCode();
+        router.replace('/')
+      } finally {
+
+      } 
+    }).catch(() => {
+      isLoading.value = false;
+      getVierificationCode();
+      message.error({ content: 'Login Failed!', key, duration: 1 });
+    })
+  }
 
 </script>
 
