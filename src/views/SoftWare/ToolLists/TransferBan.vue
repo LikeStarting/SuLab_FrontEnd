@@ -135,8 +135,8 @@
     const token = userStore.getToken
     const solfWareStore =  useSolfWareStore()
 
-    const singleColumns = ref(null)
-    const singleData = ref(null)
+    const singleColumns = ref([])
+    const singleData = ref([])
 
     interface FormState {
         drugA: string;
@@ -169,7 +169,7 @@
 
 
     const preprocessColumns = (results) => {
-        if (!results || results.length == 0) return null
+        if (!results || results.length == 0) return []
 
         return Object.keys(results[0]).map((value) => {
             let title = value
@@ -194,7 +194,7 @@
     }
 
     const preprocessData = (results) => {
-        if (!results || results.length == 0) return null
+        if (!results || results.length == 0) return []
 
         return results.map((item) => {
             item.Pred_Score = parseFloat(item.Pred_Score.toFixed(4))
@@ -217,7 +217,7 @@
     }
 
     const handleDownloadFile = () => {
-        getAlgorithmFileExample({ algorithmName }, token).then((res) => {
+        getAlgorithmFileExample({ algorithmName }).then((res) => {
             const { data } = res
             const fileURL = window.URL.createObjectURL(new Blob([data], {
                 type:'application/vnd.ms-excel',

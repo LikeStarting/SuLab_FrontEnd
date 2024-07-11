@@ -218,7 +218,7 @@
     }
 
     const handleDownloadFile = () => {
-        getAlgorithmFileExample({ algorithmName }, token).then((res) => {
+        getAlgorithmFileExample({ algorithmName }).then((res) => {
             const { data } = res
             const fileURL = window.URL.createObjectURL(new Blob([data], {
                 type:'application/vnd.ms-excel',

@@ -179,6 +179,10 @@
             }
         }
     }
+
+    .ant-pagination {
+        text-align: center;
+    }
 }
 
 </style>

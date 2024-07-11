@@ -26,8 +26,7 @@ export function useLoginState() {
 export function useFormRules(formData?: Record) {
   const getPasswordFormRule = computed(() => createRule('Please input the password!'))
   const getEmailVerificationCodeRule = computed(() => createRule('Please input the Verification Code!'))
-  const getSmsFormRule = computed(() => createRule('请输入短信验证码'))
-  const getMobileFormRule = computed(() => createRule('请输入手机号码'))
+
 
   const validateUserName = async (_rule: Rule, value: string) => {
     if (!value) {
@@ -104,15 +103,7 @@ export function useFormRules(formData?: Record) {
   const getFormRules = computed((): { [k: string]: Rule[] } => {
     // const usernameFormRule = unref(getUsernameFormRule)
     const passwordFormRule = unref(getPasswordFormRule)
-
     const emailVerificationCodeRule = unref(getEmailVerificationCodeRule)
-    const smsFormRule = unref(getSmsFormRule)
-    const mobileFormRule = unref(getMobileFormRule)
-
-    const mobileRule = {
-      sms: smsFormRule,
-      mobile: mobileFormRule,
-    }
 
     switch (unref(currentState)) {
       // register form rules
@@ -138,7 +129,6 @@ export function useFormRules(formData?: Record) {
           username: [
             { validator: validateUserName, trigger: 'change' }
           ],
-          ...mobileRule,
         }
 
       // login form rules
