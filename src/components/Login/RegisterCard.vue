@@ -5,131 +5,177 @@
     ref="formRef"
     :model="registerForm"
     label-width="0"
+    :rules="getFormRules"
   >
-    <TransitionGroup
-      appear
-      mode="out-in"
-      :css="false"
-      @before-enter="beforeEnter"
-      @enter="enter"
-      @leave="leave"
-    >
-      <a-form-item class="mt-2" :data-delay="1" :rules="[
-          {
-            required: true,
-            message: 'User Name or Mobile Number or Email address',
-            trigger: 'blur'
-          }
-        ]"
-      >
-        <a-input v-model="registerForm.username" placeholder="User Name or Mobile Number or Email address">
-          <template #prefix>
-            <SvgIcon iconName="icon-denglu-copy" className="icon-account"/>
-          </template>
-        </a-input>
-      </a-form-item>
+    <a-form-item  :data-delay="1" name="username">
+      <a-input v-model:value="registerForm.username" placeholder="Your User Name">
+        <template #prefix>
+          <SvgIcon iconName="icon-denglu-copy" className="icon-account"/>
+        </template>
+      </a-input>
+    </a-form-item>
 
-      <a-form-item class="mt" :data-delay="2" :rules="[
-          {
-            required: true,
-            message: 'Password',
-            trigger: 'blur'
-          }
-        ]"
+    <a-form-item :data-delay="2" name="password">
+      <a-input
+        v-model:value="registerForm.password"
+        placeholder="Password"
+        type="password"
       >
-        <a-input
-          v-model="registerForm.password"
-          placeholder="Password"
-          type="password"
-        >
-          <template #prefix>
-            <SvgIcon iconName="icon-mima1" className="icon-pwd" />
-          </template>
-        </a-input>
-      </a-form-item>
-      <a-form-item class="mt" :data-delay="2" :rules="[
-          {
-            required: true,
-            message: 'Password',
-            trigger: 'blur'
-          }
-        ]"
+        <template #prefix>
+          <SvgIcon iconName="icon-mima1" className="icon-pwd" />
+        </template>
+      </a-input>
+    </a-form-item>
+    <a-form-item :data-delay="3" name="confirmPassword">
+      <a-input
+        v-model:value="registerForm.confirmPassword"
+        placeholder="Enter your password again"
+        type="password"
       >
-        <a-input
-          v-model="registerForm.verificationCode"
-          placeholder="Verification Code"
-          type="text"
-        >
-          <template #prefix>
-            <SvgIcon iconName="icon-yanzhengma" className="icon-code" />
-          </template>
+        <template #prefix>
+          <SvgIcon iconName="icon-mima1" className="icon-pwd" />
+        </template>
+      </a-input>
+    </a-form-item>
 
-          <template #suffix>
-            <div class="code" @click="getVierificationCode">
-              <img v-show="codeImgSrc != ''" :src="codeImgSrc" />
-            </div>
-          </template>
-        </a-input>
-      </a-form-item>
-      <a-form-item :data-delay="3">
-        <a-button type="primary" class="register-btn" size="large" >Sign Up</a-button>
-      </a-form-item>
+    <a-form-item :data-delay="1" name="email">
+      <a-input v-model:value="registerForm.email" @change="handleChangeEmail" placeholder="Your Email address">
+        <template #prefix>
+          <SvgIcon iconName="icon-message" className="icon-email"/>
+        </template>
+      </a-input>
+    </a-form-item>
 
-      <div class="bottom-box">
-        Already have an account?
-        <span @click="() => toggleModalTabs('register')">
-          Login!
-        </span>
+    <a-form-item class="key-input-wrapper" :data-delay="4" name="verificationCode">
+      <a-input
+        class="key-input"
+        v-model:value="registerForm.verificationCode"
+        placeholder="Verification Code"
+        type="text"
+      >
+        <template #prefix>
+          <SvgIcon iconName="icon-miyue" className="icon-code" />
+        </template>
+      </a-input>
+      <div class="code">
+        <a-button type="primary" class="key-btn" size="large" :disabled="isDisable" @click="onGetCode">
+          <span v-if="!isSendingCode">Send verification email</span>
+          <span v-else>
+            Obtain after {{ timeCount }} seconds
+          </span>
+        </a-button>
       </div>
-    </TransitionGroup>
+    </a-form-item>
+    <a-form-item :data-delay="3">
+      <a-button type="primary" class="register-btn" size="large" :loading="isLoading" @click="onSubmit">Sign Up</a-button>
+    </a-form-item>
+
+    <div class="bottom-box">
+      Already have an account?
+      <span @click="() => toggleModalTabs('register')">
+        Login!
+      </span>
+    </div>
   </a-form>
 </template>
 
 <script lang="ts" setup>
   import { ref, reactive } from 'vue'
+  import { message } from 'ant-design-vue'
   import emitter from '@/utils/mitt'
-  import { getVierificationCodeApi } from '@/api/user'
-
+  import { getVierificationCodeApi, getEmailCaptcha, register } from '@/api/user'
   import { LoginStateEnum, useFormRules, useLoginState } from './userLogin'
 
-  // const { handleBackLogin, getLoginState } = useLoginState()
   const { setLoginState, handleBackLogin, getLoginState } = useLoginState()
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER)
 
-  const codeImgSrc = ref('')
+  const formRef = ref();
+  const isLoading = ref(false)
+  const isSendingCode = ref(false)
+  const isDisable = ref(true)
+  const timeCount = ref(60)
+  const timer = ref()
+
   const registerForm = reactive({
     username: '',
-    phone: '',
     email: '',
     password: '',
-    code: '',
+    confirmPassword: '',
     verificationCode: '',
+    uuid: ''
   })
+  const { getFormRules } = useFormRules(registerForm)
 
   const toggleModalTabs = (value: string) => {
     emitter.emit('change-title', 'Log In')
     setLoginState(LoginStateEnum.LOGIN)
   }
 
+  const handleChangeEmail = async () => {
+    formRef.value.validateFields(['email']).then(() => {
+      isDisable.value = false
+    }).catch(() => {
+      isDisable.value = true
+    })
+  }
 
-  const getVierificationCode = () => {
-    getVierificationCodeApi({
+  const onGetCode = () => {
+    getEmailCaptcha({
+      userEmail: registerForm.email
     }).then((res) => {
-      codeImgSrc.value = res.data;
-      // userInfo.UUID = x.uuid;
-    });
-  };
-  getVierificationCode();
+      registerForm.uuid = res.uuid
+      message.success('Send successfully!')
+    })
 
+    isSendingCode.value = true
+    isDisable.value = true
+
+    timer.value = setInterval(() => {
+      if (timeCount.value > 0) {
+        timeCount.value--
+      } else {
+        clearInterval(timer.value)
+        timeCount.value = 60
+        isSendingCode.value = false
+        isDisable.value = false
+      }
+    }, 1000)
+  }
+
+  const onSubmit = () => {
+    formRef.value
+    ?.validate().then(async () => {
+      try {
+        isLoading.value = true;
+        // showLoadingToast('登录中...')
+        const { data } = await register({
+          userName: registerForm.username,
+          userEmail: registerForm.email,
+          password: registerForm.password,
+          captcha: registerForm.verificationCode,
+          uuid: registerForm.uuid
+        })
+        setLoginState(LoginStateEnum.REGISTER_SUCCESS)
+
+      } finally {
+        
+        isLoading.value = false
+      }
+
+    }).catch((e) => {
+      // console.log('error', e)
+    })
+  }
 </script>
 
 
 <style lang="scss" scoped>
 
-
   :global(.register-form) {
-    height: 460px;
-
+    height: 470px;
+    padding: 24px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
   }
   :global(.ant-form-item.remember-box .ant-form-item-control-input-content) {
     display: flex;
@@ -137,7 +183,6 @@
   }
   :global(.register-form .ant-form-item-control-input-content) {
     text-align: center;
-
   }
     
   :global(.register-form .ant-input-affix-wrapper) {
@@ -148,6 +193,16 @@
   
   :global(.register-form .ant-input-prefix) {
     color: #222;
+  }
+
+  :global(.register-form .key-input-wrapper .ant-form-item-control-input-content) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  :global(.register-form .key-input-wrapper .ant-form-item-control-input-content .key-input) {
+    width: 40%;
   }
 
   .register-form {

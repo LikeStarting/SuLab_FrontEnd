@@ -6,13 +6,16 @@ import './style.css'
 import App from './App.vue'
 
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import SvgImage from '@/components/SvgImage/index.vue'
 import HappyButton from '@/components/HappyButton/index.vue'
+
 import '@/assets/iconfont/iconfont.js'
 
 const app = createApp(App)
 
 setupStore(app)
 app.component('SvgIocn', SvgIcon)
+app.component('SvgImage', SvgImage)
 app.component('HappyButton', HappyButton)
 
 

@@ -107,7 +107,7 @@ class Http {
             msg = "HTTP版本不受支持";
             break;
           default:
-            msg = "网络连接故障";
+            msg = "Network connection failure!";
         }
         message.error(msg);
         return Promise.reject(error);
