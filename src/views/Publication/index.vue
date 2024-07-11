@@ -13,81 +13,100 @@
         </div>
         <div class="publications">
             <div class="publications-lists">
-                <a-row>
-                    <a-col class="pic" :span="6">
-                        image
-                    </a-col>
-                    <a-col :span="18">
-                        <a-row>
-                            <a-col class="item-left" :span="18">
-                                <h2>
-                                    <a href="">Paper title</a>
-                                </h2>
-                                <p>
-                                    author
-                                </p>
-                                <p>abstract</p>
-                            </a-col>
-                            <a-col class="item-right" :span="6">
-                                <div>
-                                    <h3>DATE</h3>
-                                    <p>April 2, 2024</p>
-                                </div>
-                                <div>
-                                    <h3>JOURNAL</h3>
-                                    <p>Nature Scientific Reports</p>
-                                </div>
-                            </a-col>
-                        </a-row>
-                    </a-col>
-                </a-row>
-                <!-- <a-skeleton active :loading="isLoading"> -->
-                    <!-- <a-skeleton-image /> -->
-                    <a-row>
+                <template v-if="!loading">
+                    <a-row class="list" v-for="item in publications" :key="item.id">
                         <a-col class="pic" :span="6">
                             <a-skeleton-image />
                         </a-col>
                         <a-col :span="18">
                             <a-row>
                                 <a-col class="item-left" :span="18">
-                                    <a-skeleton-title />
-                                    <a-skeleton-paragraph />
+                                    <h2>
+                                        <a href="">{{ item.articleName }}</a>
+                                    </h2>
+                                    <p>
+                                        {{ item.authors }}
+                                    </p>
+                                    <p>{{ item.introduction }}</p>
                                 </a-col>
                                 <a-col class="item-right" :span="6">
-                                    <template>
-                                        <a-skeleton-title />
-                                        <a-skeleton-paragraph />
-                                    </template>
-                                    <template>
-                                        <a-skeleton-title />
-                                        <a-skeleton-paragraph />
-                                    </template>
-                                    <!-- <div>
+                                    <div>
                                         <h3>DATE</h3>
-                                        <p>April 2, 2024</p>
+                                        <p>{{ item.publishDate }}</p>
                                     </div>
                                     <div>
                                         <h3>JOURNAL</h3>
-                                        <p>Nature Scientific Reports</p> -->
-                                    <!-- </div> -->
+                                        <p>{{ item.publication }}</p>
+                                    </div>
                                 </a-col>
                             </a-row>
                         </a-col>
                     </a-row>
-                <!-- </a-skeleton> -->
+                </template>
+                <template v-if="loading">
+                    <a-row class="list" v-for="item in pageSize" :key="item.id">
+                        <a-col class="pic" :span="6">
+                            <a-skeleton-image />
+                        </a-col>
+                        <a-col :span="18">
+                            <a-row>
+                                <a-col class="item-left" :span="18">
+                                    <a-skeleton active :paragraph="{ rows: 4 }" />
+                                </a-col>
+                                <a-col class="item-right" :span="6">
+                                    <a-skeleton active :paragraph="{ rows: 1 }" />
+                                    <a-skeleton active :paragraph="{ rows: 1 }" />
+                                </a-col>
+                            </a-row>
+                        </a-col>
+                    </a-row>
+                </template>
             </div>
         </div>
-        <a-pagination v-model:current="current" show-quick-jumper :total="500" @change="onChange" />
+        <a-pagination v-model:current="currentPage" show-quick-jumper :total="totalCount" @change="handleChange" />
     </div>
 </template>
 
-<script lang="ts">
-    const current = ref('')
-    const isLoading = ref(true)
+<script lang="ts" setup>
+    import { useRouter } from 'vue-router'
+    import { message } from 'ant-design-vue';
+    import { useUserStore } from '@/store/modules/user'
+    import { getAllPublications } from '@/api/publication'
 
+    const router = useRouter()
+    const userStore = useUserStore()
+    const token = userStore.getToken
 
-    const onChange = () => {
+    const keyWord = ref('')
+    const totalCount = ref(0)
+    const currentPage = ref(0)
+    const pageSize = ref(3)
+    const loading = ref<boolean>(true)
 
+    const publications = ref(<any>[])
+
+    getAllPublications({
+        page: currentPage.value,
+        limit: pageSize.value
+    }, token).then((res) => {
+        const { data, count } = res
+        publications.value = data
+        totalCount.value = count
+        loading.value = false
+    })
+    
+    
+    const handleChange = (page, pageSize) => {
+        loading.value = true
+        getAllPublications({
+            page,
+            limit: pageSize
+        }, token).then((res) => {
+            const { data, count } = res
+            publications.value = data
+            totalCount.value = count
+            loading.value = false
+        })
     }
 </script>
 
@@ -114,34 +133,48 @@
     .publications {
         padding: 20px 0;
         border-top: 1px solid #ddd;
-        .list {
-            padding: 30px;
-            -webkit-box-shadow: 0 0 18px 0 rgba(93, 107, 137, 0.1);
-            box-shadow: 0 0 18px 0 rgba(93, 107, 137, 0.1);
-            .pic {
-                width: 160px;
-                height: 220px;
-            }
-            p {
-                font-size: 16px;
-                line-height: 28px;
-                color: #222;
-            }
-            .item-left {
-                h2 {
-                    font-size: 24px;
-                    font-weight: 600;
-                    line-height: 32px;
+        .publications-lists {
+            .list {
+                margin-bottom: 20px;
+                padding: 30px;
+                -webkit-box-shadow: 0 0 18px 0 rgba(93, 107, 137, 0.1);
+                box-shadow: 0 0 18px 0 rgba(93, 107, 137, 0.1);
+                .pic {
+                    width: 160px;
+                    height: 220px;
+                    .ant-skeleton-element {
+                        display: block;
+                        height: 100%;
+                    }
+                    :deep(.ant-skeleton-image) {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
-            }
-            .item-right {
-                div {
-                    padding-bottom: 16px;
+                p {
+                    font-size: 16px;
+                    line-height: 28px;
+                    color: #222;
                 }
-                h3 {
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: #999;
+                .item-left {
+                    padding: 0 20px;
+                    h2 {
+                        margin-top: 0;
+                        font-size: 24px;
+                        font-weight: 600;
+                        line-height: 32px;
+                    }
+                }
+                .item-right {
+                    padding: 0 20px;
+                    div {
+                        padding-bottom: 16px;
+                    }
+                    h3 {
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #999;
+                    }
                 }
             }
         }

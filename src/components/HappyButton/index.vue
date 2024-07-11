@@ -1,6 +1,6 @@
 <template>
     <div :class="buttonClass">
-        <span v-for="i in 15" key="i" :class="`item item-${i}`">
+        <span v-for="i in 15" :key="i" :class="`item item-${i}`">
             
         </span>
         <div class="text">{{ text }}</div>
@@ -10,11 +10,9 @@
 
 
 <script setup lang="ts">
-    import { computed, defineProps } from "vue"
-
     const props = defineProps<{
         text: string,
-        className: string
+        className?: string
     }>()
 
 
@@ -75,7 +73,7 @@
   }
   @for $i from 1 through $item {
     .item-#{$i}:hover {
-      $skew: (-$item/2+$i)/$item*3deg;
+      $skew: calc(($i - $item / 2) / $item * 3deg);
       ~ .bg, ~ .text {
         transform: skewY($skew);
       }

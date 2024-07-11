@@ -85,7 +85,6 @@
   import emitter from '@/utils/mitt'
   import { getVierificationCodeApi, getEmailCaptcha, register } from '@/api/user'
   import { LoginStateEnum, useFormRules, useLoginState } from './userLogin'
-  import { ResultEnum } from '@/enums/httpEnum'
 
   const { setLoginState, handleBackLogin, getLoginState } = useLoginState()
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER)
@@ -149,27 +148,22 @@
       try {
         isLoading.value = true;
         // showLoadingToast('登录中...')
-        const { code, message, data } = await register({
+        const { data } = await register({
           userName: registerForm.username,
           userEmail: registerForm.email,
           password: registerForm.password,
           captcha: registerForm.verificationCode,
           uuid: registerForm.uuid
         })
-
-        if (code === 0) {
-          setLoginState(LoginStateEnum.REGISTER_SUCCESS)
-        } else {
-
-        }
+        setLoginState(LoginStateEnum.REGISTER_SUCCESS)
 
       } finally {
+        
         isLoading.value = false
       }
 
-      
     }).catch((e) => {
-        message.error(e)
+      // console.log('error', e)
     })
   }
 </script>

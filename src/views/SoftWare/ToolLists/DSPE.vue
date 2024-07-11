@@ -1,7 +1,7 @@
 <template>
     <div class="software-wrapper common-box">
         <div>
-            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmName :content="description"/>
+            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" iconTitleClass="a" :algorithmName=algorithmName :content="description"/>
             <div class="AI-tool">
                 <div class="tool-use">
                     <div class="tab-bar">
@@ -129,6 +129,7 @@
     import { useUserStore } from '@/store/modules/user'
     import { PredictResult, useSolfWareStore } from '@/store/modules/solfWare'
 
+    const AlgorithmName = 'DSPE'
     const formRef = ref();
     const router = useRouter()
     const userStore = useUserStore()
@@ -154,21 +155,21 @@
     });
 
     const Example = {
-        drugA: 'Albendazole',
-        smilesA: 'CCCSC1=CC2=C(C=C1)N=C(N2)NC(=O)OC',
-        drugB: 'Allopurinol',
-        smilesB: 'C1=NNC2=C1C(=O)NC=N2',
+        drugA: 'albendazole',
+        smilesA: 'CCCSc1ccc2[nH]c(NC(=O)OC)nc2c1',
+        drugB: 'Magnesium isoglycyrrhizinate',
+        smilesB: 'C[C@]12CC[C@](C[C@@H]1C3=CC(=O)[C@@H]4[C@]5(CC[C@@H](C([C@@H]5CC[C@]4([C@@]3(CC2)C)C)(C)C)O[C@@H]6[C@@H]([C@H]([C@@H]([C@H](O6)C(=O)[O-])O)O)O[C@H]7[C@@H]([C@H]([C@@H]([C@H](O7)C(=O)[O-])O)O)O)C)(C)C(=O)O.[Mg+2]',
         clineName: 'AE'
     }
 
-    const algorithmName = 'TransferBAN-Syn'
-    const description = `The TransferBAN-Syn algorithm consists of three key modules: the drug combination feature representation module, the disease feature representation module, and the synergy prediction module. The drug combination feature representation module utilizes a Graph Convolutional Network (GCN) to extract atom-level features of drug molecules and employs a bilinear attention network to integrate single-drug features, capturing the interactions between drugs and forming the drug combination feature representation. The disease feature representation module encodes the characteristics of diseases by combining pathway information and disease similarity of parasitic diseases through a Multi-Layer Perceptron (MLP) to obtain disease feature representations. In this framework, the drug and disease feature representation modules are initially trained on multiple parasitic diseases to form a pre-trained model, which is then applied to the task of predicting drug combinations for echinococcosis. The synergy prediction module is fine-tuned using specific drug combination data for echinococcosis to optimize the model's performance in this particular prediction task. Finally, the drug combination features and disease features are merged and propagated through a fully connected layer to predict drug synergy.`
+    const algorithmName = AlgorithmName
+    const description = `The DSPE model makes full use of drug-target interaction information and smiles structures of drugs to predict drug-drug synergies. The graph attention mechanism with residuals (resGAT) is used to obtain the potential feature vector of the drug. The graph attention network (GAT) can extract deeper drug characteristics and interactions, and the addition of residual connections helps to alleviate the problem of gradient disappearance, so that the interactions between drug molecules can be captured more effectively and the drug characteristics can be more accurately represented. At the same time, by obtaining protein-protein (PPI) network data associated with echinococcosis and using node2vec and attention weight aggregation, a richer and more differentiated representation of disease features can be obtained. In addition, the data information of single drugs is introduced, which effectively solves the problem of insufficient training data of drug combinations, and improves the prediction accuracy of new diseases with limited data. DSPE enables efficient and accurate prediction of drug combination synergies.`
 
     const isInputComplete = ref(false)
     const activeKey = ref(0)
 
 
-    const preprocessColumns = (results) => {
+    const preprocessColumns = (results: any) => {
         if (!results || results.length == 0) return null
 
         return Object.keys(results[0]).map((value) => {
@@ -304,6 +305,7 @@
                 uploading.value = false
             }
             }).catch((e) => {
+                console.log('======', e)
                 uploading.value = false
                 message.error({ content: 'Predict Failed!', key, duration: 1 });
             })

@@ -6,7 +6,7 @@
             </div>
             <div class="menu">
                 <div class="navbar">
-                    <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items"/>
+                    <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" :items="items"/>
                     <div class="login">
                         <a href="javascript:;" @click="showLoginModal">Login</a>
                     </div>
@@ -20,8 +20,10 @@
 
 <script lang="ts" setup>
     import { h, ref } from 'vue';
-    import { RouterLink} from 'vue-router';
+    import { RouterLink, useRoute} from 'vue-router';
     const showLogin = ref<boolean>(false);
+    const route = useRoute()
+
     const showLoginModal = () => {
         showLogin.value = true;
     }
@@ -30,20 +32,19 @@
         showLogin.value = value;
     }
 
-    import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue';
     import { MenuProps } from 'ant-design-vue';
-    const current = ref<string[]>(['home']);
+    const selectedKeys = ref<string[]>(['/index']);
     const items = ref<MenuProps['items']>([
     {
-        key: 'home',
+        key: '/index',
         // icon: () => h(MailOutlined),
         label: h(RouterLink, { to: '/index', }, () => 'Home'),
         title: 'Home',
     },
     {
-        key: 'software',
+        key: '/software',
         // icon: () => h(AppstoreOutlined),
-        label: h('a', { class: 'softwares-dropmenu', href: 'jascript:;', }, 'Softwares'),
+        label: h('a', { class: 'softwares-dropmenu', href: 'javascript:;', }, 'Softwares'),
         title: 'Software',
         children: [
             {
@@ -52,11 +53,11 @@
                 children: [
                 {
                     label: h(RouterLink, { to: '/software/momo', }, () => 'MOMO'),
-                    key: 'tool:1',
+                    key: '/software/momo',
                 },
                 {
                     label: h(RouterLink, { to: '/software/cdmo', }, () => 'CDMO'),
-                    key: 'tool:2',
+                    key: '/software/cdmo',
                 },
                 ],
             },
@@ -66,35 +67,43 @@
                 children: [
                 {
                     label: h(RouterLink, { to: '/software/casynergy', }, () => 'CASynergy'),
-                    key: 'tool:3',
+                    key: '/software/casynergy',
                 },
                 {
                     label: h(RouterLink, { to: '/software/transferban', }, () => 'TransferBan'),
-                    key: 'tool:4',
+                    key: '/software/transferban',
+                },
+                {
+                    label: h(RouterLink, { to: '/software/dspe', }, () => 'DSPE'),
+                    key: '/software/dspe',
                 },
                 ],
             }
         ],
     },
     {
-        key: 'team',
+        key: '/team',
         // icon: () => h(MailOutlined),
         label: h(RouterLink, { to: '/team', }, () => 'Teams'),
         title: 'Team',
     },
     {
-        key: 'publication',
+        key: '/publication',
         // icon: () => h(MailOutlined),
         label: h(RouterLink, { to: '/publication', }, () => 'Publications'),
         title: 'Publication',
     },
     {
-        key: 'about',
+        key: '/about',
         // icon: () => h(MailOutlined),
         label: h(RouterLink, { to: '/about', }, () => 'About us'),
         title: 'About',
     }
     ]);
+
+    watch(() => route.path, (path) => {
+        selectedKeys.value = [path];
+    }, { immediate: true });
 </script>
 
 <style scoped lang="scss">
@@ -201,6 +210,15 @@
         }
     }
 }
+
+
+:global(.ant-menu-submenu .ant-menu .ant-menu-item-group .ant-menu-item-group-title) {
+    position: relative;                
+    font-weight: 600;
+    border-bottom: 1px solid #F7AB60;
+    color: #F7AB60;
+}
+
 .header-row {
     display: flex;
     max-width: 1240px;

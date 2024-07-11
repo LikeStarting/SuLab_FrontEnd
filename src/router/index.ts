@@ -86,6 +86,16 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/ToolLists/TransferBan.vue'),
         },
         {
+          path: '/software/dspe',
+          name: 'SoftWarePage-DSPE',
+          meta: {
+            title: 'DSPE | Su Lab',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/ToolLists/DSPE.vue'),
+        },
+        {
           path: '/publication',
           name: 'PublicationPage',
           meta: {

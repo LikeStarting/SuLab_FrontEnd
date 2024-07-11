@@ -6,22 +6,9 @@
 
 
 <script lang="ts" setup name="SvgIcon">
-    import { computed, defineProps } from "vue"
-
-    // const props = defineProps({
-    //     className: {
-    //         type: String,
-    //         default: ''
-    //     },
-    //     iconName: {
-    //         type: String,
-    //         required: true
-    //     }
-    // })
-
     const props = defineProps<{
-        className: string;
         iconName: string
+        className?: string;
     }>()
 
     const svgClass = computed(() => {
@@ -32,12 +19,6 @@
     })
 
     const iconClassName = computed(() => `#${ props.iconName }`)
-
-
-    // export default {
-    //     name: 'SvgIcon',
-    //     props: ['className', 'iconName']
-    // }
 </script>
 
 <style lang="scss" scoped>

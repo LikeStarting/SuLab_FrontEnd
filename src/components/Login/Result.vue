@@ -13,8 +13,6 @@
 
 
 <script lang="ts" setup>
-
-  import { defineProps } from 'vue'
   import emitter from '@/utils/mitt'
   import { LoginStateEnum, useLoginState } from './userLogin'
   const { setLoginState, getLoginState } = useLoginState()

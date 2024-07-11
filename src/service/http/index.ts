@@ -72,7 +72,6 @@ class Http {
         let msg = "";
         // HTTP 状态码
         const status = error.response?.status;
-        console.log('====', status, error)
         switch (status) {
           case 400:
             msg = "请求错误";
@@ -108,7 +107,7 @@ class Http {
             msg = "HTTP版本不受支持";
             break;
           default:
-            msg = "网络连接故障";
+            msg = "Network connection failure!";
         }
         message.error(msg);
         return Promise.reject(error);

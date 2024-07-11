@@ -28,3 +28,14 @@ export function callAlgorithmApi(data: any, token: string): Promise<ListResult> 
       data
     });
 }
+
+export function callAlgorithmWithSingle(data: any, token: string): Promise<ListResult> {
+  return http.request({
+    headers: {
+      token
+    },
+    url: "/algorithm/dc/single",
+    method: "post",
+    data
+  });
+}

@@ -101,7 +101,6 @@
   import { getVierificationCodeApi } from '@/api/user'
   import { LoginStateEnum, useFormRules, useLoginState } from './userLogin'
   import { useUserStore } from '@/store/modules/user'
-  import { ResultEnum } from '@/enums/httpEnum'
 
   const { setLoginState, getLoginState } = useLoginState()
   const { getFormRules } = useFormRules()

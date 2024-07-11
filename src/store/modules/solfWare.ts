@@ -8,13 +8,13 @@ import { useUserStore } from '@/store/modules/user'
 const Storage = createStorage({ storage: localStorage })
 const userStore = useUserStore()
 
-interface PredictResult {
-  cell_name: String
-  drua_name: string
-  drub_name: string
-  druga_svg_list: string
-  drugb_svg_list: string
-  pred_score: number
+export interface PredictResult {
+  Cell_Name: string
+  DrugA_Name: string
+  DrugB_Name: string
+  DrugA_Svg: string
+  DrugB_Svg: string
+  Pred_Score: number
 }
 
 interface ISolfWareState {
@@ -44,7 +44,8 @@ export const useSolfWareStore = defineStore({
       return new Promise((resolve, reject) => {
         callAlgorithmApi(params, userStore.getToken)
           .then((res) => {
-            this.setPredictResults(res)
+            const { data } = res
+            this.setPredictResults(data)
             resolve(res)
           })
           .catch((error) => {
