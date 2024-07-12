@@ -2,8 +2,8 @@ import axios from 'axios'
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios'
 import { message } from 'ant-design-vue';
 import NProgress from "@/utils/progress";
-// import { ElLoading } from 'element-plus'
-// import useDemoStore from '@/store/modules/demo'
+
+import { useUserStoreWidthOut } from '@/store/modules/user'
 import router from '@/router/index'
 
 // const baseURL = 'http://localhost:3000/'
@@ -26,16 +26,13 @@ class Http {
     Http.axiosInstance.interceptors.request.use(
       config => {
         NProgress.start();
-        // 发送请求前，可在此携带 token
-        // if (token) {
-        //   config.headers['token'] = token
-        // }
-        // loading = ElLoading.service({
-        //     lock: true,
-        //     text: '拼命加载中...'
-        // })
-        // const demoStore = useDemoStore()
-        // config.headers.token = demoStore.data.token
+        const userStore = useUserStoreWidthOut()
+        const token = userStore.token
+        console.log('====', config.headers, config, token)
+        if (token) {
+          config.headers.token = token
+        }
+        
         return config;
       },
       (error: AxiosError) => {

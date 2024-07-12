@@ -176,7 +176,7 @@
         getVierificationCode();
         router.replace('/')
       } finally {
-
+        userStore.GetUserInfo()
       } 
     }).catch(() => {
       isLoading.value = false;

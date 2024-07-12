@@ -2,14 +2,17 @@
     <a-layout-header  class="header-nav">
         <div class="header-row">
             <div class="logo" style="color: #fff;">
-                <router-link to="/index" style="font-size: 28px; color: #fff;">Su Lab logo</router-link>
+                <router-link to="/index" style="font-size: 28px; color: #fff;">
+                    <img src="/logo.png" alt="logo" />
+                </router-link>
             </div>
             <div class="menu">
                 <div class="navbar">
                     <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" :items="items"/>
-                    <div class="login">
+                    <div v-if="!userInfo" class="login">
                         <a href="javascript:;" @click="showLoginModal">Login</a>
                     </div>
+                    <UserNavMenu  v-else :avatar="userInfo.avatar" :userName="userInfo.userName" />
                 </div>
             </div>
         </div>
@@ -21,8 +24,18 @@
 <script lang="ts" setup>
     import { h, ref } from 'vue';
     import { RouterLink, useRoute} from 'vue-router';
+    import { MenuProps } from 'ant-design-vue';
+    import { useUserStore } from '@/store/modules/user'
     const showLogin = ref<boolean>(false);
+
+    const userInfo = ref(null)
     const route = useRoute()
+    const userStore = useUserStore()
+    userStore.GetUserInfo()
+
+    onMounted(() => {
+        userInfo.value = userStore.getUserInfo
+    })
 
     const showLoginModal = () => {
         showLogin.value = true;
@@ -32,7 +45,6 @@
         showLogin.value = value;
     }
 
-    import { MenuProps } from 'ant-design-vue';
     const selectedKeys = ref<string[]>(['/index']);
     const items = ref<MenuProps['items']>([
     {
@@ -147,6 +159,18 @@
     padding-bottom: 10px;
     border-bottom: 2px solid #333;
     background-color: #9DDBF8;
+    .logo {
+        display: flex;
+        align-items: center;
+        a {
+            width: 100px;
+            height: 52px;
+            img {
+                width: 100%;
+                vertical-align: top;
+            }
+        }
+    }
 }
 .menu {
     .navbar {

@@ -42,7 +42,7 @@ export const useSolfWareStore = defineStore({
 
     async GetAlgorithmResults(params: FormData) {
       return new Promise((resolve, reject) => {
-        callAlgorithmApi(params, userStore.getToken)
+        callAlgorithmApi(params)
           .then((res) => {
             const { data } = res
             this.setPredictResults(data)
@@ -52,17 +52,6 @@ export const useSolfWareStore = defineStore({
             reject(error)
           })
       })
-    },
-    // async GetAlgorithmResults(params: FormData) {
-    //   try {
-    //     const response = await callAlgorithmApi(params, userStore.getToken)
-    //     console.log('response==', response)
-    //     this.setPredictResults(response)
-    //     return Promise.resolve(response)
-    //   }
-    //   catch (error) {
-    //     return Promise.reject(error)
-    //   }
-    // },
-  },
+    }
+  }
 })

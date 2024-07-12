@@ -35,8 +35,6 @@
                                 :model="formState"
                                 name="mo-form"
                                 autocomplete="off"
-                                @finish="onFinish"
-                                @finishFailed="onFinishFailed"
                             >
                                 <a-form-item
                                 label="SMILES"

@@ -51,7 +51,7 @@ export function register(params?: object): Promise<ListResult> {
 
 export function getUserInfo(params?: object): Promise<ListResult> {
     return http.request({
-      url: "/captcha/image",
+      url: "/login/getInfo",
       method: "get",
       params
     });

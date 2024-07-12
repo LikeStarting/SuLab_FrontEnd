@@ -10,11 +10,9 @@ import router from '@/router'
 const Storage = createStorage({ storage: localStorage })
 
 interface UserInfo {
-  userId: string | number
+  // userId: string | number
   username: string
-  // avatar: string
-  phone: string
-  sign?: string
+  avatar: string
 }
 
 interface IUserState {
@@ -73,7 +71,9 @@ export const useUserStore = defineStore({
 
     async GetUserInfo() {
       return new Promise((resolve, reject) => {
-        getUserInfo()
+        getUserInfo({
+          token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MjA3OTM5OTEsIjQxIjoiU2ltcGxlWHUifQ.Mv-6_nqHfTKEeKmEqzR3Bqc8yCh30Q4JM0gSAVM8qlM'
+        })
           .then((res) => {
             this.setUserInfo(res)
             resolve(res)
@@ -87,12 +87,12 @@ export const useUserStore = defineStore({
     async Logout() {
       if (this.getToken) {
         try {
-          await doLogout()
-        }
-        catch {
-          console.error('注销Token失败')
+          await logout()
+        } finally {
+          
         }
       }
+
       this.setToken(undefined)
       this.setUserInfo(null)
       Storage.remove(ACCESS_TOKEN)
