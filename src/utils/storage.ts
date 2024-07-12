@@ -1,5 +1,3 @@
-// 默认缓存期限为7天
-const DEFAULT_CACHE_TIME = 60 * 60 * 24 * 7
 
 /**
  * 创建本地缓存对象
@@ -24,10 +22,10 @@ export function createStorage({ prefixKey = '', storage = localStorage } = {}) {
      * @param {*} value 缓存值
      * @param expire
      */
-    set(key: string, value: any, expire: number | null = DEFAULT_CACHE_TIME) {
+    set(key: string, value: any, expire: string | null) {
       const stringData = JSON.stringify({
         value,
-        expire: expire !== null ? new Date().getTime() + expire * 1000 : null,
+        expire:  expire !== null ? new Date(expire).getTime() : null,
       })
       this.storage.setItem(this.getKey(key), stringData)
     }
@@ -43,7 +41,7 @@ export function createStorage({ prefixKey = '', storage = localStorage } = {}) {
         try {
           const data = JSON.parse(item)
           const { value, expire } = data
-          // 在有效期内直接返回
+
           if (expire === null || expire >= Date.now()) {
             return value
           }
@@ -76,11 +74,11 @@ export function createStorage({ prefixKey = '', storage = localStorage } = {}) {
      * 设置cookie
      * @param {string} name cookie 名称
      * @param {*} value cookie 值
-     * @param {number=} expire 过期时间
+     * @param {string=} expire 过期时间
      * 如果过期时间为设置，默认关闭浏览器自动删除
      * @example
      */
-    setCookie(name: string, value: any, expire: number | null = DEFAULT_CACHE_TIME) {
+    setCookie(name: string, value: any, expire: string | null) {
       document.cookie = `${this.getKey(name)}=${value}; Max-Age=${expire}`
     }
 
@@ -118,6 +116,41 @@ export function createStorage({ prefixKey = '', storage = localStorage } = {}) {
         }
       }
     }
+
+    setSession(key: string, value: any, expire: string | null) {
+      const stringData = JSON.stringify({
+        value,
+        expire: expire !== null ? new Date(expire).getTime() : null,
+      })
+      sessionStorage.setItem(this.getKey(key), stringData)
+    }
+
+    getSession(key: string, def: any = null) {
+      const item = sessionStorage.getItem(this.getKey(key))
+      if (item) {
+        try {
+          const data = JSON.parse(item)
+          const { value, expire } = data
+          if (expire === null || expire >= Date.now()) {
+            return value
+          }
+          this.removeSession(key)
+        }
+        catch (e) {
+          return def
+        }
+      }
+      return def
+    }
+
+    removeSession(key: string) {
+      sessionStorage.removeItem(this.getKey(key))
+    }
+
+    clearSession(): void {
+      sessionStorage.clear()
+    }
+
   }
   return new Storage()
 }

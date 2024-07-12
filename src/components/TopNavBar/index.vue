@@ -26,16 +26,13 @@
     import { RouterLink, useRoute} from 'vue-router';
     import { MenuProps } from 'ant-design-vue';
     import { useUserStore } from '@/store/modules/user'
-    const showLogin = ref<boolean>(false);
 
-    const userInfo = ref(null)
+    const showLogin = ref(false);
+
     const route = useRoute()
     const userStore = useUserStore()
-    userStore.GetUserInfo()
 
-    onMounted(() => {
-        userInfo.value = userStore.getUserInfo
-    })
+    const userInfo = computed(() =>  userStore.getUserInfo)
 
     const showLoginModal = () => {
         showLogin.value = true;
@@ -188,16 +185,36 @@
                 &::after {
                     display: none;
                 }
-                &:hover {
-                    .ant-menu-title-content a {
-                        color: #F7AB60;
-                    }
-                }
                 .ant-menu-title-content {
                     a {
                         font-size: 18px;
                         font-weight: 600;
                         color: #fff;
+                    }
+                }
+                &.ant-menu-submenu-active,&.ant-menu-submenu-open {
+                    .ant-menu-title-content a {
+                        color: #F7AB60;
+                    }
+                    .ant-menu-submenu-arrow {
+                        color: #F7AB60;
+                    }
+                }
+                .ant-menu-submenu-arrow {
+                    display: inline;
+                    right: -18px;
+                    color: #fff;
+                    margin-top: -2px;
+                    transform: rotate(90deg);
+                    &::before {
+                        transform: rotate(45deg) translateY(-4px);
+                    }
+                    &::after {
+                        transform: rotate(-45deg) translateY(4px);
+                    }
+                    &::before, &::after {
+                        width: 10px;
+                        
                     }
                 }
             }
@@ -208,7 +225,7 @@
             }
             
             .ant-menu-item-group-list .ant-menu-item-selected, .ant-menu-submenu-selected {
-                .ant-menu-title-content a {
+                .ant-menu-title-content a, .ant-menu-submenu-arrow {
                     color: #F7AB60;
                 }
             }

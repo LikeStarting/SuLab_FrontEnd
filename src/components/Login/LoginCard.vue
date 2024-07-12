@@ -164,19 +164,20 @@
       try {
         isLoading.value = true;
         message.loading({ content: 'Logging in...', key });
+        const { remember } = userInfo
         const data = await userStore.Login({
           userName: userInfo.username,
           password: userInfo.password,
           captcha: userInfo.verificationCode,
           uuid: userInfo.uuid
-        })
+        }, remember)
         emit('closeEvent');
         isLoading.value = false;
         message.success({ content: 'Login successful!', key, duration: 2 });
         getVierificationCode();
         router.replace('/')
       } finally {
-        userStore.GetUserInfo()
+
       } 
     }).catch(() => {
       isLoading.value = false;

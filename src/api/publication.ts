@@ -6,11 +6,8 @@ type ListResult = {
     data: object;
 }
 
-export function getAllPublications(params: any, token: string): Promise<ListResult> {
+export function getAllPublications(params: any): Promise<ListResult> {
     return http.request({
-      headers: {
-        token
-      },
       url: "/article/get-all",
       method: "get",
       params

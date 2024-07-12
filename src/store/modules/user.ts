@@ -17,7 +17,7 @@ interface UserInfo {
 
 interface IUserState {
   token?: string
-  userInfo: Nullable<UserInfo>
+  userInfo: UserInfo | null
   lastUpdateTime: number
 }
 
@@ -37,31 +37,41 @@ export const useUserStore = defineStore({
   }),
   getters: {
     getUserInfo(): UserInfo {
-      return this.userInfo || Storage.get(CURRENT_USER, '') || {}
+      return this.userInfo || Storage.get(CURRENT_USER, '') || Storage.getSession(CURRENT_USER, '') ||  null
     },
     getToken(): string {
-      return this.token || Storage.get(ACCESS_TOKEN, '')
+      return this.token || Storage.get(ACCESS_TOKEN, '') || Storage.getSession(ACCESS_TOKEN, '')
     },
     getLastUpdateTime(): number {
       return this.lastUpdateTime
     },
   },
   actions: {
-    setToken(token: string | undefined) {
+    setToken(token: string | undefined, expire: string, remember: boolean) {
       this.token = token || ''
-      Storage.set(ACCESS_TOKEN, token)
+      if (remember) {
+        Storage.set(ACCESS_TOKEN, token, expire)
+      } else {
+        Storage.setSession(ACCESS_TOKEN, token, expire)
+      }
     },
-    setUserInfo(info: UserInfo | null) {
+    setUserInfo(info: UserInfo | null, expire: string, remember: boolean) {
       this.userInfo = info
       this.lastUpdateTime = new Date().getTime()
-      Storage.set(CURRENT_USER, info)
+
+      if (remember) {
+        Storage.set(CURRENT_USER, info, expire)
+      } else {
+        Storage.setSession(CURRENT_USER, info, expire)
+      }
     },
 
-    async Login(params: LoginParams) {
+    async Login(params: LoginParams, remember: boolean) {
       try {
         const response = await login(params)
-        const { token } = response
-        this.setToken(token)
+        const { token, expire } = response
+        this.setToken(token, expire, remember)
+        await this.GetUserInfo(expire, remember)
         return Promise.resolve(response)
       }
       catch (error) {
@@ -69,13 +79,11 @@ export const useUserStore = defineStore({
       }
     },
 
-    async GetUserInfo() {
+    async GetUserInfo(expire: string, remember: boolean) {
       return new Promise((resolve, reject) => {
-        getUserInfo({
-          token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MjA3OTM5OTEsIjQxIjoiU2ltcGxlWHUifQ.Mv-6_nqHfTKEeKmEqzR3Bqc8yCh30Q4JM0gSAVM8qlM'
-        })
+        getUserInfo()
           .then((res) => {
-            this.setUserInfo(res)
+            this.setUserInfo(res, expire, remember)
             resolve(res)
           })
           .catch((error) => {
@@ -93,10 +101,12 @@ export const useUserStore = defineStore({
         }
       }
 
-      this.setToken(undefined)
-      this.setUserInfo(null)
+      this.token = ''
+      this.userInfo = null
       Storage.remove(ACCESS_TOKEN)
       Storage.remove(CURRENT_USER)
+      Storage.removeSession(ACCESS_TOKEN)
+      Storage.removeSession(CURRENT_USER)
       // router.push(PageEnum.BASE_LOGIN)
       location.reload()
     },
