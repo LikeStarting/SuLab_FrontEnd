@@ -27,10 +27,10 @@
                 <a-col>
                     <h2>Research</h2>
                     <p>
-In addition to our proprietary work, we also contribute to research articles, host seminars, and attend speaking events. Visit the connect page to enquire about engagement opportunities.
+                        In addition to our proprietary work, we also contribute to research articles. Visit the connect page to enquire about publication.
                     </p>
                     <div class="more-btn">
-                        <router-link :to="{name: 'PublicationPage', params: { }}" >
+                        <router-link :to="{ name: 'PublicationPage' }" >
                             <HappyButton text="Our Publications" />
                         </router-link>
                     </div>
@@ -64,30 +64,66 @@ In addition to our proprietary work, we also contribute to research articles, ho
         height: calc(100vh - 86px);
         h2 {
             margin: 0;
-            padding: 20px 0;
-            font-size: 56px;
+            padding-bottom: 20px;
+            font-size: 46px;
             font-family: Rubik,sans-serif;
         }
         p {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 18px;
             font-family: Arial Helvetica, sans-serif;
-            line-height: 1.6;
+            line-height: 1.5;
             color: #333;
         }
         .ant-row {
             height: 100%;
             align-items: center;
             justify-content: space-between;
-            .ant-col {
-                // height: 600px;
-            }
 
         }
         .lab-view {
             height: 100%;
             // background-color: #9DDBF8;
         }
+    }
+
+    @media screen and (max-width: 1200px) {
+        .introducation {
+            h2 {
+                font-size: 46px;
+                padding-bottom: 10px;
+            }
+            p {
+                font-size: 16px;
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 1000px) {
+        .introducation {
+            h2 {
+                font-size: 40px;
+                padding-bottom: 10px;
+            }
+            p {
+                font-size: 14px;
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 860px) {
+        .introducation {
+            h2 {
+                font-size: 26px;
+            }
+            p {
+                margin-bottom: 10px;
+                line-height: 1.4;
+            }
+        }
+
     }
 
     .reserch {
@@ -98,7 +134,11 @@ In addition to our proprietary work, we also contribute to research articles, ho
         background-image: repeating-linear-gradient(45deg,	transparent, transparent 25px, #9DDBF8 25px, #9DDBF8 50px);
         background-size: $h $h;
         background-position: center;
+        .ant-row {
+            height: 100%;
+        }
         .ant-col {
+            width: 100%;
             max-width: 1340px;
             margin: 0 auto;
             padding: 20px 50px;

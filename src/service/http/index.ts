@@ -27,8 +27,7 @@ class Http {
       config => {
         NProgress.start();
         const userStore = useUserStoreWidthOut()
-        const token = userStore.token
-        console.log('====', config.headers, config, token)
+        const token = userStore.getToken
         if (token) {
           config.headers.token = token
         }
@@ -58,7 +57,6 @@ class Http {
           return data;
         } else {
           // 处理请求错误
-          // showFailToast(message);
           message.error(msg);
           return Promise.reject(response.data);
         }

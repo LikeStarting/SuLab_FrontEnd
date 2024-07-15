@@ -75,7 +75,6 @@
 
     const router = useRouter()
     const userStore = useUserStore()
-    const token = userStore.getToken
 
     const keyWord = ref('')
     const totalCount = ref(0)
@@ -88,7 +87,7 @@
     getAllPublications({
         page: currentPage.value,
         limit: pageSize.value
-    }, token).then((res) => {
+    }).then((res) => {
         const { data, count } = res
         publications.value = data
         totalCount.value = count
@@ -101,7 +100,7 @@
         getAllPublications({
             page,
             limit: pageSize
-        }, token).then((res) => {
+        }).then((res) => {
             const { data, count } = res
             publications.value = data
             totalCount.value = count

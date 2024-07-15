@@ -26,7 +26,7 @@
         width: 20px;
         height: 20px;
         fill: currentColor;
-        vertical-align: -0.15em;
+        vertical-align: middle;
         overflow: hidden;
     }
 </style>
