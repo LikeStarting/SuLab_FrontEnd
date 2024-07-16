@@ -125,6 +125,16 @@ const routes: RouteRecordRaw[] = [
           },
           component: () => import('@/views/About/index.vue')
         },
+        {
+          path: '/:pathMatch(.*)',
+          name: 'ErrorPage',
+          meta: {
+            title: 'Error page',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/404.vue')
+        }
       ]
     },
    

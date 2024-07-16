@@ -72,7 +72,7 @@ class Http {
             msg = "请求错误";
             break;
           case 401:
-            msg = "未授权，请登录";
+            msg = "Access denied. Please log in to your account to proceed.";
             break;
           case 403:
             msg = "拒绝访问";
@@ -84,7 +84,7 @@ class Http {
             msg = "请求超时";
             break;
           case 500:
-            msg = "服务器内部错误";
+            msg = "Server error, please try again later.";
             break;
           case 501:
             msg = "服务未实现";
