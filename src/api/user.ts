@@ -59,7 +59,7 @@ export function getUserInfo(params?: object): Promise<ListResult> {
 
 export function logout(): Promise<ListResult> {
   return http.request({
-    url: '/logout',
-    method: 'post',
+    url: '/login/logout',
+    method: 'get',
   })
 }

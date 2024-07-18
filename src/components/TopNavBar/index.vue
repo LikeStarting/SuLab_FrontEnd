@@ -103,10 +103,10 @@
         title: 'Publication',
     },
     {
-        key: '/about',
+        key: '/contact',
         // icon: () => h(MailOutlined),
-        label: h(RouterLink, { to: '/about', }, () => 'About us'),
-        title: 'About',
+        label: h(RouterLink, { to: '/contact', }, () => 'Contact Us'),
+        title: 'Contact us',
     }
     ]);
 

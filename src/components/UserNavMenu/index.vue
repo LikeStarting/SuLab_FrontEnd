@@ -10,7 +10,7 @@
         <template #overlay>
         <a-menu>
             <a-menu-item>
-                <a href="javascript:;">Log Out</a>
+                <a href="javascript:;" @click="handleLogout">Log Out</a>
             </a-menu-item>
         </a-menu>
         </template>
@@ -19,14 +19,25 @@
 
 
 <script lang="ts" setup name="SvgIcon">
+    import { useUserStore } from '@/store/modules/user'
+    import { message } from 'ant-design-vue'
+
+    const userStore = useUserStore()
+
     const props = defineProps<{
         avatar: string;
         userName: string;
     }>()
+
+    const handleLogout = async () => {
+        const { data } = await userStore.Logout()
+        message.success({ content: data, duration: 2 })
+    }
 </script>
 
 <style lang="scss" scoped>
     .ant-dropdown-link {
+        min-width: 120px;
         .avatar {
             display: inline-block;
             height: 30px;

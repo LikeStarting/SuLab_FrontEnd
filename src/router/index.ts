@@ -116,14 +116,14 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/Team/index.vue')
         },
         {
-          path: '/about',
-          name: 'AboutPage',
+          path: '/contact',
+          name: 'ContactPage',
           meta: {
-            title: 'About us | Su Lab',
+            title: 'Contact Us | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
-          component: () => import('@/views/About/index.vue')
+          component: () => import('@/views/Contact/index.vue')
         },
         {
           path: '/:pathMatch(.*)',
