@@ -293,11 +293,11 @@
                     drugB,
                     smilesB,
                     clineName
-                }, token)
+                })
 
                 singleColumns.value = preprocessColumns(data)
                 singleData.value = preprocessData(data)
-                message.success({ content: 'Predict successful!', key, duration: 1 });
+                message.success({ content: 'Predict successfully!', key, duration: 1 });
                 formState.drugA = ''
                 formState.smilesA = ''
                 formState.drugB = ''
@@ -337,14 +337,14 @@
         .tool-use {
             .tab-bar {
                 .bg-box {
-                    height: 300px;
-                    background: url("../../../assets/images/predict-bg.png") no-repeat center bottom / cover;
+                    height: calc(100% - 235px);
+                    background: url("../../../assets/images/predict-bg.png") no-repeat center / cover;
                 }
             }
             .tab-content {
                 .ant-form {
                     .ant-form-item {
-                        margin-bottom: 10px;
+                        // margin-bottom: 10px;
                     }
                 }
             }

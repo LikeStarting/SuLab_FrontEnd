@@ -120,8 +120,8 @@
         .tool-use {
             .tab-bar {
                 .bg-box {
-                    height: 300px;
-                    background: url("../../../assets/images/predict-bg.png") no-repeat center bottom / cover;
+                    height: calc(100% - 235px);
+                    background: url("../../../assets/images/predict-bg.png") no-repeat center / cover;
                 }
             }
         }

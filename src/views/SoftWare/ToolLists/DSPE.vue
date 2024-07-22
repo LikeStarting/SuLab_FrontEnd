@@ -77,11 +77,11 @@
                                         <a-input v-model:value="formState.smilesB" />
                                     </a-form-item>
                                     <a-form-item
-                                        label="Cline Name"
-                                        name="clineName"
-                                        :rules="[{ required: true, message: 'Please input an Cline name!' }]"
+                                        label="Disease Name"
+                                        name="diseaseName"
+                                        :rules="[{ required: true, message: 'Please input an Disease name!' }]"
                                     >
-                                        <a-input v-model:value="formState.clineName" />
+                                        <a-input v-model:value="formState.diseaseName" />
                                     </a-form-item>
                                 </a-form>    
                             </a-spin>
@@ -146,14 +146,14 @@
         smilesA: string;
         drugB: string;
         smilesB: string;
-        clineName: string;
+        diseaseName: string;
     }
     const formState = reactive<FormState>({
         drugA: '',
         smilesA: '',
         drugB: '',
         smilesB: '',
-        clineName: ''
+        diseaseName: ''
     });
 
     const Example = {
@@ -161,7 +161,7 @@
         smilesA: 'CCCSc1ccc2[nH]c(NC(=O)OC)nc2c1',
         drugB: 'Magnesium isoglycyrrhizinate',
         smilesB: 'C[C@]12CC[C@](C[C@@H]1C3=CC(=O)[C@@H]4[C@]5(CC[C@@H](C([C@@H]5CC[C@]4([C@@]3(CC2)C)C)(C)C)O[C@@H]6[C@@H]([C@H]([C@@H]([C@H](O6)C(=O)[O-])O)O)O[C@H]7[C@@H]([C@H]([C@@H]([C@H](O7)C(=O)[O-])O)O)O)C)(C)C(=O)O.[Mg+2]',
-        clineName: 'AE'
+        diseaseName: 'AE'
     }
 
     const algorithmName = AlgorithmName
@@ -215,7 +215,7 @@
         formState.smilesA = Example.smilesA
         formState.drugB = Example.drugB
         formState.smilesB = Example.smilesB
-        formState.clineName = Example.clineName
+        formState.diseaseName = Example.diseaseName
 
         isInputComplete.value = true
     }
@@ -285,14 +285,14 @@
             try {
                 uploading.value = true;
                 spinning.value = true;
-                const { drugA, smilesA, drugB, smilesB, clineName } = formState
+                const { drugA, smilesA, drugB, smilesB, diseaseName } = formState
                 const { data } = await callAlgorithmWithSingle({
                     algorithmName,
                     drugA,
                     smilesA,
                     drugB,
                     smilesB,
-                    clineName
+                    diseaseName
                 }, token)
 
                 singleColumns.value = preprocessColumns(data)
@@ -302,7 +302,7 @@
                 formState.smilesA = ''
                 formState.drugB = ''
                 formState.smilesB = ''
-                formState.clineName = ''
+                formState.diseaseName = ''
             } finally {
                 isInputComplete.value = false
                 uploading.value = false
@@ -337,15 +337,8 @@
         .tool-use {
             .tab-bar {
                 .bg-box {
-                    height: 300px;
-                    background: url("../../../assets/images/predict-bg.png") no-repeat center bottom / cover;
-                }
-            }
-            .tab-content {
-                .ant-form {
-                    .ant-form-item {
-                        margin-bottom: 10px;
-                    }
+                    height: calc(100% - 235px);
+                    background: url("../../../assets/images/predict-bg.png") no-repeat center / cover;
                 }
             }
         }

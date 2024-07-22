@@ -29,7 +29,10 @@
               }
           }
           .ant-empty-normal {
-            margin-block: 16px;
+            margin-block: 4px;
+            .ant-empty-image {
+              margin-bottom: 9px;
+            }
           }
         }
       }

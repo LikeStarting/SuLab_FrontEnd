@@ -107,8 +107,9 @@
                     height: 100%;
                     .ant-upload-wrapper {
                         display: block;
-                        height: 480px;
+                        height: 606px;
                         padding: 20px;
+                        padding-bottom: 0;
                         .ant-upload-drag {
                             .ant-upload-btn {
                                 .btn-inner {
@@ -122,7 +123,7 @@
             }
             .ant-form {
                 .ant-form-item {
-                    margin-top: 12px;
+                    margin-bottom: 22px;
                 }
                 .ant-row {
                     display: block;

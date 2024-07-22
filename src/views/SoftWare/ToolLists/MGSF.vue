@@ -76,13 +76,6 @@
                                     >
                                         <a-input v-model:value="formState.smilesB" />
                                     </a-form-item>
-                                    <a-form-item
-                                        label="Cline Name"
-                                        name="clineName"
-                                        :rules="[{ required: true, message: 'Please input an Cline name!' }]"
-                                    >
-                                        <a-input v-model:value="formState.clineName" />
-                                    </a-form-item>
                                 </a-form>    
                             </a-spin>
 
@@ -146,22 +139,19 @@
         smilesA: string;
         drugB: string;
         smilesB: string;
-        clineName: string;
     }
     const formState = reactive<FormState>({
         drugA: '',
         smilesA: '',
         drugB: '',
-        smilesB: '',
-        clineName: ''
+        smilesB: ''
     });
 
     const Example = {
-        drugA: 'ABT-888',
-        smilesA: 'C[C@@]1(CCCN1)C2=NC3=C(C=CC=C3N2)C(=O)N.Cl.Cl',
-        drugB: 'BORTEZOMIB',
-        smilesB: 'B([C@H](CC(C)C)NC(=O)[C@H](CC1=CC=CC=C1)NC(=O)C2=NC=CN=C2)(O)O',
-        clineName: 'A2058'
+        drugA: 'Albendazole',
+        smilesA: 'CCCSC1=CC2=C(C=C1)N=C(N2)NC(=O)OC',
+        drugB: 'Allopurinol',
+        smilesB: 'C1=NNC2=C1C(=O)NC=N2',
     }
 
     const algorithmName = AlgorithmName
@@ -285,24 +275,22 @@
             try {
                 uploading.value = true;
                 spinning.value = true;
-                const { drugA, smilesA, drugB, smilesB, clineName } = formState
+                const { drugA, smilesA, drugB, smilesB } = formState
                 const { data } = await callAlgorithmWithSingle({
                     algorithmName,
                     drugA,
                     smilesA,
                     drugB,
-                    smilesB,
-                    clineName
-                }, token)
+                    smilesB
+                })
 
                 singleColumns.value = preprocessColumns(data)
                 singleData.value = preprocessData(data)
-                message.success({ content: 'Predict successful!', key, duration: 1 });
+                message.success({ content: 'Predict successfully!', key, duration: 1 });
                 formState.drugA = ''
                 formState.smilesA = ''
                 formState.drugB = ''
                 formState.smilesB = ''
-                formState.clineName = ''
             } finally {
                 isInputComplete.value = false
                 uploading.value = false
@@ -337,14 +325,19 @@
         .tool-use {
             .tab-bar {
                 .bg-box {
-                    height: 300px;
-                    background: url("../../../assets/images/predict-bg.png") no-repeat center bottom / cover;
+                    height: calc(100% - 235px);
+                    background: url("../../../assets/images/predict-bg.png") no-repeat center / cover;
                 }
             }
             .tab-content {
                 .ant-form {
                     .ant-form-item {
-                        margin-bottom: 10px;
+                        // margin-bottom: 10px;
+                    }
+                }
+                .upload-box {
+                    .ant-upload-wrapper {
+                        height: 514px;
                     }
                 }
             }
