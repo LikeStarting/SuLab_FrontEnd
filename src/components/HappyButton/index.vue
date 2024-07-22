@@ -31,8 +31,8 @@
   display: flex;
   position: relative;
   background: linear-gradient(to bottom, $button, $shadow);
-  min-width: 10em;
-  min-height: 3em;
+  width: 100%;
+  height: 100%;
   font-size: 18px;
   font-weight: 600;
   text-align: center;

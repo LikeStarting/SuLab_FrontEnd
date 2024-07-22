@@ -95,20 +95,22 @@ export const useUserStore = defineStore({
     async Logout() {
       if (this.getToken) {
         try {
-          await logout()
-        } finally {
-          
+          const response = await logout()
+
+          this.token = ''
+          this.userInfo = null
+          Storage.remove(ACCESS_TOKEN)
+          Storage.remove(CURRENT_USER)
+          Storage.removeSession(ACCESS_TOKEN)
+          Storage.removeSession(CURRENT_USER)
+          location.reload()
+          return Promise.resolve(response)
+        } catch(error) {
+          return Promise.reject(error)
         }
       }
 
-      this.token = ''
-      this.userInfo = null
-      Storage.remove(ACCESS_TOKEN)
-      Storage.remove(CURRENT_USER)
-      Storage.removeSession(ACCESS_TOKEN)
-      Storage.removeSession(CURRENT_USER)
-      // router.push(PageEnum.BASE_LOGIN)
-      location.reload()
+      
     },
   },
 })

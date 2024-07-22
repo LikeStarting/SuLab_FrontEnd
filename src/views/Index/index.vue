@@ -46,7 +46,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 
 </script>
 
@@ -160,9 +160,9 @@
             a {
                 display: inline-block;
                 width: 180px;
-                height: 40px;
+                height: 54px;
                 text-align: center;
-                line-height: 40px;
+                line-height: 54px;
                 font-size: 16px;
                 border-radius: 6px;
                 color: #fff;
