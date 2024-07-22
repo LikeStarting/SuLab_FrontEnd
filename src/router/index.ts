@@ -96,6 +96,16 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/ToolLists/DSPE.vue'),
         },
         {
+          path: '/software/mgsf',
+          name: 'SoftWarePage-MGSF',
+          meta: {
+            title: 'MGSF | Su Lab',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/ToolLists/MGSF.vue'),
+        },
+        {
           path: '/publication',
           name: 'PublicationPage',
           meta: {

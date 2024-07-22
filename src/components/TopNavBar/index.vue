@@ -60,32 +60,36 @@
                 type: 'group',
                 label: 'Molecular optimization',
                 children: [
-                {
-                    label: h(RouterLink, { to: '/software/momo', }, () => 'MOMO'),
-                    key: '/software/momo',
-                },
-                {
-                    label: h(RouterLink, { to: '/software/cdmo', }, () => 'CDMO'),
-                    key: '/software/cdmo',
-                },
+                    {
+                        label: h(RouterLink, { to: '/software/momo', }, () => 'MOMO'),
+                        key: '/software/momo',
+                    },
+                    {
+                        label: h(RouterLink, { to: '/software/cdmo', }, () => 'CDMO'),
+                        key: '/software/cdmo',
+                    },
                 ],
             },
             {
                 type: 'group',
                 label: 'Drug combinations and Drug synergy',
                 children: [
-                {
-                    label: h(RouterLink, { to: '/software/casynergy', }, () => 'CASynergy'),
-                    key: '/software/casynergy',
-                },
-                {
-                    label: h(RouterLink, { to: '/software/transferban', }, () => 'TransferBan'),
-                    key: '/software/transferban',
-                },
-                {
-                    label: h(RouterLink, { to: '/software/dspe', }, () => 'DSPE'),
-                    key: '/software/dspe',
-                },
+                    {
+                        label: h(RouterLink, { to: '/software/casynergy', }, () => 'CASynergy'),
+                        key: '/software/casynergy',
+                    },
+                    {
+                        label: h(RouterLink, { to: '/software/transferban', }, () => 'TransferBan'),
+                        key: '/software/transferban',
+                    },
+                    {
+                        label: h(RouterLink, { to: '/software/dspe', }, () => 'DSPE'),
+                        key: '/software/dspe',
+                    },
+                    {
+                        label: h(RouterLink, { to: '/software/mgsf', }, () => 'MGSF'),
+                        key: '/software/mgsf',
+                    },
                 ],
             }
         ],
