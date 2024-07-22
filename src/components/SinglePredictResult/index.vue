@@ -21,8 +21,8 @@
       .content {
         :deep(.ant-table) {
           .smiles-svg {
-              width: 192px;
-              height: 80px;
+              max-width: 192px;
+              max-height: 80px;
               svg {
                   width: 100%;
                   height: 100%;
@@ -34,4 +34,20 @@
         }
       }
   }
+
+  // @media screen and (max-width: 1080px) {
+  //   .single-results {
+  //     .content {
+  //       :deep(.ant-table) {
+  //         thead {
+  //           tr {
+  //             .ant-table-cell {
+  //               padding: 2%;
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 </style>

@@ -147,7 +147,6 @@
     ?.validate().then(async () => {
       try {
         isLoading.value = true;
-        // showLoadingToast('登录中...')
         const { data } = await register({
           userName: registerForm.username,
           userEmail: registerForm.email,
@@ -158,7 +157,7 @@
         setLoginState(LoginStateEnum.REGISTER_SUCCESS)
 
       } finally {
-        
+        message.success('Register successfully!')
         isLoading.value = false
       }
 

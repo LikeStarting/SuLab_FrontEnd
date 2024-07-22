@@ -27,7 +27,7 @@
                         <div v-if="activeKey == 0">
                             <div class="example">
                                 <span>
-                                    <SvgIcon iconName="icon-lizi" className="example-icon"/>
+                                    <SvgIcon iconName="icon-example" className="example-icon"/>
                                     File Example
                                 </span>
                             </div>

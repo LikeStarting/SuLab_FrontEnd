@@ -1,7 +1,7 @@
 <template>
     <div class="software-wrapper common-box">
         <div>
-            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" iconTitleClass="a" :algorithmName=algorithmName :content="description"/>
+            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmName :content="description"/>
             <div class="AI-tool">
                 <div class="tool-use">
                     <div class="tab-bar">
@@ -85,7 +85,7 @@
                                     </a-form-item>
                                 </a-form>    
                             </a-spin>
-                            
+
                             <SinglePredictResult :columns="singleColumns" :data="singleData" />
                         </div>
                         <div class="upload-box" key="2" v-if="activeKey == 1" tab="Tab 2" force-render>
@@ -131,7 +131,7 @@
     import { useUserStore } from '@/store/modules/user'
     import { PredictResult, useSolfWareStore } from '@/store/modules/solfWare'
 
-    const AlgorithmName = 'DSPE'
+    const AlgorithmName = 'MGSF'
     const formRef = ref();
     const router = useRouter()
     const userStore = useUserStore()
@@ -157,15 +157,15 @@
     });
 
     const Example = {
-        drugA: 'albendazole',
-        smilesA: 'CCCSc1ccc2[nH]c(NC(=O)OC)nc2c1',
-        drugB: 'Magnesium isoglycyrrhizinate',
-        smilesB: 'C[C@]12CC[C@](C[C@@H]1C3=CC(=O)[C@@H]4[C@]5(CC[C@@H](C([C@@H]5CC[C@]4([C@@]3(CC2)C)C)(C)C)O[C@@H]6[C@@H]([C@H]([C@@H]([C@H](O6)C(=O)[O-])O)O)O[C@H]7[C@@H]([C@H]([C@@H]([C@H](O7)C(=O)[O-])O)O)O)C)(C)C(=O)O.[Mg+2]',
-        clineName: 'AE'
+        drugA: 'ABT-888',
+        smilesA: 'C[C@@]1(CCCN1)C2=NC3=C(C=CC=C3N2)C(=O)N.Cl.Cl',
+        drugB: 'BORTEZOMIB',
+        smilesB: 'B([C@H](CC(C)C)NC(=O)[C@H](CC1=CC=CC=C1)NC(=O)C2=NC=CN=C2)(O)O',
+        clineName: 'A2058'
     }
 
     const algorithmName = AlgorithmName
-    const description = `The DSPE model makes full use of drug-target interaction information and smiles structures of drugs to predict drug-drug synergies. The graph attention mechanism with residuals (resGAT) is used to obtain the potential feature vector of the drug. The graph attention network (GAT) can extract deeper drug characteristics and interactions, and the addition of residual connections helps to alleviate the problem of gradient disappearance, so that the interactions between drug molecules can be captured more effectively and the drug characteristics can be more accurately represented. At the same time, by obtaining protein-protein (PPI) network data associated with echinococcosis and using node2vec and attention weight aggregation, a richer and more differentiated representation of disease features can be obtained. In addition, the data information of single drugs is introduced, which effectively solves the problem of insufficient training data of drug combinations, and improves the prediction accuracy of new diseases with limited data. DSPE enables efficient and accurate prediction of drug combination synergies.`
+    const description = `The CaSynergy algorithm is an innovative predictive model for drug synergy that integrates causal inference and attention mechanisms. It first utilizes the backdoor criterion from causal inference to identify key causal genes in cell lines that affect the synergistic effects of drug triplets, enhancing the model's interpretability. Then, it constructs a specific protein-protein interaction network using the Steiner tree algorithm, providing a structural foundation for the integration of drug combination and cell line information. CaSynergy further employs a cross-attention mechanism and Hadamard product technique to fuse drug combination and cell line features, improving the model's predictive accuracy for drug interactions. In experiments, CaSynergy outperformed the most advanced existing models on the latest two drug combination datasets, demonstrating its high efficiency in identifying synergistic drug combinations. Additionally, the algorithm's causal attention learning layer effectively reduces confounding effects through attention mechanisms and backdoor adjustments, enhancing the reliability of predictions. The introduction of the CaSynergy algorithm provides a new, more accurate, and interpretable method for predicting drug synergy, with the potential to play a significant role in the fields of drug discovery and personalized medicine.`
 
     const isInputComplete = ref(false)
     const activeKey = ref(0)

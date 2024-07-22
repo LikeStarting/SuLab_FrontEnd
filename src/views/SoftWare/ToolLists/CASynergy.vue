@@ -34,56 +34,58 @@
                         <div v-if="activeKey == 0">
                             <div class="example">
                                 <span  @click="handleInputExample">
-                                    <SvgIcon iconName="icon-lizi" className="example-icon"/>
+                                    <SvgIcon iconName="icon-example" className="example-icon"/>
                                     An Example
                                 </span>
                             </div>
-                            <a-form
-                                :model="formState"
-                                ref="formRef"
-                                autocomplete="off"
-                                @validate="handleValidate"
-                            >
-                                <a-form-item
-                                    label="Drug A"
-                                    name="drugA"
-                                    :rules="[{ required: true, message: 'Please input an Drug!' }]"
+                            <a-spin :spinning="spinning" tip="Loading...">
+                                <a-form
+                                    :model="formState"
+                                    ref="formRef"
+                                    autocomplete="off"
+                                    @validate="handleValidate"
                                 >
-                                    <a-input v-model:value="formState.drugA" />
-                                </a-form-item>
+                                    <a-form-item
+                                        label="Drug A"
+                                        name="drugA"
+                                        :rules="[{ required: true, message: 'Please input an Drug!' }]"
+                                    >
+                                        <a-input v-model:value="formState.drugA" />
+                                    </a-form-item>
 
-                                <a-form-item
-                                    label="SMILES A"
-                                    name="smilesA"
-                                    :rules="[{ required: true, message: 'Please input an SMILES!' }]"
-                                >
-                                    <a-input v-model:value="formState.smilesA" />
-                                </a-form-item>
+                                    <a-form-item
+                                        label="SMILES A"
+                                        name="smilesA"
+                                        :rules="[{ required: true, message: 'Please input an SMILES!' }]"
+                                    >
+                                        <a-input v-model:value="formState.smilesA" />
+                                    </a-form-item>
 
-                                <a-form-item
-                                    label="Drug B"
-                                    name="drugB"
-                                    :rules="[{ required: true, message: 'Please input an Drug!' }]"
-                                >
-                                    <a-input v-model:value="formState.drugB" />
-                                </a-form-item>
-                                
-                                <a-form-item
-                                    label="SMILES B"
-                                    name="smilesB"
-                                    :rules="[{ required: true, message: 'Please input an SMILES!' }]"
-                                >
-                                    <a-input v-model:value="formState.smilesB" />
-                                </a-form-item>
-                                <a-form-item
-                                    label="Cline Name"
-                                    name="clineName"
-                                    :rules="[{ required: true, message: 'Please input an Cline name!' }]"
-                                >
-                                    <a-input v-model:value="formState.clineName" />
-                                </a-form-item>
-                            </a-form>    
-                            
+                                    <a-form-item
+                                        label="Drug B"
+                                        name="drugB"
+                                        :rules="[{ required: true, message: 'Please input an Drug!' }]"
+                                    >
+                                        <a-input v-model:value="formState.drugB" />
+                                    </a-form-item>
+                                    
+                                    <a-form-item
+                                        label="SMILES B"
+                                        name="smilesB"
+                                        :rules="[{ required: true, message: 'Please input an SMILES!' }]"
+                                    >
+                                        <a-input v-model:value="formState.smilesB" />
+                                    </a-form-item>
+                                    <a-form-item
+                                        label="Cline Name"
+                                        name="clineName"
+                                        :rules="[{ required: true, message: 'Please input an Cline name!' }]"
+                                    >
+                                        <a-input v-model:value="formState.clineName" />
+                                    </a-form-item>
+                                </a-form>    
+                            </a-spin>
+
                             <SinglePredictResult :columns="singleColumns" :data="singleData" />
                         </div>
                         <div class="upload-box" key="2" v-if="activeKey == 1" tab="Tab 2" force-render>
@@ -167,7 +169,7 @@
 
     const isInputComplete = ref(false)
     const activeKey = ref(0)
-
+    const spinning = ref(false)
 
     const preprocessColumns = (results: any) => {
         if (!results || results.length == 0) return []
@@ -188,7 +190,8 @@
                 title,
                 dataIndex: value,
                 customRender,
-                align: 'center'
+                align: 'center',
+                ellipsis: true,
             }
         })
 
@@ -259,7 +262,7 @@
         solfWareStore.GetAlgorithmResults(formData).then((res) => {
             fileList.value = [];
             uploading.value = false;
-            message.success('Predict successfully.');
+            message.success('Upload successfully.');
             const { href } = router.resolve({
                 name: 'SoftWareResultPage',
             })
@@ -281,7 +284,7 @@
             ?.validate().then(async () => {
             try {
                 uploading.value = true;
-                message.loading({ content: 'Predict...', key });
+                spinning.value = true;
                 const { drugA, smilesA, drugB, smilesB, clineName } = formState
                 const { data } = await callAlgorithmWithSingle({
                     algorithmName,
@@ -303,9 +306,11 @@
             } finally {
                 isInputComplete.value = false
                 uploading.value = false
+                spinning.value = false
             }
             }).catch((e) => {
                 uploading.value = false
+                spinning.value = false
                 message.error({ content: 'Predict Failed!', key, duration: 1 });
             })
     }
