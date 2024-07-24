@@ -20,6 +20,7 @@
     margin-top: 16px;
       .content {
         :deep(.ant-table) {
+          height: 145px;
           .smiles-svg {
               max-width: 192px;
               max-height: 80px;

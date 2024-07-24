@@ -1,8 +1,7 @@
-import { callAlgorithmApi, getAlgorithmFileExample } from '@/api/algorithm'
+import { callAlgorithmApi, getAlgorithmFileExample, callAlgorithmWithSc, callAlgorithmWithSC } from '@/api/algorithm'
 import { createStorage } from '@/utils/storage'
 import { defineStore } from 'pinia'
-import { PREDICT_RESULTS } from '@/store/mutation-types'
-import { callAlgorithmApi } from '@/api/algorithm'
+import { PREDICT_RESULTS, PREDICT_RESULTS_SC } from '@/store/mutation-types'
 import { useUserStore } from '@/store/modules/user'
 
 const Storage = createStorage({ storage: localStorage })
@@ -17,8 +16,26 @@ export interface PredictResult {
   Pred_Score: number
 }
 
+export interface PredictSCResult {
+  Disease_Name: string
+  Pred: number
+  DrugB_Name: string
+  DrugB_Svg: string
+  Pred_Score: number
+}
+
+export  interface SCResults {
+  Disease_Name: string
+  Pred: number
+  result: Array<PredictSCResult>
+}
+
 interface ISolfWareState {
   predictResults: Array<PredictResult>
+}
+
+interface ISolfWareSCState {
+  predictSCResults: Array<SCResults>
 }
 
 export const useSolfWareStore = defineStore({
@@ -46,6 +63,43 @@ export const useSolfWareStore = defineStore({
           .then((res) => {
             const { data } = res
             this.setPredictResults(data)
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+  }
+})
+
+
+export const useSolfWareSCStore = defineStore({
+  id: 'app-algorithmSC',
+  state: (): ISolfWareSCState => ({
+    predictSCResults: []
+  }),
+  getters: {
+    getPredictSCResults(): Array<SCResults> {
+      if (this.predictSCResults.length !== 0) {
+        return this.predictSCResults
+      }
+      return Storage.get(PREDICT_RESULTS_SC, '') || []
+    }
+  },
+  actions: {
+    setPredictSCResults(results: Array<SCResults> | []) {
+      this.predictSCResults = results
+      Storage.set(PREDICT_RESULTS_SC, results)
+    },
+
+    async GetAlgorithmResults(params: FormData) {
+      return new Promise((resolve, reject) => {
+        callAlgorithmWithSC(params)
+          .then((res) => {
+            const { data } = res
+            console.log('data===', data)
+            this.setPredictSCResults(data)
             resolve(res)
           })
           .catch((error) => {

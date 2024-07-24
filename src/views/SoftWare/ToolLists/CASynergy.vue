@@ -95,25 +95,27 @@
                                     File Example
                                 </span>
                             </div>
-                            <a-upload-dragger
-                                v-model:fileList="fileList"
-                                name="file"
-                                :maxCount="1"
-                                :multiple="false"
-                                :beforeUpload="beforeUpload"
-                                @remove="handleRemove"
-                                @drop="handleDrop"
-                            >
-                                <div class="btn-inner">
-                                    <p class="ant-upload-drag-icon">
-                                    <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                    </p>
-                                    <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                    <p class="ant-upload-hint">
-                                        sdf and csv formats only, max file size: 20MB
-                                    </p>
-                                </div>
-                            </a-upload-dragger>
+                            <div class="upload-content">
+                                <a-upload-dragger
+                                    v-model:fileList="fileList"
+                                    name="file"
+                                    :maxCount="1"
+                                    :multiple="false"
+                                    :beforeUpload="beforeUpload"
+                                    @remove="handleRemove"
+                                    @drop="handleDrop"
+                                >
+                                    <div class="btn-inner">
+                                        <p class="ant-upload-drag-icon">
+                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                        </p>
+                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                        <p class="ant-upload-hint">
+                                            sdf and csv formats only, max file size: 20MB
+                                        </p>
+                                    </div>
+                                </a-upload-dragger>
+                            </div>
                         </div>
                     </div>
                 </div>

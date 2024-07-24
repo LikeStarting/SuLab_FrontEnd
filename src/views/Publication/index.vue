@@ -2,15 +2,18 @@
     <div class="publication-wrapper common-box">
         <div class="search">
             <a-row justify="space-between">               
-                <a-col :span="6">
-                    <a-input v-model:value="keyWord" placeholder="Search">
-                        <template #suffix>
-                            <SvgIcon iconName="icon-SEARCH" className="icon-search" />
+                <a-col :span="12">
+                    <a-input-search v-model:value="keyWord" placeholder="Search" @search="handleSearch">
+                        <template #enterButton>
+                            <a-button><SvgIcon iconName="icon-SEARCH" className="icon-search" /></a-button>
                         </template>
-                    </a-input>
+                    </a-input-search>
                 </a-col>
             </a-row>
         </div>
+
+        <a-pagination class="pagination-top" v-model:current="currentPage" :defaultPageSize=4 show-quick-jumper :total="totalCount" @change="handleChange" />
+
         <div class="publications">
             <div class="publications-lists">
                 <template v-if="!loading">
@@ -53,6 +56,18 @@
                         </a-col>
                     </a-row>
                 </template>
+
+                <div class="empty-box" v-if="!loading && publications.length == 0">
+                    <a-row >
+                        <a-empty>
+                            <template #description>
+                                <span>
+                                    No data available.
+                                </span>
+                            </template>
+                        </a-empty>
+                    </a-row>
+                </div>
                 <template v-if="loading">
                     <a-row class="list" v-for="item in pageSize" :key="item">
                         <a-col class="pic" :span="6">
@@ -73,7 +88,7 @@
                 </template>
             </div>
         </div>
-        <a-pagination v-model:current="currentPage" show-quick-jumper :total="totalCount" @change="handleChange" />
+        <a-pagination v-model:current="currentPage" :defaultPageSize=4 show-quick-jumper :total="totalCount" @change="handleChange" />
     </div>
 </template>
 
@@ -81,26 +96,46 @@
     import { useRouter } from 'vue-router'
     import { message } from 'ant-design-vue';
     import { useUserStore } from '@/store/modules/user'
-    import { getAllPublications } from '@/api/publication'
+    import { getAllPublications, getPublicationsBySearch } from '@/api/publication'
 
     const router = useRouter()
     const userStore = useUserStore()
 
     const keyWord = ref('')
     const totalCount = ref(0)
-    const currentPage = ref(0)
-    const pageSize = ref(3)
+    const currentPage = ref(1)
+    const pageSize = ref(4)
     const loading = ref<boolean>(true)
 
     const publications = ref(<any>[])
+        
+    const handleSearch = () => {
+        if (!keyWord.value) return 
+        loading.value = true
+        getPublicationsBySearch({
+            articleName: keyWord.value,
+            introduction: keyWord.value,
+            page: currentPage.value - 1,
+            limit: pageSize.value
+        }).then((res) => {
+            const { data, count } = res
+            publications.value = data
+            totalCount.value = count
+            loading.value = false
+        }, (error) => {
+            loading.value = false
+        })
+    }
 
     getAllPublications({
-        page: currentPage.value,
+        page: currentPage.value - 1,
         limit: pageSize.value
     }).then((res) => {
         const { data, count } = res
         publications.value = data
         totalCount.value = count
+        loading.value = false
+    }, (error) => {
         loading.value = false
     })
     
@@ -108,7 +143,7 @@
     const handleChange = (page, pageSize) => {
         loading.value = true
         getAllPublications({
-            page,
+            page: page - 1,
             limit: pageSize
         }).then((res) => {
             const { data, count } = res
@@ -123,10 +158,18 @@
 .publication-wrapper {
     .search {
         padding: 20px 0;
-        .ant-input-affix-wrapper {
-            padding-top: 8px;
-            padding-bottom: 8px;
-            font-size: 16px;
+        :deep(.ant-input-group) {
+            .ant-input {
+                padding-top: 8px;
+                padding-bottom: 8px;
+                font-size: 16px;
+                line-height: 1.8;
+            }
+            .ant-input-group-addon {
+                .ant-input-search-button {
+                    height: 46px;
+                }
+            }
         }
         :deep(.ant-select-selector .ant-select-selection-search-input) {
             height: 46px;
@@ -140,8 +183,8 @@
     }
 
     .publications {
+        margin-top: 20px;
         padding: 20px 0;
-        border-top: 1px solid #ddd;
         .publications-lists {
             .list {
                 align-items: center;
@@ -234,7 +277,21 @@
                     }
                 }
             }
+            .empty-box {
+                margin-bottom: 20px;
+                .ant-row {
+                    justify-content: center;
+                    .ant-empty {
+                        padding: 50px 0;
+                    }
+                }
+            }
         }
+    }
+
+    .pagination-top {
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
     }
 
     .ant-pagination {

@@ -1,7 +1,7 @@
 <template>
     <div class="software-wrapper common-box">
         <div>
-            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" iconTitleClass="a" :algorithmName=algorithmName :content="description"/>
+            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmName :content="description"/>
             <div class="AI-tool">
                 <div class="tool-use">
                     <div class="tab-bar">
@@ -20,7 +20,7 @@
                             <a-button 
                                 type="primary" 
                                 html-type="submit"
-                                :disabled="activeKey == 0 ? !isInputComplete : (!fileList || fileList.length === 0)"
+                                :disabled="activeKey == 0 ? !isInputComplete : (!fileList || fileList.length === 0 || secondFormState.drugName == '')"
                                 :loading="uploading" 
                                 @click="handleSubmit">
                                 {{ uploading ? 'Running' : 'Start Run' }}
@@ -78,10 +78,10 @@
                                     </a-form-item>
                                     <a-form-item
                                         label="Disease Name"
-                                        name="diseaseName"
+                                        name="clineName"
                                         :rules="[{ required: true, message: 'Please input an Disease name!' }]"
                                     >
-                                        <a-input v-model:value="formState.diseaseName" />
+                                        <a-input v-model:value="formState.clineName" />
                                     </a-form-item>
                                 </a-form>    
                             </a-spin>
@@ -95,25 +95,38 @@
                                     File Example
                                 </span>
                             </div>
-                            <a-upload-dragger
-                                v-model:fileList="fileList"
-                                name="file"
-                                :maxCount="1"
-                                :multiple="false"
-                                :beforeUpload="beforeUpload"
-                                @remove="handleRemove"
-                                @drop="handleDrop"
-                            >
-                                <div class="btn-inner">
-                                    <p class="ant-upload-drag-icon">
-                                    <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                    </p>
-                                    <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                    <p class="ant-upload-hint">
-                                        sdf and csv formats only, max file size: 20MB
-                                    </p>
+                            <div class="upload-content">
+                                <div class="drug-select">
+                                    <a-form 
+                                        :model="secondFormState"
+                                        ref="secondFormRef"
+                                        autocomplete="off"
+                                    >
+                                        <a-form-item name="drugName" label="Drug Name" :rules="[{ required: true, message: 'please select a drug!' }]">
+                                            <a-select show-search v-model:value="secondFormState.drugName" :options="drugLists"></a-select>
+                                        </a-form-item>
+                                    </a-form>
                                 </div>
-                            </a-upload-dragger>
+                                <a-upload-dragger
+                                    v-model:fileList="fileList"
+                                    name="file"
+                                    :maxCount="1"
+                                    :multiple="false"
+                                    :beforeUpload="beforeUpload"
+                                    @remove="handleRemove"
+                                    @drop="handleDrop"
+                                >
+                                    <div class="btn-inner">
+                                        <p class="ant-upload-drag-icon">
+                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                        </p>
+                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                        <p class="ant-upload-hint">
+                                            sdf and csv formats only, max file size: 20MB
+                                        </p>
+                                    </div>
+                                </a-upload-dragger>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -129,14 +142,15 @@
     import type { UploadProps, UploadChangeParam } from 'ant-design-vue';
     import { getAlgorithmFileExample, callAlgorithmWithSingle } from '@/api/algorithm';
     import { useUserStore } from '@/store/modules/user'
-    import { PredictResult, useSolfWareStore } from '@/store/modules/solfWare'
+    import { PredictResult, useSolfWareSCStore } from '@/store/modules/solfWare'
 
     const AlgorithmName = 'DSPE'
-    const formRef = ref();
+    const formRef = ref()
+    const secondFormRef = ref()
     const router = useRouter()
     const userStore = useUserStore()
     const token = userStore.getToken
-    const solfWareStore =  useSolfWareStore()
+    const solfWareStore =  useSolfWareSCStore()
 
     const singleColumns = ref([])
     const singleData = ref([])
@@ -146,22 +160,26 @@
         smilesA: string;
         drugB: string;
         smilesB: string;
-        diseaseName: string;
+        clineName: string;
     }
     const formState = reactive<FormState>({
         drugA: '',
         smilesA: '',
         drugB: '',
         smilesB: '',
-        diseaseName: ''
+        clineName: ''
     });
+
+    const secondFormState = reactive({
+        drugName: ''
+    })
 
     const Example = {
         drugA: 'albendazole',
         smilesA: 'CCCSc1ccc2[nH]c(NC(=O)OC)nc2c1',
         drugB: 'Magnesium isoglycyrrhizinate',
         smilesB: 'C[C@]12CC[C@](C[C@@H]1C3=CC(=O)[C@@H]4[C@]5(CC[C@@H](C([C@@H]5CC[C@]4([C@@]3(CC2)C)C)(C)C)O[C@@H]6[C@@H]([C@H]([C@@H]([C@H](O6)C(=O)[O-])O)O)O[C@H]7[C@@H]([C@H]([C@@H]([C@H](O7)C(=O)[O-])O)O)O)C)(C)C(=O)O.[Mg+2]',
-        diseaseName: 'AE'
+        clineName: 'AE'
     }
 
     const algorithmName = AlgorithmName
@@ -170,6 +188,13 @@
     const isInputComplete = ref(false)
     const activeKey = ref(0)
     const spinning = ref(false)
+
+    const drugLists = [
+        { label: 'Albendazole', value: 'Albendazole' },
+        { label: 'Flubendazole', value: 'Flubendazole' },
+        { label: 'Mebendazole', value: 'Mebendazole' },
+        { label: 'Praziquantel', value: 'Praziquantel' }
+    ]
 
     const preprocessColumns = (results: any) => {
         if (!results || results.length == 0) return []
@@ -215,7 +240,7 @@
         formState.smilesA = Example.smilesA
         formState.drugB = Example.drugB
         formState.smilesB = Example.smilesB
-        formState.diseaseName = Example.diseaseName
+        formState.clineName = Example.clineName
 
         isInputComplete.value = true
     }
@@ -256,15 +281,16 @@
         // });
         const file = fileList.value[0].originFileObj
         formData.append('file', file);
-        formData.append('algorithmName', algorithmName);
+        formData.append('algorithmName', AlgorithmName);
+        formData.append('drugName', secondFormState.drugName);
         uploading.value = true;
 
         solfWareStore.GetAlgorithmResults(formData).then((res) => {
             fileList.value = [];
             uploading.value = false;
-            message.success('Upload successfully.');
+            message.success('Predict successfully.');
             const { href } = router.resolve({
-                name: 'SoftWareResultPage',
+                name: 'SoftWareSCResultPage',
             })
             window.open(href, '_blank')
         })
@@ -285,14 +311,14 @@
             try {
                 uploading.value = true;
                 spinning.value = true;
-                const { drugA, smilesA, drugB, smilesB, diseaseName } = formState
+                const { drugA, smilesA, drugB, smilesB, clineName } = formState
                 const { data } = await callAlgorithmWithSingle({
                     algorithmName,
                     drugA,
                     smilesA,
                     drugB,
                     smilesB,
-                    diseaseName
+                    clineName
                 }, token)
 
                 singleColumns.value = preprocessColumns(data)
@@ -302,7 +328,7 @@
                 formState.smilesA = ''
                 formState.drugB = ''
                 formState.smilesB = ''
-                formState.diseaseName = ''
+                formState.clineName = ''
             } finally {
                 isInputComplete.value = false
                 uploading.value = false
@@ -339,6 +365,27 @@
                 .bg-box {
                     height: calc(100% - 235px);
                     background: url("../../../assets/images/predict-bg.png") no-repeat center / cover;
+                }
+            }
+            .tab-content {
+                .upload-box {
+                    .upload-content {
+                        height: 602px;
+                        .drug-select {
+                            padding: 0 20px;
+                            .ant-form-item {
+                                margin-bottom: 0;
+                                :deep(.ant-select-selector) {
+                                    .ant-select-selection-item {
+                                        line-height: 36px;
+                                    }
+                                }
+                            }
+                        }
+                        .ant-upload-wrapper {
+                            height: calc(100% - 100px);
+                        }
+                    }
                 }
             }
         }

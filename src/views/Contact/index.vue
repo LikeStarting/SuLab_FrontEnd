@@ -12,11 +12,11 @@
                     </div>
                     <div class="item">
                         <h3>PHONE</h3>
-                        <p>xxxxxx</p>
+                        <p>15755146125</p>
                     </div>
                     <div class="item">
                         <h3>E-MAIL</h3>
-                        <p>xxxxx@xxxxxxx</p>
+                        <p>suyansen@ahu.edu.cn</p>
                     </div>
                 </a-col>
                 <a-col class="map" :span="12">
