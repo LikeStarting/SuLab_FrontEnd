@@ -61,33 +61,33 @@
                 label: 'Molecular optimization',
                 children: [
                     {
-                        label: h(RouterLink, { to: '/software/momo', }, () => 'MOMO'),
-                        key: '/software/momo',
-                    },
-                    {
-                        label: h(RouterLink, { to: '/software/cdmo', }, () => 'CDMO'),
+                        label: h(RouterLink, { to: '/software/cdmo', }, () => 'Single-property Optimization'),
                         key: '/software/cdmo',
                     },
+                    {
+                        label: h(RouterLink, { to: '/software/momo', }, () => 'Multi-property Optimization'),
+                        key: '/software/momo',
+                    }     
                 ],
             },
             {
                 type: 'group',
-                label: 'Drug combinations and Drug synergy',
+                label: 'Drug combinations prediction',
                 children: [
                     {
-                        label: h(RouterLink, { to: '/software/casynergy', }, () => 'CASynergy'),
+                        label: h(RouterLink, { to: '/software/casynergy', }, () => 'Prediction of Novel Drug Combinations for Cancer Treatment'),
                         key: '/software/casynergy',
                     },
                     {
-                        label: h(RouterLink, { to: '/software/transferban', }, () => 'TransferBan'),
+                        label: h(RouterLink, { to: '/software/transferban', }, () => 'Prediction of Novel Drug Combinations for Echinococcosis Treatment'),
                         key: '/software/transferban',
                     },
                     {
-                        label: h(RouterLink, { to: '/software/dspe', }, () => 'DSPE'),
+                        label: h(RouterLink, { to: '/software/dspe', }, () => 'Prediction of Sensitizing Drug Combinations'),
                         key: '/software/dspe',
                     },
                     {
-                        label: h(RouterLink, { to: '/software/mgsf', }, () => 'MGSF'),
+                        label: h(RouterLink, { to: '/software/mgsf', }, () => 'Prediction of Drug Side Effects'),
                         key: '/software/mgsf',
                     },
                 ],

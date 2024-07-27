@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { storage } from '@/utils/storage'
+import { useUserStoreWidthOut } from '@/store/modules/user'
 // import NProgress from 'nprogress'
 // import 'nprogress/nprogress.css'
 
@@ -36,7 +39,7 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/index.vue'),
         },
         {
-          path: '/software/result',
+          path: '/software/result/1',
           name: 'SoftWareResultPage',
           meta: {
             title: 'Result | Su Lab',
@@ -44,6 +47,16 @@ const routes: RouteRecordRaw[] = [
             keepAlive: false
           },
           component: () => import('@/views/SoftWare/PredictResult.vue'),
+        },
+        {
+          path: '/software/result/2',
+          name: 'SoftWareSCResultPage',
+          meta: {
+            title: 'Result | Su Lab',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/PredictSCResult.vue'),
         },
         {
           path: '/software/momo',
@@ -157,6 +170,9 @@ const routes: RouteRecordRaw[] = [
   
 
   router.beforeEach((to, from ,next) => {
+    // const userStore = useUserStoreWidthOut()
+    // const token = userStore.getToken
+
     const Document:any = document
     if (to.meta.title) {
       Document.title = to.meta.title
@@ -165,9 +181,6 @@ const routes: RouteRecordRaw[] = [
   })
   // router.beforeEach((to, from, next) => {
   //   // const token = getItem('user')
-  //   // if (to.meta.title) {
-  //   //   document.title = `${to.meta.title}-ADK-blog 我的个人小站`
-  //   // }
   //   // if (to.meta.requireAuth) {
   //   //   if (token) {
   //   //     NProgress.start()

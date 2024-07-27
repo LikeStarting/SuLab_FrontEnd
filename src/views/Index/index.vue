@@ -3,9 +3,9 @@
         <div class="introducation common-box">
             <a-row>
                 <a-col :span="11">
-                    <h2>AHU Bio Platform</h2>
+                    <h2>AHU BI Platform</h2>
                     <p>
-                        At AHU-Bio-Platform (Anhui University Bioinformatics Laboratory Platform), we are dedicated to creating an efficient bioinformatics platform by combining the most advanced AI-based drug design methods and bioinformatics technologies. Our research focuses on developing new computational biology methods by incorporating artificial intelligence algorithms, such as drug molecule optimization, drug combinations, drug synergy, medical image segmentation, and single-cell sequencing. Using these methods, we investigate the molecular mechanisms underlying the development of serious diseases such as cancer, infectious diseases, and metabolic disorders, and accordingly develop therapeutic agents.
+                        At AHU-BI-Platform (Anhui University Bioinformatics Laboratory Platform), we are dedicated to creating an efficient bioinformatics platform by combining the most advanced AI-based drug design methods and bioinformatics technologies. Our research focuses on developing new computational biology methods by incorporating artificial intelligence algorithms, such as drug molecule optimization, drug combinations, drug synergy, medical image segmentation, and single-cell sequencing. Using these methods, we investigate the molecular mechanisms underlying the development of serious diseases such as cancer, infectious diseases, and metabolic disorders, and accordingly develop therapeutic agents.
                     </p>
                     <p>
                         Currently, we have designed several algorithmic tools, which are available on our platform for public access, and our research findings have been published in academic journals or filed as patents.

@@ -78,10 +78,10 @@
                                     </a-form-item>
                                     <a-form-item
                                         label="Disease Name"
-                                        name="diseaseName"
+                                        name="clineName"
                                         :rules="[{ required: true, message: 'Please input an Disease name!' }]"
                                     >
-                                        <a-input v-model:value="formState.diseaseName" />
+                                        <a-input v-model:value="formState.clineName" />
                                     </a-form-item>
                                 </a-form>    
                             </a-spin>
@@ -96,25 +96,27 @@
                                     File Example
                                 </span>
                             </div>
-                            <a-upload-dragger
-                                v-model:fileList="fileList"
-                                name="file"
-                                :maxCount="1"
-                                :multiple="false"
-                                :beforeUpload="beforeUpload"
-                                @remove="handleRemove"
-                                @drop="handleDrop"
-                            >
-                                <div class="btn-inner">
-                                    <p class="ant-upload-drag-icon">
-                                    <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                    </p>
-                                    <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                    <p class="ant-upload-hint">
-                                        sdf and csv formats only, max file size: 20MB
-                                    </p>
-                                </div>
-                            </a-upload-dragger>
+                            <div class="upload-content">
+                                <a-upload-dragger
+                                    v-model:fileList="fileList"
+                                    name="file"
+                                    :maxCount="1"
+                                    :multiple="false"
+                                    :beforeUpload="beforeUpload"
+                                    @remove="handleRemove"
+                                    @drop="handleDrop"
+                                >
+                                    <div class="btn-inner">
+                                        <p class="ant-upload-drag-icon">
+                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                        </p>
+                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                        <p class="ant-upload-hint">
+                                            sdf and csv formats only, max file size: 20MB
+                                        </p>
+                                    </div>
+                                </a-upload-dragger>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -146,14 +148,14 @@
         smilesA: string;
         drugB: string;
         smilesB: string;
-        diseaseName: string;
+        clineName: string;
     }
     const formState = reactive<FormState>({
         drugA: '',
         smilesA: '',
         drugB: '',
         smilesB: '',
-        diseaseName: ''
+        clineName: ''
     });
 
     const Example = {
@@ -161,7 +163,7 @@
         smilesA: 'CCCSC1=CC2=C(C=C1)N=C(N2)NC(=O)OC',
         drugB: 'Allopurinol',
         smilesB: 'C1=NNC2=C1C(=O)NC=N2',
-        diseaseName: 'AE'
+        clineName: 'AE'
     }
 
     const algorithmName = 'TransferBAN-Syn'
@@ -215,7 +217,7 @@
         formState.smilesA = Example.smilesA
         formState.drugB = Example.drugB
         formState.smilesB = Example.smilesB
-        formState.diseaseName = Example.diseaseName
+        formState.clineName = Example.clineName
 
         isInputComplete.value = true
     }
@@ -285,14 +287,14 @@
             try {
                 uploading.value = true;
                 spinning.value = true;
-                const { drugA, smilesA, drugB, smilesB, diseaseName } = formState
+                const { drugA, smilesA, drugB, smilesB, clineName } = formState
                 const { data } = await callAlgorithmWithSingle({
                     algorithmName,
                     drugA,
                     smilesA,
                     drugB,
                     smilesB,
-                    diseaseName
+                    clineName
                 }, token)
 
                 singleColumns.value = preprocessColumns(data)
@@ -302,7 +304,7 @@
                 formState.smilesA = ''
                 formState.drugB = ''
                 formState.smilesB = ''
-                formState.diseaseName = ''
+                formState.clineName = ''
             } finally {
                 isInputComplete.value = false
                 uploading.value = false

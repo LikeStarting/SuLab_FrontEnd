@@ -24,6 +24,16 @@ export function callAlgorithmApi(data: any): Promise<ListResult> {
       data
     });
 }
+export function callAlgorithmWithSC(data: any): Promise<ListResult> {
+  return http.request({
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    url: "/algorithm/dc/recommend",
+    method: "post",
+    data
+  });
+}
 
 export function callAlgorithmWithSingle(data: any): Promise<ListResult> {
   return http.request({

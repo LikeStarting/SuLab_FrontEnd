@@ -22,12 +22,12 @@
             }
             .tab-bar {
                 width: 21%;
+                min-width: 160px;
                 padding: 20px;
                 text-align: center;
                 border-radius: 16px;
                 -webkit-box-shadow: 0 0 8px 0 rgb(68, 190, 98);
                 box-shadow: 0 0 8px 0 rgb(68, 190, 98);
-
                 .tabBar-title {
                     font-size: 18px;
                     font-weight: 600;
@@ -105,16 +105,19 @@
                 }
                 .upload-box {
                     height: 100%;
-                    .ant-upload-wrapper {
-                        display: block;
-                        height: 606px;
-                        padding: 20px;
-                        padding-bottom: 0;
-                        .ant-upload-drag {
-                            .ant-upload-btn {
-                                .btn-inner {
-                                    display: table-cell;
-                                    vertical-align: middle;
+                    .upload-content {
+                        height: 602px;
+                        .ant-upload-wrapper {
+                            display: block;
+                            height: calc(100% - 30px);
+                            padding: 20px;
+                            padding-bottom: 0;
+                            .ant-upload-drag {
+                                .ant-upload-btn {
+                                    .btn-inner {
+                                        display: table-cell;
+                                        vertical-align: middle;
+                                    }
                                 }
                             }
                         }
@@ -154,5 +157,31 @@
                 }
             }
         }
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .software-wrapper {
+        .AI-tool {
+            .tool-use {
+                .tab-bar {
+                    padding: 1.6%;
+                    .tabBar-title {
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ant-form .ant-btn-primary {
+    background-color: $skyblue-color;
+    box-shadow: 0 2px 6px $hover-color;
+    &:hover {
+        background-color: $skyblue-hover-color;
+    }
+    &:disabled {
+        color: #fff;
     }
 }

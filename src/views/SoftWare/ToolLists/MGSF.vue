@@ -88,25 +88,27 @@
                                     File Example
                                 </span>
                             </div>
-                            <a-upload-dragger
-                                v-model:fileList="fileList"
-                                name="file"
-                                :maxCount="1"
-                                :multiple="false"
-                                :beforeUpload="beforeUpload"
-                                @remove="handleRemove"
-                                @drop="handleDrop"
-                            >
-                                <div class="btn-inner">
-                                    <p class="ant-upload-drag-icon">
-                                    <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                    </p>
-                                    <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                    <p class="ant-upload-hint">
-                                        sdf and csv formats only, max file size: 20MB
-                                    </p>
-                                </div>
-                            </a-upload-dragger>
+                            <div class="upload-content">
+                                <a-upload-dragger
+                                    v-model:fileList="fileList"
+                                    name="file"
+                                    :maxCount="1"
+                                    :multiple="false"
+                                    :beforeUpload="beforeUpload"
+                                    @remove="handleRemove"
+                                    @drop="handleDrop"
+                                >
+                                    <div class="btn-inner">
+                                        <p class="ant-upload-drag-icon">
+                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                        </p>
+                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                        <p class="ant-upload-hint">
+                                            sdf and csv formats only, max file size: 20MB
+                                        </p>
+                                    </div>
+                                </a-upload-dragger>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -155,7 +157,7 @@
     }
 
     const algorithmName = AlgorithmName
-    const description = `The CaSynergy algorithm is an innovative predictive model for drug synergy that integrates causal inference and attention mechanisms. It first utilizes the backdoor criterion from causal inference to identify key causal genes in cell lines that affect the synergistic effects of drug triplets, enhancing the model's interpretability. Then, it constructs a specific protein-protein interaction network using the Steiner tree algorithm, providing a structural foundation for the integration of drug combination and cell line information. CaSynergy further employs a cross-attention mechanism and Hadamard product technique to fuse drug combination and cell line features, improving the model's predictive accuracy for drug interactions. In experiments, CaSynergy outperformed the most advanced existing models on the latest two drug combination datasets, demonstrating its high efficiency in identifying synergistic drug combinations. Additionally, the algorithm's causal attention learning layer effectively reduces confounding effects through attention mechanisms and backdoor adjustments, enhancing the reliability of predictions. The introduction of the CaSynergy algorithm provides a new, more accurate, and interpretable method for predicting drug synergy, with the potential to play a significant role in the fields of drug discovery and personalized medicine.`
+    const description = `The MGSF-DDI algorithm is a drug combination prediction model based on substructure features and utilizes graph neural networks. The method predicts drug combinations by integrating drug feature information learned from both the microscopic level and the macroscopic network level. At the microscopic level, the algorithm uses drug SMILES to construct drug molecular graphs. First, it encodes drug features by chemically characterizing the drug atoms and obtains substructure sequence encoding features through random walks starting from each atom on the molecular graph. Then, a graph attention network is used to propagate and learn from these two features on the molecular graph. At the macroscopic network level, the method utilizes the PubChemFP substructure sequence encoding as the drug feature input. Initially, a soft threshold function is used to extract features from the sparse molecular fingerprint features, reducing dimensionality while retaining important information. Then, an association network is constructed for the drug combinations in the database, and the drug PubChemFP features are propagated and learned through a multi-layer graph convolutional network on this association network. Finally, the model fuses the features learned from both the microscopic level and the macroscopic network level through an adaptive weighted feature fusion method to more accurately predict drug interactions. Experiments demonstrate that our proposed model achieves significant improvements in DDI prediction tasks, providing new methods and insights for studying combination therapies and avoiding multi-drug interactions.`
 
     const isInputComplete = ref(false)
     const activeKey = ref(0)
@@ -336,8 +338,11 @@
                     }
                 }
                 .upload-box {
-                    .ant-upload-wrapper {
-                        height: 514px;
+                    .upload-content {
+                        height: 510px;
+                        .ant-upload-wrapper {
+                            height: calc(100% - 30px)
+                        }
                     }
                 }
             }
