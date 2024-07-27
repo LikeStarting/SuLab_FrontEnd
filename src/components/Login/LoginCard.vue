@@ -1,12 +1,13 @@
 <template>
   <a-card
+    class="login-card"
     v-if="getShow"
     style="width: 100%"
     :tab-list="tabListNoTitle"
     :active-tab-key="tabKey"
     @tabChange="key => onTabChange(key)"
   >
-    <div class="login-wrapper">
+    <div class="login-content">
       <a-form
         v-if="tabKey === 'wechat'"
         ref="formRef"
@@ -75,7 +76,7 @@
           <a-form-item name="remember" no-style>
             <a-checkbox v-model:checked="userInfo.remember">Remember me</a-checkbox>
           </a-form-item>
-          <a class="login-form-forgot" href="javascript:;">Forgot password</a>
+          <a class="link-forgot" href="javascript:;">Forgot password</a>
         </a-form-item>
         <a-form-item :data-delay="3">
           <a-button type="primary" class="login-btn" size="large" :loading="isLoading" @click="onSubmit">Login</a-button>
@@ -142,7 +143,6 @@
   }
 
   const onTabChange = (value: string) => {
-    console.log(value);
     tabKey.value = value;
   };
 
@@ -190,44 +190,88 @@
 
 
 <style lang="scss" scoped>
-  :global(.ant-card) {
+  :global(.login-card) {
+    margin-top: 20px;
     height: 470px;
+    border: none;
+    box-shadow: 0 2px 6px $theme-color;
   }
   :global(.ant-form-item.remember-box .ant-form-item-control-input-content) {
     display: flex;
     justify-content: space-between;
   }
-  :global(.ant-card .ant-form-item-control-input-content) {
+  :global(.login-card .ant-form-item-control-input-content) {
     text-align: center;
-
   }
     
-  :global(.ant-card .ant-input-affix-wrapper) {
+  :global(.login-card .ant-input-affix-wrapper) {
     padding-top: 8px;
     padding-bottom: 8px;
     font-size: 16px;
   }
   
-  :global(.ant-card .ant-input-prefix) {
+  :global(.login-card .ant-input-prefix) {
     color: #222;
   }
 
-  :global(.ant-card .ant-card-body) {
+  :global(.login-card .ant-card-body) {
+    margin-top: 10px;
     cursor: context-menu !important;
-    margin-top: 20px;
-    
   }
 
-  .login-wrapper {
-    .login-btn {
-      width: 100%;
-    }
-    .bottom-box {
-      text-align: center;
-      span {
-        cursor: pointer;
-        color: $theme-color;
+  .login-card {
+    :deep(.ant-tabs) {
+      line-height: 26px;
+      .ant-tabs-tab {
+        &.ant-tabs-tab-active {
+          .ant-tabs-tab-btn {
+            color: $active-color;
+          }
+        }
+        &:hover {
+          color: $active-color;
+        }
       }
+      .ant-tabs-ink-bar {
+        background-color: $active-color;
+      }
+    }
+  }
+
+
+  .login-content {
+    .ant-form {
+      .ant-form-item {
+        &.remember-box {
+          :deep(.ant-checkbox-wrapper) {
+            &:hover {
+              .ant-checkbox-checked:after {
+                border-color: $active-color;
+              }
+              .ant-checkbox-inner {
+                border-color: $light-activate-color;
+              }
+            }
+            .ant-checkbox {
+              &.ant-checkbox-checked {
+                .ant-checkbox-inner {
+                  background-color: $active-color;
+                  border-color: $active-color;
+                }
+              }
+              &:hover {
+                .ant-checkbox-inner {
+                  border-color: $light-activate-color;
+                }
+              }
+            }
+          }
+          .link-forgot {
+            color: $active-color;
+          }
+        }
+      }
+
     }
   } 
 </style>

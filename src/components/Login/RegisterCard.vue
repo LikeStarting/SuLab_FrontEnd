@@ -67,7 +67,7 @@
       </div>
     </a-form-item>
     <a-form-item :data-delay="3">
-      <a-button type="primary" class="register-btn" size="large" :loading="isLoading" @click="onSubmit">Sign Up</a-button>
+      <a-button type="primary" class="login-btn" size="large" :loading="isLoading" @click="onSubmit">Sign Up</a-button>
     </a-form-item>
 
     <div class="bottom-box">
@@ -169,12 +169,12 @@
 
 
 <style lang="scss" scoped>
-
   :global(.register-form) {
+    margin-top: 20px;
     height: 470px;
     padding: 24px;
-    border: 1px solid #f0f0f0;
     border-radius: 8px;
+    box-shadow: 0 2px 6px $theme-color;
   }
   :global(.ant-form-item.remember-box .ant-form-item-control-input-content) {
     display: flex;

@@ -174,3 +174,14 @@
         }
     }
 }
+
+.ant-form .ant-btn-primary {
+    background-color: $skyblue-color;
+    box-shadow: 0 2px 6px $hover-color;
+    &:hover {
+        background-color: $skyblue-hover-color;
+    }
+    &:disabled {
+        color: #fff;
+    }
+}

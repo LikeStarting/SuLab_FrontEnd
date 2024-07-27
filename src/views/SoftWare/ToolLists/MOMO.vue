@@ -17,7 +17,7 @@
                             </li>
                         </ul>
                         <a-form-item class="submit-btn">
-                            <a-button type="primary" html-type="submit">Start Run</a-button>
+                            <a-button type="primary" html-type="submit" disabled>Start Run</a-button>
                         </a-form-item>
                         <div class="bg-box">
                             
