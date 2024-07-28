@@ -1,13 +1,20 @@
 <template>
     <div class="publication-wrapper common-box">
         <div class="search">
-            <a-row justify="space-between">               
+            <a-row justify="flex-start">               
                 <a-col :span="12">
                     <a-input-search v-model:value="keyWord" placeholder="Search" @search="handleSearch">
                         <template #enterButton>
                             <a-button><SvgIcon iconName="icon-SEARCH" className="icon-search" /></a-button>
                         </template>
                     </a-input-search>
+                    
+                </a-col>
+                <a-col :span="4" class="reset-col">
+                    <div class="reset-btn" @click="handleResetSearch">
+                        <SvgIcon iconName="icon-icon_reseting" className="icon-reset" />
+                        <span>Reset</span>
+                    </div>
                 </a-col>
             </a-row>
         </div>
@@ -106,15 +113,35 @@
     const currentPage = ref(1)
     const pageSize = ref(4)
     const loading = ref<boolean>(true)
+    const isAllPublications = ref(true)
 
     const publications = ref(<any>[])
         
     const handleSearch = () => {
         if (!keyWord.value) return 
         loading.value = true
+        isAllPublications.value = false
         getPublicationsBySearch({
             articleName: keyWord.value,
             introduction: keyWord.value,
+            page: currentPage.value - 1,
+            limit: pageSize.value
+        }).then((res) => {
+            const { data, count } = res
+            publications.value = data
+            totalCount.value = count
+            loading.value = false
+        }, (error) => {
+            loading.value = false
+        })
+    }
+
+    const handleResetSearch = () => {
+        if (!keyWord.value) return 
+        keyWord.value = ''
+        currentPage.value = 1
+        isAllPublications.value = true
+        getAllPublications({
             page: currentPage.value - 1,
             limit: pageSize.value
         }).then((res) => {
@@ -139,10 +166,24 @@
         loading.value = false
     })
     
-    
     const handleChange = (page, pageSize) => {
         loading.value = true
-        getAllPublications({
+        if (isAllPublications.value) {
+            getAllPublications({
+                page: page - 1,
+                limit: pageSize
+            }).then((res) => {
+                const { data, count } = res
+                publications.value = data
+                totalCount.value = count
+                loading.value = false
+            }, (error) => {
+                loading.value = false
+            })
+        } else {
+            getPublicationsBySearch({
+            articleName: keyWord.value,
+            introduction: keyWord.value,
             page: page - 1,
             limit: pageSize
         }).then((res) => {
@@ -150,7 +191,10 @@
             publications.value = data
             totalCount.value = count
             loading.value = false
-        })
+        }, (error) => {
+                loading.value = false
+            })
+        }
     }
 </script>
 
@@ -174,12 +218,33 @@
         :deep(.ant-select-selector .ant-select-selection-search-input) {
             height: 46px;
         }
-    }
-
-    .icon-search {
-        width: 28px;
-        height: 28px;
-        cursor: pointer;
+        .icon-search {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+        }
+        .reset-col {
+            margin-left: 10px;
+            .reset-btn {
+                display: inline-block;
+                padding: 7px;
+                border: 1px solid #d9d9d9;
+                border-radius: 6px;
+                cursor: pointer;
+                .icon-reset {
+                    width: 30px;
+                    height: 30px;
+                }
+                &:hover {
+                    border: 1px solid #4096ff;
+                    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+                }
+                span {
+                    margin-left: 6px;
+                    font-weight: 600;
+                }
+            }
+        }
     }
 
     .publications {
