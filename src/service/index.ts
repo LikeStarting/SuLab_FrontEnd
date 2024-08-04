@@ -5,7 +5,7 @@ const configDefault = {
     // headers: {
     //   "Content-Type": ContentTypeEnum.FORM_URLENCODED
     // },
-    timeout: 6000,
+    timeout: 60000,
     baseURL: '/api',
     data: {}
 };

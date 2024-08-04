@@ -1,7 +1,7 @@
 <template>
     <div class="software-wrapper common-box">
         <div>
-            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmName :content="description"/>
+            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmTitle :content="description"/>
             <div class="AI-tool">
                 <div class="tool-use">
                     <div class="tab-bar">
@@ -37,6 +37,10 @@
                                     <SvgIcon iconName="icon-example" className="example-icon"/>
                                     An Example
                                 </span>
+                                <a  class="drug-link" href="https://go.drugbank.com/" target="_blank">
+                                    <SvgIcon iconName="icon-Allergy_Drug" className="drug-icon" />
+                                    DrugBank
+                                </a>
                             </div>
                             <a-spin :spinning="spinning" tip="Loading...">
                                 <a-form
@@ -45,6 +49,16 @@
                                     autocomplete="off"
                                     @validate="handleValidate"
                                 >
+                                    <!-- <a-form-item
+                                        label="Disease Name"
+                                        name="clineName"
+                                        :rules="[{ required: true, message: 'Please input an Disease name!' }]"
+                                    >
+                                        <a-input v-model:value="formState.clineName" />
+                                    </a-form-item> -->
+                                    <a-form-item name="clineName" label="Disease Name" :rules="[{ required: true, message: 'Please input an Disease name!' }]">
+                                        <a-select show-search v-model:value="formState.clineName" :options="diseaseLists"></a-select>
+                                    </a-form-item>
                                     <a-form-item
                                         label="Drug A"
                                         name="drugA"
@@ -76,18 +90,10 @@
                                     >
                                         <a-input v-model:value="formState.smilesB" />
                                     </a-form-item>
-                                    <a-form-item
-                                        label="Disease Name"
-                                        name="clineName"
-                                        :rules="[{ required: true, message: 'Please input an Disease name!' }]"
-                                    >
-                                        <a-input v-model:value="formState.clineName" />
-                                    </a-form-item>
                                 </a-form>    
                             </a-spin>
                         
                             <SinglePredictResult :columns="singleColumns" :data="singleData" />
-                            
                         </div>
                         <div class="upload-box" key="2" v-if="activeKey == 1" tab="Tab 2" force-render>
                             <div class="example">
@@ -112,7 +118,7 @@
                                         </p>
                                         <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
                                         <p class="ant-upload-hint">
-                                            sdf and csv formats only, max file size: 20MB
+                                            csv and xls formats only, max file size: 20MB
                                         </p>
                                     </div>
                                 </a-upload-dragger>
@@ -133,6 +139,8 @@
     import { getAlgorithmFileExample, callAlgorithmWithSingle } from '@/api/algorithm';
     import { useUserStore } from '@/store/modules/user'
     import { PredictResult, useSolfWareStore } from '@/store/modules/solfWare'
+    import { Tag } from 'ant-design-vue'
+    import SvgIcon from '@/components/SvgIcon/index.vue'
 
     const formRef = ref();
     const router = useRouter()
@@ -166,6 +174,12 @@
         clineName: 'AE'
     }
 
+    const diseaseLists = [
+        { label: 'AE (Alveolar echinococcosis)', value: 'AE (Alveolar echinococcosis)' },
+        { label: 'CE (Cystic echinococcosis)', value: 'CE (Cystic echinococcosis)' },
+    ]
+
+    const algorithmTitle = 'Prediction of Novel Drug Combinations for Echinococcosis Treatment'
     const algorithmName = 'TransferBAN-Syn'
     const description = `The TransferBAN-Syn algorithm consists of three key modules: the drug combination feature representation module, the disease feature representation module, and the synergy prediction module. The drug combination feature representation module utilizes a Graph Convolutional Network (GCN) to extract atom-level features of drug molecules and employs a bilinear attention network to integrate single-drug features, capturing the interactions between drugs and forming the drug combination feature representation. The disease feature representation module encodes the characteristics of diseases by combining pathway information and disease similarity of parasitic diseases through a Multi-Layer Perceptron (MLP) to obtain disease feature representations. In this framework, the drug and disease feature representation modules are initially trained on multiple parasitic diseases to form a pre-trained model, which is then applied to the task of predicting drug combinations for echinococcosis. The synergy prediction module is fine-tuned using specific drug combination data for echinococcosis to optimize the model's performance in this particular prediction task. Finally, the drug combination features and disease features are merged and propagated through a fully connected layer to predict drug synergy.`
 
@@ -182,8 +196,29 @@
 
             if (value.includes('Svg') ) {
                 title = value.replace('Svg', 'SMILES')
-                customRender = (text) => {
-                    const vnode = h('div', { class: 'smiles-svg', innerHTML: text.text })
+                customRender = ({ text }) => {
+                    const vnode = h('div', { class: 'smiles-svg', innerHTML: text })
+                    return vnode
+                }
+            }
+
+            if (value === 'Pred_Score') {
+                title = 'Synergy Level'
+                customRender = ({ text }) => {
+                    // const icon = h(SvgIcon, { iconName: 'icon-example' })
+                    let color = ''
+                    let value = ''
+                    if (text >= 0.9) {
+                        color = '#87d068'
+                        value = 'High'
+                    } else if (text >= 0.7) {
+                        color = '#FFA15A'
+                        value = 'Moderate'
+                    } else {
+                        color = '#dee9eb'
+                        value = 'Low'
+                    }
+                    const vnode = h(Tag, { color  }, value)
                     return vnode
                 }
             }
@@ -325,11 +360,6 @@
         }
         
     }
-
-    function handleDrop(e: DragEvent) {
-        console.log(e);
-    }
-
     
 </script>
 

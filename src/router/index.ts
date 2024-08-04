@@ -59,6 +59,16 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/PredictSCResult.vue'),
         },
         {
+          path: '/software/result/3',
+          name: 'SoftWareMPHNSynResultPage',
+          meta: {
+            title: 'Result | Su Lab',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/PredictMPHNSynResult.vue'),
+        },
+        {
           path: '/software/momo',
           name: 'SoftWarePage-MOMO',
           meta: {
@@ -117,6 +127,16 @@ const routes: RouteRecordRaw[] = [
             keepAlive: false
           },
           component: () => import('@/views/SoftWare/ToolLists/MGSF.vue'),
+        },
+        {
+          path: '/software/mphnsyn',
+          name: 'SoftWarePage-MPHNSyn',
+          meta: {
+            title: 'MPHNSyn | Su Lab',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/ToolLists/MPHNSyn.vue'),
         },
         {
           path: '/publication',

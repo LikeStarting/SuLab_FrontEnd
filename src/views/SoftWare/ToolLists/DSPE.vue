@@ -1,17 +1,21 @@
 <template>
     <div class="software-wrapper common-box">
         <div>
-            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmName :content="description"/>
+            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmTitle :content="description"/>
             <div class="AI-tool">
                 <div class="tool-use">
                     <div class="tab-bar">
                         <div class="tabBar-title">Customized Type</div>
                         <ul>
-                            <li :class="activeKey == 0 ? 'tab-active' : ''" @click="() => handleSelect(0)">
+                            <!-- <li :class="activeKey == 0 ? 'tab-active' : ''" @click="() => handleSelect(0)">
                                 <SvgIcon iconName="icon-icon" className="tabBar-icon"/>
                                 <span>Text</span>
-                            </li>
-                            <li :class="activeKey == 1 ? 'tab-active' : ''" @click="() => handleSelect(1)">
+                            </li> -->
+                            <!-- <li :class="activeKey == 1 ? 'tab-active' : ''" @click="() => handleSelect(1)">
+                                <SvgIcon iconName="icon-shangchuanwenjian" className="tabBar-icon"/>
+                                <span>File</span>
+                            </li> -->
+                            <li class="tab-active">
                                 <SvgIcon iconName="icon-shangchuanwenjian" className="tabBar-icon"/>
                                 <span>File</span>
                             </li>
@@ -37,6 +41,10 @@
                                     <SvgIcon iconName="icon-example" className="example-icon"/>
                                     An Example
                                 </span>
+                                <a  class="drug-link" href="https://go.drugbank.com/" target="_blank">
+                                    <SvgIcon iconName="icon-Allergy_Drug" className="drug-icon" />
+                                    DrugBank
+                                </a>
                             </div>
                             <a-spin :spinning="spinning" tip="Loading...">
                                 <a-form
@@ -102,10 +110,13 @@
                                         ref="secondFormRef"
                                         autocomplete="off"
                                     >
-                                        <a-form-item name="drugName" label="Drug Name" :rules="[{ required: true, message: 'please select a drug!' }]">
-                                            <a-select show-search v-model:value="secondFormState.drugName" :options="drugLists"></a-select>
+                                        <a-form-item name="drugName" label="Drug Name" :rules="[{ required: true }]">
+                                            <a-select show-search v-model:value="secondFormState.drugName" :options="drugLists" placeholder="Please select a drug"></a-select>
                                         </a-form-item>
                                     </a-form>
+                                </div>
+                                <div class="file-label">
+                                    <span>Gene expression</span>
                                 </div>
                                 <a-upload-dragger
                                     v-model:fileList="fileList"
@@ -122,7 +133,7 @@
                                         </p>
                                         <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
                                         <p class="ant-upload-hint">
-                                            sdf and csv formats only, max file size: 20MB
+                                            csv and xls formats only, max file size: 20MB
                                         </p>
                                     </div>
                                 </a-upload-dragger>
@@ -162,6 +173,9 @@
         smilesB: string;
         clineName: string;
     }
+    interface SecondFormState {
+        drugName: string | undefined;
+    }
     const formState = reactive<FormState>({
         drugA: '',
         smilesA: '',
@@ -170,8 +184,8 @@
         clineName: ''
     });
 
-    const secondFormState = reactive({
-        drugName: ''
+    const secondFormState = reactive<SecondFormState>({
+        drugName: undefined
     })
 
     const Example = {
@@ -182,11 +196,12 @@
         clineName: 'AE'
     }
 
+    const algorithmTitle = 'Prediction of Sensitizing Drug Combinations'
     const algorithmName = AlgorithmName
-    const description = `The DSPE model makes full use of drug-target interaction information and smiles structures of drugs to predict drug-drug synergies. The graph attention mechanism with residuals (resGAT) is used to obtain the potential feature vector of the drug. The graph attention network (GAT) can extract deeper drug characteristics and interactions, and the addition of residual connections helps to alleviate the problem of gradient disappearance, so that the interactions between drug molecules can be captured more effectively and the drug characteristics can be more accurately represented. At the same time, by obtaining protein-protein (PPI) network data associated with echinococcosis and using node2vec and attention weight aggregation, a richer and more differentiated representation of disease features can be obtained. In addition, the data information of single drugs is introduced, which effectively solves the problem of insufficient training data of drug combinations, and improves the prediction accuracy of new diseases with limited data. DSPE enables efficient and accurate prediction of drug combination synergies.`
+    const description = `The DSPE model analyzes gene expression of echinococcus to determine resistance, and recommends sensitizing drug combinations for common anti-echinococcosis drugs based on the expression profiles. DSPE utilizes echinococcus expression data, employing node2vec and attention-weight aggregation techniques to generate detailed feature representations of echinococcosis. It uses data from single drug and drug combinations, applying a residual graph attention mechanism to capture potential drug feature vectors and enhance the effect of drug combinations. Users only need to input the microarray data of echinococcosis, and the DSPE model can determine if it is drug-resistant. Based on gene expression data of echinococcosis and commonly used anti-echinococcosis drugs selected by the user, the algorithm recommends the three most likely synergistic sensitizing drug combinations. The DSPE model is highly effective in detecting drug resistance and advising on drug combination enhancements, providing significant insights for treating echinococcosis.`
 
     const isInputComplete = ref(false)
-    const activeKey = ref(0)
+    const activeKey = ref(1)
     const spinning = ref(false)
 
     const drugLists = [
@@ -382,8 +397,33 @@
                                 }
                             }
                         }
+                        .file-label {
+                            padding: 20px;
+                            padding-bottom: 0;
+                            font-size: 18px;
+                            line-height: 32px;
+                            font-weight: 600;
+                            color: #222;
+                            &::before {
+                                display: inline-block;
+                                margin-inline-end: 4px;
+                                color: #ff4d4f;
+                                font-size: 14px;
+                                font-family: SimSun, sans-serif;
+                                line-height: 1;
+                                content: "*";
+                            }
+                            &::after {
+                                content: ":";
+                                position: relative;
+                                margin-block: 0;
+                                margin-inline-start: 2px;
+                                margin-inline-end: 8px;
+                            }
+                        }
                         .ant-upload-wrapper {
-                            height: calc(100% - 100px);
+                            padding-top: 0;
+                            height: calc(100% - 132px);
                         }
                     }
                 }

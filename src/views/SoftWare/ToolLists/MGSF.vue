@@ -1,7 +1,7 @@
 <template>
     <div class="software-wrapper common-box">
         <div>
-            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmName :content="description"/>
+            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmTitle :content="description"/>
             <div class="AI-tool">
                 <div class="tool-use">
                     <div class="tab-bar">
@@ -37,6 +37,10 @@
                                     <SvgIcon iconName="icon-example" className="example-icon"/>
                                     An Example
                                 </span>
+                                <a  class="drug-link" href="https://go.drugbank.com/" target="_blank">
+                                    <SvgIcon iconName="icon-Allergy_Drug" className="drug-icon" />
+                                    DrugBank
+                                </a>
                             </div>
                             <a-spin :spinning="spinning" tip="Loading...">
                                 <a-form
@@ -104,7 +108,7 @@
                                         </p>
                                         <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
                                         <p class="ant-upload-hint">
-                                            sdf and csv formats only, max file size: 20MB
+                                            csv and xls formats only, max file size: 20MB
                                         </p>
                                     </div>
                                 </a-upload-dragger>
@@ -120,7 +124,8 @@
 <script lang="ts" setup>
     import { reactive, ref } from 'vue';
     import { useRouter } from 'vue-router'
-    import { message } from 'ant-design-vue';
+    import { message, Tooltip, Tag } from 'ant-design-vue';
+    
     import type { UploadProps, UploadChangeParam } from 'ant-design-vue';
     import { getAlgorithmFileExample, callAlgorithmWithSingle } from '@/api/algorithm';
     import { useUserStore } from '@/store/modules/user'
@@ -157,6 +162,7 @@
     }
 
     const algorithmName = AlgorithmName
+    const algorithmTitle = 'Prediction of Drug Side Effects'
     const description = `The MGSF-DDI algorithm is a drug combination prediction model based on substructure features and utilizes graph neural networks. The method predicts drug combinations by integrating drug feature information learned from both the microscopic level and the macroscopic network level. At the microscopic level, the algorithm uses drug SMILES to construct drug molecular graphs. First, it encodes drug features by chemically characterizing the drug atoms and obtains substructure sequence encoding features through random walks starting from each atom on the molecular graph. Then, a graph attention network is used to propagate and learn from these two features on the molecular graph. At the macroscopic network level, the method utilizes the PubChemFP substructure sequence encoding as the drug feature input. Initially, a soft threshold function is used to extract features from the sparse molecular fingerprint features, reducing dimensionality while retaining important information. Then, an association network is constructed for the drug combinations in the database, and the drug PubChemFP features are propagated and learned through a multi-layer graph convolutional network on this association network. Finally, the model fuses the features learned from both the microscopic level and the macroscopic network level through an adaptive weighted feature fusion method to more accurately predict drug interactions. Experiments demonstrate that our proposed model achieves significant improvements in DDI prediction tasks, providing new methods and insights for studying combination therapies and avoiding multi-drug interactions.`
 
     const isInputComplete = ref(false)
@@ -172,8 +178,17 @@
 
             if (value.includes('Svg') ) {
                 title = value.replace('Svg', 'SMILES')
-                customRender = (text) => {
-                    const vnode = h('div', { class: 'smiles-svg', innerHTML: text.text })
+                customRender = ({ text }) => {
+                    const vnode = h('div', { class: 'smiles-svg', innerHTML: text })
+                    return vnode
+                }
+            }
+
+            if (value == 'Side_Effect') {
+                const colors = ['#87d068', '#FFA15A', '#dee9eb']
+                customRender = ({ text }) => {
+                    const desc = text.map((v, i) => (h(Tooltip, { title: v, color: colors[i] }, [h(Tag, { color: colors[i] }, i+1)])))
+                    const vnode = h('div', { class: 'desc' }, desc)
                     return vnode
                 }
             }
@@ -192,10 +207,7 @@
     const preprocessData = (results) => {
         if (!results || results.length == 0) return []
 
-        return results.map((item) => {
-            item.Pred_Score = parseFloat(item.Pred_Score.toFixed(4))
-            return item
-        })
+        return results
     }
 
     const handleSelect = (key: number) => {
@@ -207,8 +219,6 @@
         formState.smilesA = Example.smilesA
         formState.drugB = Example.drugB
         formState.smilesB = Example.smilesB
-        formState.clineName = Example.clineName
-
         isInputComplete.value = true
     }
 
@@ -342,6 +352,13 @@
                         height: 510px;
                         .ant-upload-wrapper {
                             height: calc(100% - 30px)
+                        }
+                    }
+                }
+                :deep(.ant-table) {
+                    .desc {
+                        .ant-tag {
+                            margin: 0 4px;
                         }
                     }
                 }

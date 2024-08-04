@@ -1,7 +1,7 @@
 <template>
     <div class="software-wrapper common-box">
         <div>
-            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmName :content="description"/>
+            <AlgorithmIntro iconClass="icon-yanfapingtai-icon-shujufenxi" :algorithmName=algorithmTitle :content="description"/>
             <div class="AI-tool">
                 <div class="tool-use">
                     <div class="tab-bar">
@@ -37,6 +37,10 @@
                                     <SvgIcon iconName="icon-example" className="example-icon"/>
                                     An Example
                                 </span>
+                                <a  class="drug-link" href="https://go.drugbank.com/" target="_blank">
+                                    <SvgIcon iconName="icon-Allergy_Drug" className="drug-icon" />
+                                    DrugBank
+                                </a>
                             </div>
                             <a-spin :spinning="spinning" tip="Loading...">
                                 <a-form
@@ -111,7 +115,7 @@
                                         </p>
                                         <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
                                         <p class="ant-upload-hint">
-                                            sdf and csv formats only, max file size: 20MB
+                                            csv and xls formats only, max file size: 20MB
                                         </p>
                                     </div>
                                 </a-upload-dragger>
@@ -167,6 +171,7 @@
     }
 
     const algorithmName = AlgorithmName
+    const algorithmTitle = 'Prediction of Novel Drug Combinations for Cancer Treatment'
     const description = `The CaSynergy algorithm is an innovative predictive model for drug synergy that integrates causal inference and attention mechanisms. It first utilizes the backdoor criterion from causal inference to identify key causal genes in cell lines that affect the synergistic effects of drug triplets, enhancing the model's interpretability. Then, it constructs a specific protein-protein interaction network using the Steiner tree algorithm, providing a structural foundation for the integration of drug combination and cell line information. CaSynergy further employs a cross-attention mechanism and Hadamard product technique to fuse drug combination and cell line features, improving the model's predictive accuracy for drug interactions. In experiments, CaSynergy outperformed the most advanced existing models on the latest two drug combination datasets, demonstrating its high efficiency in identifying synergistic drug combinations. Additionally, the algorithm's causal attention learning layer effectively reduces confounding effects through attention mechanisms and backdoor adjustments, enhancing the reliability of predictions. The introduction of the CaSynergy algorithm provides a new, more accurate, and interpretable method for predicting drug synergy, with the potential to play a significant role in the fields of drug discovery and personalized medicine.`
 
     const isInputComplete = ref(false)
