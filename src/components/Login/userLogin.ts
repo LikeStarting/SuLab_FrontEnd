@@ -88,6 +88,19 @@ export function useFormRules(formData?: Record) {
   //   return !value ? Promise.resolve('勾选后才能注册') : Promise.resolve(true)
   // }
 
+  const validatePassword = async (_rule: Rule, value: string) => {
+    if (!value) {
+      return Promise.reject('Please input the password!')
+    } else {
+      const passwordRegex = /^[a-zA-Z0-9]{6}$/
+      if (!passwordRegex.test(value)) {
+        return Promise.reject('Password: at least 6 chars, letters or numbers only!')
+      } else {
+        return Promise.resolve(true)
+      }
+    }
+  }
+
   const validateConfirmPassword = (password: string) => {
     return async (_rule: Rule, value: string) => {
       if (!value) {
@@ -115,7 +128,9 @@ export function useFormRules(formData?: Record) {
           email: [
             { validator: validateRegisterEmail, trigger: 'change' }
           ],
-          password: passwordFormRule,
+          password: [
+            { validator: validatePassword, trigger: 'change' }
+          ],
           confirmPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
           ],

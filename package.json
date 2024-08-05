@@ -12,6 +12,7 @@
     "@amap/amap-jsapi-loader": "^1.0.1",
     "ant-design-vue": "4.x",
     "axios": "^1.7.2",
+    "echarts": "^5.5.1",
     "mitt": "^3.0.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",

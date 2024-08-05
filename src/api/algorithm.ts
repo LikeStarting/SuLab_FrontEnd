@@ -14,6 +14,14 @@ export function getAlgorithmFileExample(params: any): Promise<any> {
   });
 }
 
+export function getAlgorithmDrugLists(params: any): Promise<any> {
+  return http.request({
+    url: "/algorithm/download",
+    method: "get",
+    params
+  });
+}
+
 export function callAlgorithmApi(data: any): Promise<ListResult> {
     return http.request({
       headers: {
@@ -40,5 +48,13 @@ export function callAlgorithmWithSingle(data: any): Promise<ListResult> {
     url: "/algorithm/dc/single",
     method: "post",
     data
+  });
+}
+
+export function callMPHNSynWithSingle(params: any): Promise<ListResult> {
+  return http.request({
+    url: "/algorithm/dc/MPHNSyn",
+    method: "get",
+    params
   });
 }

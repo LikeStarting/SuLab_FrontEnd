@@ -41,6 +41,7 @@
       h2 {
           font-size: 30px;
           text-align: center;
+          color: #003366;
           .icon-title {
               width: 40px;
               height: 40px;

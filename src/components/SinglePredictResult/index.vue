@@ -1,17 +1,18 @@
 <template>
   <div class="single-results">
       <div class="content">
-        <a-table :columns="props.columns" :data-source="props.data" bordered :pagination="false"/>
+        <a-table :columns="props.columns" :data-source="props.data" bordered :pagination="props.pagination || false"/>
       </div>
   </div>
 </template>
 
 
 <script setup lang="ts">
-    const props = defineProps<{
-      columns: Array<any>,
-      data: Array<any>
-    }>()
+  const props = defineProps<{
+    columns: Array<any>,
+    data: Array<any>,
+    pagination?: Boolean | Object
+  }>()
 </script>
 
 
@@ -38,20 +39,4 @@
         }
       }
   }
-
-  // @media screen and (max-width: 1080px) {
-  //   .single-results {
-  //     .content {
-  //       :deep(.ant-table) {
-  //         thead {
-  //           tr {
-  //             .ant-table-cell {
-  //               padding: 2%;
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 </style>

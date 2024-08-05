@@ -182,7 +182,7 @@
     }).catch(() => {
       isLoading.value = false;
       getVierificationCode();
-      // message.error({ content: 'Login Failed!', key, duration: 1 });
+      message.error({ content: 'Login Failed!', key, duration: 1 });
     })
   }
 
@@ -212,6 +212,10 @@
   
   :global(.login-card .ant-input-prefix) {
     color: #222;
+  }
+
+  :global(.login-card .ant-input-suffix .code img) {
+    cursor: pointer;
   }
 
   :global(.login-card .ant-card-body) {

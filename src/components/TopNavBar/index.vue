@@ -56,20 +56,20 @@
         label: h('a', { class: 'softwares-dropmenu', href: 'javascript:;', }, 'Softwares'),
         title: 'Software',
         children: [
-            {
-                type: 'group',
-                label: 'Molecular optimization',
-                children: [
-                    {
-                        label: h(RouterLink, { to: '/software/cdmo', }, () => 'Single-property Optimization'),
-                        key: '/software/cdmo',
-                    },
-                    {
-                        label: h(RouterLink, { to: '/software/momo', }, () => 'Multi-property Optimization'),
-                        key: '/software/momo',
-                    }     
-                ],
-            },
+            // {
+            //     type: 'group',
+            //     label: 'Molecular optimization',
+            //     children: [
+            //         {
+            //             label: h(RouterLink, { to: '/software/cdmo', }, () => 'Single-property Optimization'),
+            //             key: '/software/cdmo',
+            //         },
+            //         {
+            //             label: h(RouterLink, { to: '/software/momo', }, () => 'Multi-property Optimization'),
+            //             key: '/software/momo',
+            //         }     
+            //     ],
+            // },
             {
                 type: 'group',
                 label: 'Drug combinations prediction',
@@ -90,6 +90,10 @@
                         label: h(RouterLink, { to: '/software/mgsf', }, () => 'Prediction of Drug Side Effects'),
                         key: '/software/mgsf',
                     },
+                    {
+                        label: h(RouterLink, { to: '/software/mphnsyn', }, () => 'Prediction of Drug Combination Synergy and Toxicity Scores'),
+                        key: '/software/mphnsyn',
+                    },
                 ],
             }
         ],
@@ -109,7 +113,7 @@
     {
         key: '/contact',
         // icon: () => h(MailOutlined),
-        label: h(RouterLink, { to: '/contact', }, () => 'Contact Us'),
+        label: h(RouterLink, { to: '/contact', }, () => 'Contact'),
         title: 'Contact us',
     }
     ]);
@@ -218,7 +222,6 @@
                     }
                     &::before, &::after {
                         width: 10px;
-                        
                     }
                 }
             }

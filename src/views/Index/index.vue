@@ -3,9 +3,9 @@
         <div class="introducation common-box">
             <a-row>
                 <a-col :span="11">
-                    <h2>AHU BI Platform</h2>
+                    <h2>AHU DrugD Platform</h2>
                     <p>
-                        At AHU-BI-Platform (Anhui University Bioinformatics Laboratory Platform), we are dedicated to creating an efficient bioinformatics platform by combining the most advanced AI-based drug design methods and bioinformatics technologies. Our research focuses on developing new computational biology methods by incorporating artificial intelligence algorithms, such as drug molecule optimization, drug combinations, drug synergy, medical image segmentation, and single-cell sequencing. Using these methods, we investigate the molecular mechanisms underlying the development of serious diseases such as cancer, infectious diseases, and metabolic disorders, and accordingly develop therapeutic agents.
+                        The Anhui University Drug Discovery Platform (AHU-DrugD-Platform) is an advanced platform that combines artificial intelligence (AI) methods in drug design with parasitic disease research, aimed at creating an efficient anti-parasitic drug discovery system. The main focus of the platform is the development of new drug design methods through the integration of AI algorithms, including drug molecule optimization, drug side effect prediction, and drug synergy prediction.
                     </p>
                     <p>
                         Currently, we have designed several algorithmic tools, which are available on our platform for public access, and our research findings have been published in academic journals or filed as patents.
@@ -66,6 +66,7 @@
             margin: 0;
             padding-bottom: 20px;
             font-size: 46px;
+            color: #003366;
             font-family: Rubik,sans-serif;
         }
         p {
@@ -148,6 +149,7 @@
             padding: 20px 0;
             font-size: 56px;
             font-family: Rubik,sans-serif;
+            color: #003366;
         }
         p {
             margin-bottom: 20px;

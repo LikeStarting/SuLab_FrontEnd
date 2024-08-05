@@ -116,44 +116,4 @@
 
 
 <style lang="scss" scoped>
-.result-wrapper {
-    h2 {
-        font-size: 28px;
-        line-height: 36px;
-        .title-icon {
-            width: 66px;
-            height: 36px;
-            vertical-align: top;
-        }
-    }
-    .software-tabs {
-        :deep(.ant-table) {
-            .smiles-svg {
-                display: inline-block;
-                width: 240px;
-                height: 100px;
-                svg {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            .disease-name {
-                font-weight: 700;
-                color: #808080;
-            }
-            .drug-name {
-                font-weight: 700;
-                color: #00A65A;
-            }
-            .type_one {
-                font-weight: 700;
-                color: #006400;
-            }
-            .type_two {
-                font-weight: 700;
-                color: #FFA07A;
-            }
-        }
-    }
-}
 </style>

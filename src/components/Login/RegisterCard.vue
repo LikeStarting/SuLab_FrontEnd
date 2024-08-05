@@ -7,7 +7,7 @@
     label-width="0"
     :rules="getFormRules"
   >
-    <a-form-item  :data-delay="1" name="username">
+    <a-form-item  :data-delay="1" name="username"> 
       <a-input v-model:value="registerForm.username" placeholder="Your User Name">
         <template #prefix>
           <SvgIcon iconName="icon-denglu-copy" className="icon-account"/>
@@ -16,7 +16,7 @@
     </a-form-item>
 
     <a-form-item :data-delay="2" name="password">
-      <a-input
+      <a-input-password
         v-model:value="registerForm.password"
         placeholder="Password"
         type="password"
@@ -24,10 +24,10 @@
         <template #prefix>
           <SvgIcon iconName="icon-mima1" className="icon-pwd" />
         </template>
-      </a-input>
+      </a-input-password>
     </a-form-item>
     <a-form-item :data-delay="3" name="confirmPassword">
-      <a-input
+      <a-input-password
         v-model:value="registerForm.confirmPassword"
         placeholder="Enter your password again"
         type="password"
@@ -35,7 +35,7 @@
         <template #prefix>
           <SvgIcon iconName="icon-mima1" className="icon-pwd" />
         </template>
-      </a-input>
+      </a-input-password>
     </a-form-item>
 
     <a-form-item :data-delay="1" name="email">
@@ -83,7 +83,7 @@
   import { ref, reactive } from 'vue'
   import { message } from 'ant-design-vue'
   import emitter from '@/utils/mitt'
-  import { getVierificationCodeApi, getEmailCaptcha, register } from '@/api/user'
+  import { getEmailCaptcha, register } from '@/api/user'
   import { LoginStateEnum, useFormRules, useLoginState } from './userLogin'
 
   const { setLoginState, handleBackLogin, getLoginState } = useLoginState()
@@ -142,11 +142,13 @@
     }, 1000)
   }
 
+  const key = 'updatable';
   const onSubmit = () => {
     formRef.value
     ?.validate().then(async () => {
       try {
         isLoading.value = true;
+        message.loading({ content: 'Registering...', key });
         const { data } = await register({
           userName: registerForm.username,
           userEmail: registerForm.email,
@@ -155,14 +157,14 @@
           uuid: registerForm.uuid
         })
         setLoginState(LoginStateEnum.REGISTER_SUCCESS)
-
+        message.success({ content: 'Register successfully!', key, duration: 2 })
+        isLoading.value = false
       } finally {
-        message.success('Register successfully!')
         isLoading.value = false
       }
 
     }).catch((e) => {
-      // console.log('error', e)
+      message.error({ content: 'Register failed!', key })
     })
   }
 </script>
