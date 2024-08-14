@@ -33,7 +33,7 @@
     import AMapLoader from "@amap/amap-jsapi-loader";
     import { onMounted, onUnmounted, ref } from 'vue';
 
-    let map = null;
+    const map = ref(null);
 
     onMounted(() => {
         window._AMapSecurityConfig = {
@@ -45,28 +45,45 @@
             plugins: ["AMap.Scale"],
         })
         .then((AMap) => {
-            map = new AMap.Map("map-container", {
-                viewMode: "3D", 
+            map.value = new AMap.Map("map-container", {
+                viewMode: "2D", 
                 zoom: 14, 
                 center: [117.189175,31.758371], // 初始化地图中心点位置
             });
 
-
-            const position = new AMap.LngLat(117.189175,31.758371);
+            const position = map.value.getCenter();
             const marker = new AMap.Marker({
-            position: position,
-            // content: markerContent,
-            // offset: new AMap.Pixel(-13, -30)
+                position: position,
             })
+            map.value.add(marker)
 
-            map.add(marker)
+            const infoContent = `
+                <div class="info-card">
+                    <h2>Su Lab</h2>
+                    <p><span>Adress:</span> 111 Jiulong Road, Shushan District, Hefei City, Anhui Province</p>
+                </div>
+            `
+            const infoWindow = new AMap.InfoWindow({
+                content: infoContent,
+                anchor: "top-left",
+            });
+            
+            infoWindow.open(map.value, position);
+
+            function markerClick(e) {
+                infoWindow.open(map.value, position);
+            }
+
+            marker.on('click', markerClick);
+            marker.emit('click', {target: marker});
+
         }).catch((e) => {
-            console.log(e);
+            // console.log(e)
         });
     });
 
     onUnmounted(() => {
-        map?.destroy();
+        map.value?.destroy();
     });
 </script>
 
@@ -110,9 +127,26 @@
             #map-container {
                 width: 100%;
                 height: 400px;
+                :deep(.amap-info-content) {
+                    padding-left: 18px;
+                    .info-card {
+                        width: 170px;
+                        h2 {
+                            margin: 0;
+                            line-height: 2;
+                            color: #003366;
+                        }
+                        p {
+                            color: $theme-color;
+                            span {
+                                font-weight: 600;
+                                color: #003366;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
-
 </style>

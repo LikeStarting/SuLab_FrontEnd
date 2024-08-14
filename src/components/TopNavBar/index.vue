@@ -51,22 +51,23 @@
         title: 'Home',
     },
     {
-        key: '/software',
+        key: '/model',
         // icon: () => h(AppstoreOutlined),
-        label: h('a', { class: 'softwares-dropmenu', href: 'javascript:;', }, 'Softwares'),
-        title: 'Software',
+        label: h('a', { class: 'softwares-dropmenu', href: 'javascript:;', }, 'Models'),
+        title: 'Models',
+        popupOffset: [-197,0],
         children: [
             // {
             //     type: 'group',
             //     label: 'Molecular optimization',
             //     children: [
             //         {
-            //             label: h(RouterLink, { to: '/software/cdmo', }, () => 'Single-property Optimization'),
-            //             key: '/software/cdmo',
+            //             label: h(RouterLink, { to: '/model/cdmo', }, () => 'Single-property Optimization'),
+            //             key: '/model/cdmo',
             //         },
             //         {
-            //             label: h(RouterLink, { to: '/software/momo', }, () => 'Multi-property Optimization'),
-            //             key: '/software/momo',
+            //             label: h(RouterLink, { to: '/model/momo', }, () => 'Multi-property Optimization'),
+            //             key: '/model/momo',
             //         }     
             //     ],
             // },
@@ -75,34 +76,28 @@
                 label: 'Drug combinations prediction',
                 children: [
                     {
-                        label: h(RouterLink, { to: '/software/casynergy', }, () => 'Prediction of Novel Drug Combinations for Cancer Treatment'),
-                        key: '/software/casynergy',
+                        label: h(RouterLink, { to: '/model/casynergy', }, () => 'Prediction of Novel Drug Combinations with Interpretability'),
+                        key: '/model/casynergy',
                     },
                     {
-                        label: h(RouterLink, { to: '/software/transferban', }, () => 'Prediction of Novel Drug Combinations for Echinococcosis Treatment'),
-                        key: '/software/transferban',
+                        label: h(RouterLink, { to: '/model/transferban', }, () => 'Prediction of Novel Drug Combinations for Echinococcosis Treatment'),
+                        key: '/model/transferban',
                     },
                     {
-                        label: h(RouterLink, { to: '/software/dspe', }, () => 'Prediction of Sensitizing Drug Combinations'),
-                        key: '/software/dspe',
+                        label: h(RouterLink, { to: '/model/dspe', }, () => 'Prediction of Sensitizing Drug Combinations'),
+                        key: '/model/dspe',
                     },
                     {
-                        label: h(RouterLink, { to: '/software/mgsf', }, () => 'Prediction of Drug Side Effects'),
-                        key: '/software/mgsf',
+                        label: h(RouterLink, { to: '/model/mgsf', }, () => 'Prediction of Drug Side Effects'),
+                        key: '/model/mgsf',
                     },
                     {
-                        label: h(RouterLink, { to: '/software/mphnsyn', }, () => 'Prediction of Drug Combination Synergy and Toxicity Scores'),
-                        key: '/software/mphnsyn',
+                        label: h(RouterLink, { to: '/model/mphnsyn', }, () => 'Prediction of Drug Combination Synergy and Toxicity Scores'),
+                        key: '/model/mphnsyn',
                     },
                 ],
             }
         ],
-    },
-    {
-        key: '/team',
-        // icon: () => h(MailOutlined),
-        label: h(RouterLink, { to: '/team', }, () => 'Teams'),
-        title: 'Team',
     },
     {
         key: '/publication',
@@ -110,6 +105,12 @@
         label: h(RouterLink, { to: '/publication', }, () => 'Publications'),
         title: 'Publication',
     },
+    {
+        key: '/team',
+        // icon: () => h(MailOutlined),
+        label: h(RouterLink, { to: '/team', }, () => 'Teams'),
+        title: 'Team',
+    }, 
     {
         key: '/contact',
         // icon: () => h(MailOutlined),
@@ -185,6 +186,7 @@
             background-color: transparent;
             border-bottom: none;
             .ant-menu-submenu {
+                padding-right: 32px;
                 &::after {
                     display: none;
                 }
@@ -239,10 +241,12 @@
         }
 
         .login {
+            padding-left: 10px;
             a {
                 font-size: 18px;
                 font-weight: 600;
-                color: #fff;
+                font-family: Roboto,'Helvetica Neue' sans-serif;
+                color: #003366;
             }
         }
 
@@ -258,7 +262,6 @@
         }
     }
 }
-
 
 :global(.ant-menu-submenu .ant-menu .ant-menu-item-group .ant-menu-item-group-title) {
     position: relative;                

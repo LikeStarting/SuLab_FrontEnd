@@ -92,27 +92,29 @@
                                     File Example
                                 </span>
                             </div>
-                            <div class="upload-content">
-                                <a-upload-dragger
-                                    v-model:fileList="fileList"
-                                    name="file"
-                                    :maxCount="1"
-                                    :multiple="false"
-                                    :beforeUpload="beforeUpload"
-                                    @remove="handleRemove"
-                                    @drop="handleDrop"
-                                >
-                                    <div class="btn-inner">
-                                        <p class="ant-upload-drag-icon">
-                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                        </p>
-                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                        <p class="ant-upload-hint">
-                                            csv and xls formats only, max file size: 20MB
-                                        </p>
-                                    </div>
-                                </a-upload-dragger>
-                            </div>
+                            <a-spin :spinning="spinning" tip="Loading...">
+                                <div class="upload-content">
+                                    <a-upload-dragger
+                                        v-model:fileList="fileList"
+                                        name="file"
+                                        :maxCount="1"
+                                        :multiple="false"
+                                        :beforeUpload="beforeUpload"
+                                        @remove="handleRemove"
+                                        @drop="handleDrop"
+                                    >
+                                        <div class="btn-inner">
+                                            <p class="ant-upload-drag-icon">
+                                            <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                            </p>
+                                            <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                            <p class="ant-upload-hint">
+                                                csv and xls formats only, max file size: 20MB
+                                            </p>
+                                        </div>
+                                    </a-upload-dragger>
+                                </div>
+                            </a-spin>
                         </div>
                     </div>
                 </div>
@@ -130,6 +132,8 @@
     import { getAlgorithmFileExample, callAlgorithmWithSingle } from '@/api/algorithm';
     import { useUserStore } from '@/store/modules/user'
     import { PredictResult, useSolfWareStore } from '@/store/modules/solfWare'
+
+    import SvgIcon from '@/components/SvgIcon/index.vue'
 
     const AlgorithmName = 'MGSF'
     const formRef = ref();
@@ -169,10 +173,23 @@
     const activeKey = ref(0)
     const spinning = ref(false)
 
+    const generateHexColors = (length) => {
+        const colors = [];  
+        for (let i = 0; i < length; i++) {  
+            let color = "#";  
+            for (let j = 0; j < 3; j++) {   
+                const hex = Math.floor(Math.random() * 16).toString(16);  
+                color += hex.length === 1 ? "0" + hex : hex;  
+            }  
+            colors.push(color);  
+        }  
+        return colors;  
+    }
+
     const preprocessColumns = (results: any) => {
         if (!results || results.length == 0) return []
 
-        return Object.keys(results[0]).map((value) => {
+        return Object.keys(results[0]).filter(v => v !== 'Side_Score').map((value) => {
             let title = value
             let customRender = null
 
@@ -184,15 +201,25 @@
                 }
             }
 
+            const colors = ['#87d068', '#FFA15A', '#9DDBF8', '4581B2', '6a737b', 'FDC4C5', 'C4A9DC']
+
             if (value == 'Side_Effect') {
-                const colors = ['#87d068', '#FFA15A', '#dee9eb']
                 customRender = ({ text }) => {
-                    const desc = text.map((v, i) => (h(Tooltip, { title: v, color: colors[i] }, [h(Tag, { color: colors[i] }, i+1)])))
-                    const vnode = h('div', { class: 'desc' }, desc)
+                    const iconNode = h(SvgIcon, { iconName: 'icon-tishitubiao', className: 'info-icon' })
+                    const tooltip = text.map((v, i) => {
+                        if (v.score == 0) {
+                            return h('span', { class: 'no-score' }, v.desc)
+                        }
+                        const randomIndex = Math.floor(Math.random() * colors.length)
+                        const color = colors[randomIndex]
+                        return (h('div', { class: 'tooltip' }, [h('span', { style: { color } },  [v.score]), h(Tooltip, { title: v.desc, color: '#EC7E34' }, () => iconNode)]))
+                    })
+                    const vnode = h('div', { class: 'score-box' }, tooltip)
                     return vnode
                 }
             }
 
+            title = title.replace(/_/g, ' ')
             return {
                 title,
                 dataIndex: value,
@@ -206,8 +233,20 @@
 
     const preprocessData = (results) => {
         if (!results || results.length == 0) return []
-
-        return results
+        const sideSores = results.map(item => {
+            if (item.Side_Score.length == 0) {
+                return [0]
+            }
+            return item.Side_Score.map(v => parseFloat(v.toFixed(4)))
+        })
+        const data = results.map((item, index) => {
+            item.Side_Effect = item.Side_Effect.map((v, i) => ({
+                desc: v,
+                score: sideSores[index][i]
+            }))
+            return item
+        })
+        return data
     }
 
     const handleSelect = (key: number) => {
@@ -260,18 +299,20 @@
         formData.append('file', file);
         formData.append('algorithmName', algorithmName);
         uploading.value = true;
-
+        spinning.value = true;
         solfWareStore.GetAlgorithmResults(formData).then((res) => {
             fileList.value = [];
             uploading.value = false;
+            spinning.value = false;
             message.success('Upload successfully.');
             const { href } = router.resolve({
-                name: 'SoftWareResultPage',
+                name: 'ModelResultPage',
             })
             window.open(href, '_blank')
         })
         .catch(() => {
             uploading.value = false;
+            spinning.value = false;
             fileList.value = []
         });
     };
@@ -284,30 +325,30 @@
     const handleSingleInput = () => {
         formRef.value
             ?.validate().then(async () => {
-            try {
-                uploading.value = true;
-                spinning.value = true;
-                const { drugA, smilesA, drugB, smilesB } = formState
-                const { data } = await callAlgorithmWithSingle({
-                    algorithmName,
-                    drugA,
-                    smilesA,
-                    drugB,
-                    smilesB
-                })
+                try {
+                    uploading.value = true;
+                    spinning.value = true;
+                    const { drugA, smilesA, drugB, smilesB } = formState
+                    const { data } = await callAlgorithmWithSingle({
+                        algorithmName,
+                        drugA,
+                        smilesA,
+                        drugB,
+                        smilesB
+                    })
 
-                singleColumns.value = preprocessColumns(data)
-                singleData.value = preprocessData(data)
-                message.success({ content: 'Predict successfully!', key, duration: 1 });
-                formState.drugA = ''
-                formState.smilesA = ''
-                formState.drugB = ''
-                formState.smilesB = ''
-            } finally {
-                isInputComplete.value = false
-                uploading.value = false
-                spinning.value = false
-            }
+                    singleColumns.value = preprocessColumns(data)
+                    singleData.value = preprocessData(data)
+                    message.success({ content: 'Predict successfully!', key, duration: 1 });
+                    formState.drugA = ''
+                    formState.smilesA = ''
+                    formState.drugB = ''
+                    formState.smilesB = ''
+                    isInputComplete.value = false
+                } finally {
+                    uploading.value = false
+                    spinning.value = false
+                }
             }).catch((e) => {
                 uploading.value = false
                 spinning.value = false
@@ -351,15 +392,28 @@
                     .upload-content {
                         height: 510px;
                         .ant-upload-wrapper {
-                            height: calc(100% - 30px)
+                            height: calc(100% - 30px);
                         }
                     }
                 }
                 :deep(.ant-table) {
-                    .desc {
-                        .ant-tag {
-                            margin: 0 4px;
+                    height: auto;
+                    .score-box {
+                        .tooltip {
+                            font-size: 16px;
+                            line-height: 30px;
+                            padding: 6px 0;
+                            .info-icon {
+                                margin-left: 4px;
+                                vertical-align: top;
+                                margin-top: 5px;
+                                cursor: pointer;
+                            }
                         }
+                    }
+                    .no-score {
+                        color: #44be62;
+                        font-weight: 700;
                     }
                 }
             }

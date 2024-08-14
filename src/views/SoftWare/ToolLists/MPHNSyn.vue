@@ -28,7 +28,7 @@
                             <a-button 
                                 type="primary" 
                                 html-type="submit"
-                                :disabled="activeKey == 0  ? !isInputComplete : (activeKey == 1 ? !isInputComplete2 : (!fileList || fileList.length === 0))"
+                                :disabled="activeKey == 0  ? !isInputComplete : (activeKey == 1 ? (!isInputComplete2 || !fileTargetList || fileTargetList.length === 0 ) : (!fileList || fileList.length === 0))"
                                 :loading="uploading" 
                                 @click="handleSubmit">
                                 {{ uploading ? 'Running' : 'Start Run' }}
@@ -89,13 +89,17 @@
                             
                             <SinglePredictResult :columns="singleColumns" :data="singleData" />
                         </div>
-                        <div v-if="activeKey == 1">
+                        <div v-if="activeKey == 1" class="upload-box">
                             <div class="example">
                                 <span  @click="handleInputExample">
                                     <SvgIcon iconName="icon-example" className="example-icon"/>
                                     An Example
                                 </span>
-                                <span class="drug-data" @click="() => handleDownloadFile('MPHNSyn-drug-name', 'Data_Drugs')">
+                                <span class="drug-data" @click="() => handleDownloadFile('MPHNSyn-target-all', `${algorithmName}_Disease_Targets`)">
+                                    <SvgIcon iconName="icon-badianliebiao" className="example-icon"/>
+                                    Disease Targets
+                                </span>
+                                <span class="drug-data" @click="() => handleDownloadFile('MPHNSyn-drug-name', `${algorithmName}_Data_Drugs`)">
                                     <SvgIcon iconName="icon-lizi" className="example-icon"/>
                                     Drugs Data
                                 </span>
@@ -105,23 +109,47 @@
                                 </a>
                             </div>
                             <a-spin :spinning="spinning" tip="Loading...">
-                                <a-form
-                                    :model="formState2"
-                                    ref="secondFormRef"
-                                    autocomplete="off"
-                                    @validate="handleValidate"
-                                >
-                                    <a-form-item
-                                        label="Disease Name"
-                                        name="diseaseName"
-                                        :rules="[{ required: true }]"
+                                <div class="upload-content upload1">
+                                    <div class="drug-select">
+                                        <a-form
+                                            :model="formState2"
+                                            ref="secondFormRef"
+                                            autocomplete="off"
+                                            @validate="handleValidate"
+                                        >
+                                            <a-form-item
+                                                label="Disease Name"
+                                                name="diseaseName"
+                                                :rules="[{ required: true }]"
+                                            >
+                                                <a-select show-search v-model:value="formState2.diseaseName" :options="diseaseDatasets" placeholder="Please select a disease"></a-select>
+                                            </a-form-item>
+                                        </a-form> 
+                                    </div>
+                                    <div class="file-label">
+                                        <span>Disease Targets</span>
+                                    </div>
+                                    <a-upload-dragger
+                                        v-model:fileList="fileTargetList"
+                                        name="file"
+                                        :maxCount="1"
+                                        :multiple="false"
+                                        :beforeUpload="beforeUpload"
+                                        @remove="handleRemove"
+                                        @drop="handleDrop"
                                     >
-                                        <a-select show-search v-model:value="formState2.diseaseName" :options="diseaseDatasets" placeholder="Please select a disease"></a-select>
-                                    </a-form-item>
-                                </a-form>    
+                                        <div class="btn-inner">
+                                            <p class="ant-upload-drag-icon">
+                                            <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                            </p>
+                                            <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                            <p class="ant-upload-hint">
+                                                csv and xls formats only, max file size: 20MB
+                                            </p>
+                                        </div>
+                                    </a-upload-dragger>
+                                </div>
                             </a-spin>
-                            
-                            <SinglePredictResult :columns="singleColumns2" :data="singleData2" :pagination="{ pageSize: 5 }"/>
                         </div>
                         <div class="upload-box"  v-if="activeKey == 2">
                             <div class="example">
@@ -130,27 +158,29 @@
                                     File Example
                                 </span>
                             </div>
-                            <div class="upload-content">
-                                <a-upload-dragger
-                                    v-model:fileList="fileList"
-                                    name="file"
-                                    :maxCount="1"
-                                    :multiple="false"
-                                    :beforeUpload="beforeUpload"
-                                    @remove="handleRemove"
-                                    @drop="handleDrop"
-                                >
-                                    <div class="btn-inner">
-                                        <p class="ant-upload-drag-icon">
-                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                        </p>
-                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                        <p class="ant-upload-hint">
-                                            csv and xls formats only, max file size: 20MB
-                                        </p>
-                                    </div>
-                                </a-upload-dragger>
-                            </div>
+                            <a-spin :spinning="spinning" tip="Loading...">
+                                <div class="upload-content upload2">
+                                    <a-upload-dragger
+                                        v-model:fileList="fileList"
+                                        name="file"
+                                        :maxCount="1"
+                                        :multiple="false"
+                                        :beforeUpload="beforeUpload"
+                                        @remove="handleRemove"
+                                        @drop="handleDrop"
+                                    >
+                                        <div class="btn-inner">
+                                            <p class="ant-upload-drag-icon">
+                                            <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                            </p>
+                                            <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                            <p class="ant-upload-hint">
+                                                csv and xls formats only, max file size: 20MB
+                                            </p>
+                                        </div>
+                                    </a-upload-dragger>
+                                </div>
+                            </a-spin>
                         </div>
                     </div>
                 </div>
@@ -172,18 +202,16 @@
     import { reactive, ref } from 'vue';
     import { useRouter } from 'vue-router'
     import { message } from 'ant-design-vue';
-    import type { UploadProps, UploadChangeParam } from 'ant-design-vue';
+    import type { UploadProps } from 'ant-design-vue';
     import { getAlgorithmFileExample, callAlgorithmWithSingle, callMPHNSynWithSingle, getAlgorithmDrugLists } from '@/api/algorithm';
-    import { useUserStore } from '@/store/modules/user'
-    import { PredictMPHNSynResult, PredictMPHNSynResult2, useSolfWareMPHNSynStore } from '@/store/modules/solfWare'
+    import { PredictMPHNSynResult, PredictMPHNSynResult2, useSolfWareMPHNSynStore, useSolfWareMPHNSynWithTargetStore } from '@/store/modules/solfWare'
 
     const AlgorithmName = 'MPHNSyn'
     const formRef = ref()
     const secondFormRef = ref()
     const router = useRouter()
-    const userStore = useUserStore()
-    const token = userStore.getToken
     const solfWareStore =  useSolfWareMPHNSynStore()
+    const solfWareWithTargetStore =  useSolfWareMPHNSynWithTargetStore()
 
     const singleColumns = ref([])
     const singleData = ref([])
@@ -224,7 +252,7 @@
     const spinning = ref(false)
 
     const drugDatasets = ref([])
-    let diseaseDatasets = ['Alveolar', 'echinococcosis','Amebiasis','Ancylostomiasis','Ascariasis','Babesiosis','Bilharziasis','Chagas Disease','Cutaneous Leishmaniasis','Cystic echinococcosis','Cysticercosis','Elephantiasis','Fascioliasis','Giardiasis','Malaria','Mucocutaneous Leishmaniasis','Myiasis','Onchocerciasis','Schistosomiasis','Strongyloidiasis','Toxocariasis','Trichinosis','Trichuriasis','Trypanosomiasis','Visceral leishmaniasis','Filariasis']
+    let diseaseDatasets = ['Alveolar echinococcosis','Amebiasis','Ancylostomiasis','Ascariasis','Babesiosis','Bilharziasis','Chagas Disease','Cutaneous Leishmaniasis','Cystic echinococcosis','Cysticercosis','Elephantiasis','Fascioliasis','Giardiasis','Malaria','Mucocutaneous Leishmaniasis','Myiasis','Onchocerciasis','Schistosomiasis','Strongyloidiasis','Toxocariasis','Trichinosis','Trichuriasis','Trypanosomiasis','Visceral leishmaniasis','Filariasis']
     diseaseDatasets = diseaseDatasets.map((v) => ({
         label: v,
         value: v
@@ -232,7 +260,11 @@
     const showChartModal = ref(false)
     const options = ref(null)
 
-    
+    const uploading = ref<boolean>(false);
+    const fileList = ref<UploadProps['fileList']>([]);
+    const fileTargetList = ref<UploadProps['fileList']>([]);
+
+
     const preprocessColumns = (results: any, type: number) => {
         if (!results || results.length == 0) return []
         const keys = Object.keys(results[0])
@@ -403,44 +435,81 @@
         })
     }
 
-    const uploading = ref<boolean>(false);
-    const fileList = ref<UploadProps['fileList']>([]);
-
     const handleRemove: UploadProps['onRemove'] = file => {
-        const index = fileList.value.indexOf(file);
-        const newFileList = fileList.value.slice();
-        newFileList.splice(index, 1);
-        fileList.value = newFileList;
+        if (activeKey.value == 1) {
+            const index = fileTargetList.value.indexOf(file);
+            const newFileList = fileTargetList.value.slice();
+            newFileList.splice(index, 1);
+            fileTargetList.value = newFileList;
+        } else {
+            const index = fileList.value.indexOf(file);
+            const newFileList = fileList.value.slice();
+            newFileList.splice(index, 1);
+            fileList.value = newFileList;
+        }
     };
 
     const beforeUpload: UploadProps['beforeUpload'] = file => {
-        fileList.value = [...(fileList.value || []), file];
+        if (activeKey.value == 1) {
+            fileTargetList.value = [...(fileTargetList.value || []), file];
+        } else {
+            fileList.value = [...(fileList.value || []), file];
+        }
         return false;
     };
 
-    const messageKey = 'predict_file'
-    const handleUpload = () => {
-        const formData = new FormData();
-        // fileList.value.forEach((file: UploadProps['fileList'][number]) => {
-        // });
-        const file = fileList.value[0].originFileObj
-        formData.append('file', file);
-        formData.append('algorithmName', AlgorithmName);
-        uploading.value = true;
-        message.loading({ content: 'Predicting...', key: messageKey });
-        solfWareStore.GetAlgorithmResults(formData).then((res) => {
-            fileList.value = [];
-            uploading.value = false;
-            message.success({ content: 'Predict successfully!', key: messageKey, duration: 2 });
-            const { href } = router.resolve({
-                name: 'SoftWareMPHNSynResultPage',
+    const handleUpload = (type) => {
+        if (type == 1) {
+            const formData = new FormData();
+            const file = fileTargetList.value[0].originFileObj
+            const { diseaseName } = formState2
+            formData.append('file', file);
+            formData.append('diseaseName', diseaseName);
+            formData.append('algorithmName', AlgorithmName);
+            uploading.value = true;
+            spinning.value = true;
+            solfWareWithTargetStore.GetAlgorithmResults(formData).then((res) => {
+                
+                fileTargetList.value = [];
+                uploading.value = false;
+                spinning.value = false
+                message.success({ content: 'Predict successfully!', duration: 2 });
+                const { href } = router.resolve({
+                    name: 'ModelMPHNSynWithTargetResultPage',
+                })
+    
+                window.open(href, '_blank')
             })
-            window.open(href, '_blank')
-        })
-        .catch(() => {
-            uploading.value = false;
-            fileList.value = []
-        });
+            .catch((e) => {
+                spinning.value = false
+                uploading.value = false;
+                fileTargetList.value = []
+            });
+        } else {
+            const formData = new FormData();
+            const file = fileList.value[0].originFileObj
+            formData.append('file', file);
+            formData.append('algorithmName', AlgorithmName);
+            uploading.value = true;
+            spinning.value = true;
+            solfWareStore.GetAlgorithmResults(formData).then((res) => {
+                
+                fileList.value = [];
+                uploading.value = false;
+                spinning.value = false
+                message.success({ content: 'Predict successfully!', duration: 2 });
+                const { href } = router.resolve({
+                    name: 'ModelMPHNSynResultPage',
+                })
+    
+                window.open(href, '_blank')
+            })
+            .catch((e) => {
+                spinning.value = false
+                uploading.value = false;
+                fileList.value = []
+            });
+        }
     };
 
     const handleValidate = (name, status, error) => {
@@ -489,10 +558,9 @@
                     formState2.diseaseName = ''
                 }
                 message.success({ content: 'Predict successful!', key, duration: 2 });
-                
-            } finally {
                 isInputComplete.value = false
                 isInputComplete2.value = false
+            } finally {
                 uploading.value = false
                 spinning.value = false
             }
@@ -507,9 +575,10 @@
         if (activeKey.value == 0) {
             handleSingleInput(0)
         } else if (activeKey.value == 1) {
-            handleSingleInput(1)
+            // handleSingleInput(1)
+            handleUpload(1)
         } else {
-            handleUpload()
+            handleUpload(2)
         }
         
     }
@@ -852,7 +921,16 @@
                         }
                         .ant-upload-wrapper {
                             padding-top: 0;
-                            height: calc(100% - 30px);
+                        }
+                        &.upload1 {
+                            .ant-upload-wrapper {
+                                height: calc(100% - 152px);
+                            }
+                        }
+                        &.upload2 {
+                            .ant-upload-wrapper {
+                                height: calc(100% - 32px);
+                            }
                         }
                     }
                 }

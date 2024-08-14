@@ -21,3 +21,12 @@ export function getPublicationsBySearch(params: any): Promise<ListResult> {
     params
   });
 }
+
+
+export function getPublicationsByGroup(params: any): Promise<ListResult> {
+  return http.request({
+    url: "/article/fuzzy-search-group",
+    method: "get",
+    params
+  });
+}

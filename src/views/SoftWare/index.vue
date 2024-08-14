@@ -43,8 +43,6 @@
 <script lang="ts">
     const activeKey = ref('1');
 
-
-
     export default { name: 'SoftwarePage' }
 </script>
 

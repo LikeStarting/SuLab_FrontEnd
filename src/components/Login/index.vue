@@ -37,12 +37,12 @@
                 width: 100%;
                 background-color: $active-color;
                 &:hover {
-                    background-color: $light-activate-color;
+                    background-color: $light-active-color;
                 }
             }
             .ant-input-affix-wrapper {
                 &:hover {
-                    border-color: $light-activate-color;
+                    border-color: $light-active-color;
                 }
             }
         }
@@ -57,13 +57,13 @@
     
     :deep(.ant-input-affix-wrapper) {
         &:focus {
-            border-color: $light-activate-color;
+            border-color: $light-active-color;
             box-shadow: 0 0 6px rgba(248, 125, 0, 0.1);
         }
     }
 
     :deep(.ant-input-affix-wrapper-focused) {
-        border-color: $light-activate-color;
+        border-color: $light-active-color;
         box-shadow: 0 0 6px rgba(248, 125, 0, 0.1);
     }
 }

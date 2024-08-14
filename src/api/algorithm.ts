@@ -32,6 +32,16 @@ export function callAlgorithmApi(data: any): Promise<ListResult> {
       data
     });
 }
+export function callAlgorithWithMPHNSyn(data: any): Promise<ListResult> {
+  return http.request({
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    url: "/algorithm/dc/MPHNSyn",
+    method: "post",
+    data
+  });
+}
 export function callAlgorithmWithSC(data: any): Promise<ListResult> {
   return http.request({
     headers: {

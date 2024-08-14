@@ -1,7 +1,7 @@
-import { callAlgorithmApi, getAlgorithmFileExample, callAlgorithmWithSc, callAlgorithmWithSC } from '@/api/algorithm'
+import { callAlgorithmApi, getAlgorithmFileExample, callAlgorithmWithSC, callAlgorithWithMPHNSyn } from '@/api/algorithm'
 import { createStorage } from '@/utils/storage'
 import { defineStore } from 'pinia'
-import { PREDICT_RESULTS, PREDICT_RESULTS_SC, PREDICT_RESULTS_MPHNSYN } from '@/store/mutation-types'
+import { PREDICT_RESULTS, PREDICT_RESULTS_SC, PREDICT_RESULTS_MPHNSYN, PREDICT_RESULTS_MPHNSYN_Target } from '@/store/mutation-types'
 import { useUserStore } from '@/store/modules/user'
 
 const Storage = createStorage({ storage: localStorage })
@@ -121,7 +121,41 @@ export const useSolfWareMPHNSynStore = defineStore({
         callAlgorithmApi(params)
           .then((res) => {
             const { data } = res
-            console.log('data===', data)
+            this.setPredictMPHNSynResults(data)
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+  }
+})
+
+export const useSolfWareMPHNSynWithTargetStore = defineStore({
+  id: 'app-algorithmMPHNSyn-target',
+  state: (): ISolfWareMPHNSynState => ({
+    predictMPHNSynResults: []
+  }),
+  getters: {
+    getPredictMPHNSynResults(): Array<PredictMPHNSynResult> {
+      if (this.predictMPHNSynResults.length !== 0) {
+        return this.predictMPHNSynResults
+      }
+      return Storage.get(PREDICT_RESULTS_MPHNSYN_Target, '') || []
+    }
+  },
+  actions: {
+    setPredictMPHNSynResults(results: Array<PredictMPHNSynResult> | []) {
+      this.predictMPHNSynResults = results
+      Storage.set(PREDICT_RESULTS_MPHNSYN_Target, results)
+    },
+
+    async GetAlgorithmResults(params: FormData) {
+      return new Promise((resolve, reject) => {
+        callAlgorithWithMPHNSyn(params)
+          .then((res) => {
+            const { data } = res
             this.setPredictMPHNSynResults(data)
             resolve(res)
           })
@@ -156,7 +190,7 @@ export const useSolfWareSCStore = defineStore({
     async GetAlgorithmResults(params: FormData) {
       return new Promise((resolve, reject) => {
         callAlgorithmWithSC(params)
-          .then((res) => {
+        .then((res) => {
             const { data } = res
             this.setPredictSCResults(data)
             resolve(res)

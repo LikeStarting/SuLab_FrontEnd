@@ -50,7 +50,7 @@ export function useFormRules(formData?: Record) {
     } else {
       const nameRegex = /^[a-zA-Z0-9]{6,32}$/
       if (!nameRegex.test(value)) {
-        return Promise.reject('Username: 6-32 chars, letters & numbers only!')
+        return Promise.reject('Must be 6-32 chars with letters & numbers!')
       } else {
         return Promise.resolve(true)
       }
@@ -94,7 +94,7 @@ export function useFormRules(formData?: Record) {
     } else {
       const passwordRegex = /^[a-zA-Z0-9]{6}$/
       if (!passwordRegex.test(value)) {
-        return Promise.reject('Password: at least 6 chars, letters or numbers only!')
+        return Promise.reject('Must be 6-15 chars long with letters & numbers!')
       } else {
         return Promise.resolve(true)
       }

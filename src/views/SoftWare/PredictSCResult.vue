@@ -24,6 +24,7 @@
     scResults.forEach((item) => {
         const temp = item.result.map((val, index, arr) => {
             val.Disease_Name = item.Disease_Name
+
             val.Pred = item.Pred == 0 ? 'Drug-sensitive' : 'Drug-resistant'
             val.Pred_Score = parseFloat(val.Pred_Score.toFixed(4))
             if (index == 0) {
@@ -41,19 +42,20 @@
 
         data = data.concat(temp)
     })
+    // const keys = Object.keys(data[0])
+    const keys = ['Disease_Name', 'Pred', 'DrugA_Name', 'DrugB_Name', 'DrugA_Svg', 'DrugB_Svg', 'Pred_Score']
+    // for(let i = 0; i < 1; i++) {
+    //     const col = keys.splice(keys.length - 1, 1)[0]
+    //     keys.splice(0, 0, col)
+    // }
 
-    const keys = Object.keys(data[0])
-    for(let i = 0; i < 2; i++) {
-        const col = keys.splice(keys.length - 1, 1)[0]
-        keys.splice(0, 0, col)
-    }
-
-    const columns = keys.filter(val => val !== 'Pred_Score').map((value) => {
+    const columns = keys.map((value) => {
         let title = value
         let defaultSortOrder = ''
         let sorter = null
         let customRender = null
         let customCell = null
+        let colSpan = 1
 
         // if (value == 'Pred_Score') {
         //     defaultSortOrder ='descend'
@@ -61,32 +63,41 @@
         // }  
 
         if (value == 'Disease_Name') {
-            customRender = (text) => {
-                const vnode = h('div', { class: 'disease-name', innerHTML: text.text })
+            customRender = ({ text }) => {
+                const vnode = h('div', { class: 'disease-name', innerHTML: text })
                 return vnode
             }
         } 
 
         if (value == 'Pred') {
             title = 'Echinococcosis Subtype'
-            customRender = (text) => {
-                const vnode = h('div', { class: text.text == 'Drug-resistant' ? 'type_one' : 'type_two', innerHTML: text.text })
+            customRender = ({ text }) => {
+                const vnode = h('div', { class: text == 'Drug-resistant' ? 'type_one' : 'type_two', innerHTML: text })
                 return vnode
             }
         }  
 
+        if (value == 'DrugA_Name') {
+            colSpan = 0
+            customRender = ({ text }) => {
+                const vnode = h('div', { class: 'drug-name drug_a', innerHTML: text })
+                return vnode
+            }
+        }
+
         if (value == 'DrugB_Name') {
+            colSpan = 2
             title = 'Potential synergistic drugs'
-            customRender = (text) => {
-                const vnode = h('div', { class: 'drug-name', innerHTML: text.text })
+            customRender = ({ text }) => {
+                const vnode = h('div', { class: 'drug-name drug_b', innerHTML: text })
                 return vnode
             }
         }
 
         if (value.includes('Svg') ) {
             title = value.replace('Svg', 'SMILES')
-            customRender = (text) => {
-                const vnode = h('div', { class: 'smiles-svg', innerHTML: text.text })
+            customRender = ({ text }) => {
+                const vnode = h('div', { class: 'smiles-svg', innerHTML: text })
                 return vnode
             }
         }
@@ -97,8 +108,11 @@
             }
         }
 
+        title = title.replace(/_/g, ' ')
+
         return {
             title,
+            colSpan,
             dataIndex: value,
             defaultSortOrder,
             sorter,

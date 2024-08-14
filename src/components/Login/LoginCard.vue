@@ -208,14 +208,22 @@
     padding-top: 8px;
     padding-bottom: 8px;
     font-size: 16px;
+
   }
   
   :global(.login-card .ant-input-prefix) {
     color: #222;
   }
 
-  :global(.login-card .ant-input-suffix .code img) {
-    cursor: pointer;
+  .login-card {
+    .ant-input-suffix {
+      .code {
+        height: 35px;
+        img {
+          cursor: pointer;
+        }
+      }
+    }
   }
 
   :global(.login-card .ant-card-body) {
@@ -253,7 +261,7 @@
                 border-color: $active-color;
               }
               .ant-checkbox-inner {
-                border-color: $light-activate-color;
+                border-color: $light-active-color;
               }
             }
             .ant-checkbox {
@@ -262,10 +270,16 @@
                   background-color: $active-color;
                   border-color: $active-color;
                 }
+                &::after {
+                  border-color: $active-color;
+                }
+              }
+              .ant-checkbox-input:focus-visible+.ant-checkbox-inner {
+                outline-color: $light-active-color;
               }
               &:hover {
                 .ant-checkbox-inner {
-                  border-color: $light-activate-color;
+                  border-color: $light-active-color;
                 }
               }
             }

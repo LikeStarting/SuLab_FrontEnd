@@ -102,7 +102,7 @@ export function createStorage({ prefixKey = '', storage = localStorage } = {}) {
      * @param {string} key
      */
     removeCookie(key: string) {
-      this.setCookie(key, 1, -1)
+      this.setCookie(key, 1, '-1')
     }
 
     /**

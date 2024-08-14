@@ -41,10 +41,6 @@
                                     <SvgIcon iconName="icon-example" className="example-icon"/>
                                     An Example
                                 </span>
-                                <a  class="drug-link" href="https://go.drugbank.com/" target="_blank">
-                                    <SvgIcon iconName="icon-Allergy_Drug" className="drug-icon" />
-                                    DrugBank
-                                </a>
                             </div>
                             <a-spin :spinning="spinning" tip="Loading...">
                                 <a-form
@@ -102,42 +98,48 @@
                                     <SvgIcon iconName="icon-lizi" className="example-icon"/>
                                     File Example
                                 </span>
+                                <a  class="drug-link" href="https://go.drugbank.com/" target="_blank">
+                                    <SvgIcon iconName="icon-Allergy_Drug" className="drug-icon" />
+                                    DrugBank
+                                </a>
                             </div>
-                            <div class="upload-content">
-                                <div class="drug-select">
-                                    <a-form 
-                                        :model="secondFormState"
-                                        ref="secondFormRef"
-                                        autocomplete="off"
-                                    >
-                                        <a-form-item name="drugName" label="Drug Name" :rules="[{ required: true }]">
-                                            <a-select show-search v-model:value="secondFormState.drugName" :options="drugLists" placeholder="Please select a drug"></a-select>
-                                        </a-form-item>
-                                    </a-form>
-                                </div>
-                                <div class="file-label">
-                                    <span>Gene expression</span>
-                                </div>
-                                <a-upload-dragger
-                                    v-model:fileList="fileList"
-                                    name="file"
-                                    :maxCount="1"
-                                    :multiple="false"
-                                    :beforeUpload="beforeUpload"
-                                    @remove="handleRemove"
-                                    @drop="handleDrop"
-                                >
-                                    <div class="btn-inner">
-                                        <p class="ant-upload-drag-icon">
-                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                        </p>
-                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                        <p class="ant-upload-hint">
-                                            csv and xls formats only, max file size: 20MB
-                                        </p>
+                            <a-spin :spinning="spinning" tip="Loading...">
+                                <div class="upload-content">
+                                    <div class="drug-select">
+                                        <a-form 
+                                            :model="secondFormState"
+                                            ref="secondFormRef"
+                                            autocomplete="off"
+                                        >
+                                            <a-form-item name="drugName" label="Drug Name" :rules="[{ required: true }]">
+                                                <a-select show-search v-model:value="secondFormState.drugName" :options="drugLists" placeholder="Please select a drug"></a-select>
+                                            </a-form-item>
+                                        </a-form>
                                     </div>
-                                </a-upload-dragger>
-                            </div>
+                                    <div class="file-label">
+                                        <span>Gene expression</span>
+                                    </div>
+                                    <a-upload-dragger
+                                        v-model:fileList="fileList"
+                                        name="file"
+                                        :maxCount="1"
+                                        :multiple="false"
+                                        :beforeUpload="beforeUpload"
+                                        @remove="handleRemove"
+                                        @drop="handleDrop"
+                                    >
+                                        <div class="btn-inner">
+                                            <p class="ant-upload-drag-icon">
+                                            <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                            </p>
+                                            <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                            <p class="ant-upload-hint">
+                                                csv and xls formats only, max file size: 20MB
+                                            </p>
+                                        </div>
+                                    </a-upload-dragger>
+                                </div>
+                            </a-spin>
                         </div>
                     </div>
                 </div>
@@ -226,6 +228,8 @@
                 }
             }
 
+            title = title.replace(/_/g, ' ')
+
             return {
                 title,
                 dataIndex: value,
@@ -299,18 +303,20 @@
         formData.append('algorithmName', AlgorithmName);
         formData.append('drugName', secondFormState.drugName);
         uploading.value = true;
-
+        spinning.value = true;
         solfWareStore.GetAlgorithmResults(formData).then((res) => {
             fileList.value = [];
             uploading.value = false;
+            spinning.value = false;
             message.success('Predict successfully.');
             const { href } = router.resolve({
-                name: 'SoftWareSCResultPage',
+                name: 'ModelSCResultPage',
             })
             window.open(href, '_blank')
         })
         .catch(() => {
             uploading.value = false;
+            spinning.value = false;
             fileList.value = []
         });
     };

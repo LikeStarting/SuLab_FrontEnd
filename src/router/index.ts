@@ -29,18 +29,18 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/Index/index.vue')
         },
         {
-          path: '/software',
-          name: 'SoftWarePage',
+          path: '/model',
+          name: 'ModelPage',
           meta: {
-            title: 'SoftWares | Su Lab',
+            title: 'Models | Su Lab',
             requireAuth: false,
             keepAlive: false
           },
           component: () => import('@/views/SoftWare/index.vue'),
         },
         {
-          path: '/software/result/1',
-          name: 'SoftWareResultPage',
+          path: '/model/result/1',
+          name: 'ModelResultPage',
           meta: {
             title: 'Result | Su Lab',
             requireAuth: false,
@@ -49,8 +49,8 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/PredictResult.vue'),
         },
         {
-          path: '/software/result/2',
-          name: 'SoftWareSCResultPage',
+          path: '/model/result/2',
+          name: 'ModelSCResultPage',
           meta: {
             title: 'Result | Su Lab',
             requireAuth: false,
@@ -59,8 +59,8 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/PredictSCResult.vue'),
         },
         {
-          path: '/software/result/3',
-          name: 'SoftWareMPHNSynResultPage',
+          path: '/model/result/3',
+          name: 'ModelMPHNSynResultPage',
           meta: {
             title: 'Result | Su Lab',
             requireAuth: false,
@@ -69,8 +69,18 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/PredictMPHNSynResult.vue'),
         },
         {
-          path: '/software/momo',
-          name: 'SoftWarePage-MOMO',
+          path: '/model/result/4',
+          name: 'ModelMPHNSynWithTargetResultPage',
+          meta: {
+            title: 'Result | Su Lab',
+            requireAuth: false,
+            keepAlive: false
+          },
+          component: () => import('@/views/SoftWare/PredictMPHNSynWithTargetResul.vue'),
+        },
+        {
+          path: '/model/momo',
+          name: 'ModelPage-MOMO',
           meta: {
             title: 'MOMO | Su Lab',
             requireAuth: false,
@@ -79,8 +89,8 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/ToolLists/MOMO.vue'),
         },
         {
-          path: '/software/cdmo',
-          name: 'SoftWarePage-CDMO',
+          path: '/model/cdmo',
+          name: 'ModelPage-CDMO',
           meta: {
             title: 'CDMO | Su Lab',
             requireAuth: false,
@@ -89,8 +99,8 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/ToolLists/CDMO.vue'),
         },
         {
-          path: '/software/casynergy',
-          name: 'SoftWarePage-CASynergy',
+          path: '/model/casynergy',
+          name: 'ModelPage-CASynergy',
           meta: {
             title: 'CASynergy | Su Lab',
             requireAuth: false,
@@ -99,8 +109,8 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/ToolLists/CASynergy.vue'),
         },
         {
-          path: '/software/transferban',
-          name: 'SoftWarePage-TransferBan',
+          path: '/model/transferban',
+          name: 'ModelPage-TransferBan',
           meta: {
             title: 'TransferBan | Su Lab',
             requireAuth: false,
@@ -109,8 +119,8 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/ToolLists/TransferBan.vue'),
         },
         {
-          path: '/software/dspe',
-          name: 'SoftWarePage-DSPE',
+          path: '/model/dspe',
+          name: 'ModelPage-DSPE',
           meta: {
             title: 'DSPE | Su Lab',
             requireAuth: false,
@@ -119,8 +129,8 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/ToolLists/DSPE.vue'),
         },
         {
-          path: '/software/mgsf',
-          name: 'SoftWarePage-MGSF',
+          path: '/model/mgsf',
+          name: 'ModelPage-MGSF',
           meta: {
             title: 'MGSF | Su Lab',
             requireAuth: false,
@@ -129,8 +139,8 @@ const routes: RouteRecordRaw[] = [
           component: () => import('@/views/SoftWare/ToolLists/MGSF.vue'),
         },
         {
-          path: '/software/mphnsyn',
-          name: 'SoftWarePage-MPHNSyn',
+          path: '/model/mphnsyn',
+          name: 'ModelPage-MPHNSyn',
           meta: {
             title: 'MPHNSyn | Su Lab',
             requireAuth: false,

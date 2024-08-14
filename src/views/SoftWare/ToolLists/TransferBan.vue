@@ -102,27 +102,29 @@
                                     File Example
                                 </span>
                             </div>
-                            <div class="upload-content">
-                                <a-upload-dragger
-                                    v-model:fileList="fileList"
-                                    name="file"
-                                    :maxCount="1"
-                                    :multiple="false"
-                                    :beforeUpload="beforeUpload"
-                                    @remove="handleRemove"
-                                    @drop="handleDrop"
-                                >
-                                    <div class="btn-inner">
-                                        <p class="ant-upload-drag-icon">
-                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                        </p>
-                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                        <p class="ant-upload-hint">
-                                            csv and xls formats only, max file size: 20MB
-                                        </p>
-                                    </div>
-                                </a-upload-dragger>
-                            </div>
+                            <a-spin :spinning="spinning" tip="Loading...">
+                                <div class="upload-content">
+                                    <a-upload-dragger
+                                        v-model:fileList="fileList"
+                                        name="file"
+                                        :maxCount="1"
+                                        :multiple="false"
+                                        :beforeUpload="beforeUpload"
+                                        @remove="handleRemove"
+                                        @drop="handleDrop"
+                                    >
+                                        <div class="btn-inner">
+                                            <p class="ant-upload-drag-icon">
+                                            <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                            </p>
+                                            <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                            <p class="ant-upload-hint">
+                                                csv and xls formats only, max file size: 20MB
+                                            </p>
+                                        </div>
+                                    </a-upload-dragger>
+                                </div>
+                            </a-spin>
                         </div>
                     </div>
                 </div>
@@ -193,6 +195,7 @@
         return Object.keys(results[0]).map((value) => {
             let title = value
             let customRender = null
+            
 
             if (value.includes('Svg') ) {
                 title = value.replace('Svg', 'SMILES')
@@ -203,7 +206,7 @@
             }
 
             if (value === 'Pred_Score') {
-                title = 'Synergy Level'
+                title = 'Synergy Score'
                 customRender = ({ text }) => {
                     // const icon = h(SvgIcon, { iconName: 'icon-example' })
                     let color = ''
@@ -215,13 +218,19 @@
                         color = '#FFA15A'
                         value = 'Moderate'
                     } else {
-                        color = '#dee9eb'
+                        color = '#b6c1c3'
                         value = 'Low'
                     }
-                    const vnode = h(Tag, { color  }, value)
+                    const vnode = h('div', { class: 'score', style: { color }  }, [text, h(Tag, { color  }, () => value)])
                     return vnode
                 }
             }
+
+            if (value == 'Cell_Name') {
+                title = 'Disease Name'
+            }
+
+            title = title.replace(/_/g, ' ')
 
             return {
                 title,
@@ -295,18 +304,21 @@
         formData.append('file', file);
         formData.append('algorithmName', algorithmName);
         uploading.value = true;
+        spinning.value = true;
 
         solfWareStore.GetAlgorithmResults(formData).then((res) => {
             fileList.value = [];
             uploading.value = false;
+            spinning.value = false;
             message.success('Upload successfully.');
             const { href } = router.resolve({
-                name: 'SoftWareResultPage',
+                name: 'ModelResultPage',
             })
             window.open(href, '_blank')
         })
         .catch(() => {
             uploading.value = false;
+            spinning.value = false;
             fileList.value = []
         });
     };

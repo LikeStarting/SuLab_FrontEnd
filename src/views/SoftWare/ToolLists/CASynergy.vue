@@ -81,9 +81,9 @@
                                         <a-input v-model:value="formState.smilesB" />
                                     </a-form-item>
                                     <a-form-item
-                                        label="Cline Name"
+                                        label="Cell Line Name"
                                         name="clineName"
-                                        :rules="[{ required: true, message: 'Please input an Cline name!' }]"
+                                        :rules="[{ required: true, message: 'Please input an Cell line name!' }]"
                                     >
                                         <a-input v-model:value="formState.clineName" />
                                     </a-form-item>
@@ -99,27 +99,29 @@
                                     File Example
                                 </span>
                             </div>
-                            <div class="upload-content">
-                                <a-upload-dragger
-                                    v-model:fileList="fileList"
-                                    name="file"
-                                    :maxCount="1"
-                                    :multiple="false"
-                                    :beforeUpload="beforeUpload"
-                                    @remove="handleRemove"
-                                    @drop="handleDrop"
-                                >
-                                    <div class="btn-inner">
-                                        <p class="ant-upload-drag-icon">
-                                        <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
-                                        </p>
-                                        <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
-                                        <p class="ant-upload-hint">
-                                            csv and xls formats only, max file size: 20MB
-                                        </p>
-                                    </div>
-                                </a-upload-dragger>
-                            </div>
+                            <a-spin :spinning="spinning" tip="Loading...">
+                                <div class="upload-content">
+                                    <a-upload-dragger
+                                        v-model:fileList="fileList"
+                                        name="file"
+                                        :maxCount="1"
+                                        :multiple="false"
+                                        :beforeUpload="beforeUpload"
+                                        @remove="handleRemove"
+                                        @drop="handleDrop"
+                                    >
+                                        <div class="btn-inner">
+                                            <p class="ant-upload-drag-icon">
+                                            <SvgIcon iconName="icon-shangchuanwenjian1" className="file-icon"/>
+                                            </p>
+                                            <p class="ant-upload-text">Drag and drop a file to this area, or choose from local device</p>
+                                            <p class="ant-upload-hint">
+                                                csv and xls formats only, max file size: 20MB
+                                            </p>
+                                        </div>
+                                    </a-upload-dragger>
+                                </div>
+                            </a-spin>
                         </div>
                     </div>
                 </div>
@@ -131,7 +133,7 @@
 <script lang="ts" setup>
     import { reactive, ref } from 'vue';
     import { useRouter } from 'vue-router'
-    import { message } from 'ant-design-vue';
+    import { message, Tag } from 'ant-design-vue';
     import type { UploadProps, UploadChangeParam } from 'ant-design-vue';
     import { getAlgorithmFileExample, callAlgorithmWithSingle } from '@/api/algorithm';
     import { useUserStore } from '@/store/modules/user'
@@ -171,7 +173,7 @@
     }
 
     const algorithmName = AlgorithmName
-    const algorithmTitle = 'Prediction of Novel Drug Combinations for Cancer Treatment'
+    const algorithmTitle = 'Prediction of Novel Drug Combinations with Interpretability'
     const description = `The CaSynergy algorithm is an innovative predictive model for drug synergy that integrates causal inference and attention mechanisms. It first utilizes the backdoor criterion from causal inference to identify key causal genes in cell lines that affect the synergistic effects of drug triplets, enhancing the model's interpretability. Then, it constructs a specific protein-protein interaction network using the Steiner tree algorithm, providing a structural foundation for the integration of drug combination and cell line information. CaSynergy further employs a cross-attention mechanism and Hadamard product technique to fuse drug combination and cell line features, improving the model's predictive accuracy for drug interactions. In experiments, CaSynergy outperformed the most advanced existing models on the latest two drug combination datasets, demonstrating its high efficiency in identifying synergistic drug combinations. Additionally, the algorithm's causal attention learning layer effectively reduces confounding effects through attention mechanisms and backdoor adjustments, enhancing the reliability of predictions. The introduction of the CaSynergy algorithm provides a new, more accurate, and interpretable method for predicting drug synergy, with the potential to play a significant role in the fields of drug discovery and personalized medicine.`
 
     const isInputComplete = ref(false)
@@ -192,6 +194,33 @@
                     return vnode
                 }
             }
+
+            if (value === 'Pred_Score') {
+                title = 'Synergy Score'
+                customRender = ({ text }) => {
+                    // const icon = h(SvgIcon, { iconName: 'icon-example' })
+                    let color = ''
+                    let value = ''
+                    if (text >= 0.8) {
+                        color = '#87d068'
+                        value = 'High'
+                    } else if (text >= 0.6) {
+                        color = '#FFA15A'
+                        value = 'Moderate'
+                    } else {
+                        color = '#b6c1c3'
+                        value = 'Low'
+                    }
+                    const vnode = h('div', { class: 'score', style: { color }  }, [text, h(Tag, { color  }, () => value)])
+                    return vnode
+                }
+            }
+
+            if (value == 'Cell_Name') {
+                title = 'Cell Line Name'
+            }
+
+            title = title.replace(/_/, ' ')
 
             return {
                 title,
@@ -265,18 +294,21 @@
         formData.append('file', file);
         formData.append('algorithmName', algorithmName);
         uploading.value = true;
+        spinning.value = true;
 
         solfWareStore.GetAlgorithmResults(formData).then((res) => {
             fileList.value = [];
             uploading.value = false;
+            spinning.value = false;
             message.success('Upload successfully.');
             const { href } = router.resolve({
-                name: 'SoftWareResultPage',
+                name: 'ModelResultPage',
             })
             window.open(href, '_blank')
         })
         .catch(() => {
             uploading.value = false;
+            spinning.value = false;
             fileList.value = []
         });
     };

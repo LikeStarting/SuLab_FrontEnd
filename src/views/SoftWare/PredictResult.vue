@@ -14,10 +14,12 @@
 
 <script lang="ts" setup>
     import { PredictResult, useSolfWareStore } from '@/store/modules/solfWare'
-
+    import { Tag } from 'ant-design-vue'
 
     const solfWareStore =  useSolfWareStore()
     const results = solfWareStore.getPredictResults
+
+    const route = useRoute();  
 
     const columns = Object.keys(results[0]).map((value) => {
         let title = value
@@ -28,7 +30,31 @@
         if (value == 'Pred_Score') {
             defaultSortOrder ='descend'
             sorter = (a: PredictResult, b: PredictResult) => a.Pred_Score - b.Pred_Score
+            const lastPath = route.path.split('result/')
+            if (lastPath[lastPath.length - 1] == '1') {
+                title = 'Synergy Score'
+                customRender = ({ text }) => {
+                    // const icon = h(SvgIcon, { iconName: 'icon-example' })
+                    let color = ''
+                    let value = ''
+                    if (text >= 0.8) {
+                        color = '#87d068'
+                        value = 'High'
+                    } else if (text >= 0.6) {
+                        color = '#FFA15A'
+                        value = 'Moderate'
+                    } else {
+                        color = '#b6c1c3'
+                        value = 'Low'
+                    }
+                    // const vnode = h(Tag, { color  }, value)
+                    const vnode = h('div', { class: 'score', style: { color }  }, [text, h(Tag, { color  }, () => value)])
+                    return vnode
+                }
+            }
         }  
+
+        
 
         if (value.includes('Svg') ) {
             title = value.replace('Svg', 'SMILES')
@@ -37,6 +63,12 @@
                 return vnode
             }
         }
+
+        if (value == 'Cell_Name') {
+                title = 'Disease Name'
+            }
+
+        title = title.replace(/_/g, ' ')
 
         return {
             title,
@@ -81,6 +113,13 @@
                     width: 100%;
                     height: 100%;
                 }
+            }
+            .ant-tag {
+                margin-left: 6px;
+                font-size: 14px;
+                line-height: 24px;
+                cursor: pointer;
+                margin-inline-end: 0;
             }
         }
     }

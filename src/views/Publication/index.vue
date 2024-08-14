@@ -1,7 +1,26 @@
 <template>
     <div class="publication-wrapper common-box">
         <div class="search">
-            <a-row justify="flex-start">               
+            <a-row class="row-1">
+                <a-col class="label" :span="3">
+                    <span>
+                        <SvgIcon iconName="icon-fenlei2-copy" className="category-icon" />
+                        Categories:
+                    </span>
+                </a-col>
+                <a-col class="items" :span="20">
+                    <a-flex wrap="wrap" gap="middle" :vertical="false">
+                        <span 
+                            v-for="(item) in categories" :key="item.id"
+                            :class="['category-item', category == item.id ? 'active' : '']" 
+                            @click="() => handleSelectCategory(item.id)"
+                        >
+                            {{ item.value  }} 
+                        </span>
+                    </a-flex>
+                </a-col>
+            </a-row>
+            <a-row class="row-2" justify="flex-start">               
                 <a-col :span="12">
                     <a-input-search v-model:value="keyWord" placeholder="Search" @search="handleSearch">
                         <template #enterButton>
@@ -19,7 +38,7 @@
             </a-row>
         </div>
 
-        <a-pagination class="pagination-top" v-model:current="currentPage" :defaultPageSize=4 show-quick-jumper :total="totalCount" @change="handleChange" />
+        <a-pagination class="pagination-top" :hideOnSinglePage="true" v-model:current="currentPage" :defaultPageSize=4 show-quick-jumper :total="totalCount" @change="handleChange" />
 
         <div class="publications">
             <div class="publications-lists">
@@ -95,40 +114,91 @@
                 </template>
             </div>
         </div>
-        <a-pagination v-model:current="currentPage" :defaultPageSize=4 show-quick-jumper :total="totalCount" @change="handleChange" />
+        <a-pagination v-model:current="currentPage" :hideOnSinglePage="true" :defaultPageSize=4 show-quick-jumper :total="totalCount" @change="handleChange" />
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { useRouter } from 'vue-router'
-    import { message } from 'ant-design-vue';
-    import { useUserStore } from '@/store/modules/user'
-    import { getAllPublications, getPublicationsBySearch } from '@/api/publication'
-
-    const router = useRouter()
-    const userStore = useUserStore()
+    import { getAllPublications, getPublicationsBySearch, getPublicationsByGroup } from '@/api/publication'
 
     const keyWord = ref('')
+    const lastKeyWord = ref('') // 防止重复请求
+    const category = ref(-1)
+    const lastCategory = ref(-1)
     const totalCount = ref(0)
     const currentPage = ref(1)
     const pageSize = ref(4)
     const loading = ref<boolean>(true)
-    const isAllPublications = ref(true)
 
     const publications = ref(<any>[])
-        
-    const handleSearch = () => {
-        if (!keyWord.value) return 
+
+    const categories = [ 
+        {
+            id: -1,
+            value: 'All'
+        },
+        {
+            id: 1,
+            value: 'Drug combination prediction'
+        },
+        {
+            id: 2,
+            value: 'Molecule optimization'
+        },
+        {
+            id: 0,
+            value: 'Medical Image segmentation'
+        }, 
+        {
+            id: 3,
+            value: 'Other'
+        }
+    ]
+
+    const handleSelectCategory = (id) => {
+        if (id == lastCategory.value) return 
         loading.value = true
-        isAllPublications.value = false
+
         getPublicationsBySearch({
             articleName: keyWord.value,
             introduction: keyWord.value,
-            page: currentPage.value - 1,
-            limit: pageSize.value
+            page: 0,
+            limit: pageSize.value,
+            memberGroup: id == -1 ? '' : id
         }).then((res) => {
+            keyWord.value = ''
+            lastKeyWord.value = ''
+            category.value = id
+            lastCategory.value = id
+
             const { data, count } = res
             publications.value = data
+            totalCount.value = count
+            loading.value = false
+            currentPage.value = 1
+            pageSize.value = 4
+        }, (error) => {
+            loading.value = false
+        })
+    }
+        
+    const handleSearch = () => {
+        if (!keyWord.value || keyWord.value == lastKeyWord.value) return 
+        loading.value = true
+
+        getPublicationsBySearch({
+            articleName: keyWord.value,
+            introduction: keyWord.value,
+            page: 0,
+            limit: pageSize.value,
+            memberGroup: category.value == -1 ? '' : category.value
+        }).then((res) => {
+
+            lastKeyWord.value = keyWord.value
+
+            const { data, count } = res
+            publications.value = data
+            currentPage.value = 1
             totalCount.value = count
             loading.value = false
         }, (error) => {
@@ -137,14 +207,19 @@
     }
 
     const handleResetSearch = () => {
-        if (!keyWord.value) return 
-        keyWord.value = ''
-        currentPage.value = 1
-        isAllPublications.value = true
+        if (!keyWord.value && category.value == -1) return 
+        
         getAllPublications({
             page: currentPage.value - 1,
             limit: pageSize.value
         }).then((res) => {
+
+            keyWord.value = ''
+            category.value = -1
+            currentPage.value = 1
+            lastKeyWord.value = ''
+            lastCategory.value = -1
+            
             const { data, count } = res
             publications.value = data
             totalCount.value = count
@@ -168,33 +243,20 @@
     
     const handleChange = (page, pageSize) => {
         loading.value = true
-        if (isAllPublications.value) {
-            getAllPublications({
-                page: page - 1,
-                limit: pageSize
-            }).then((res) => {
-                const { data, count } = res
-                publications.value = data
-                totalCount.value = count
-                loading.value = false
-            }, (error) => {
-                loading.value = false
-            })
-        } else {
-            getPublicationsBySearch({
+        getPublicationsBySearch({
             articleName: keyWord.value,
             introduction: keyWord.value,
             page: page - 1,
-            limit: pageSize
+            limit: pageSize,
+            memberGroup: category.value == -1 ? '' : category.value
         }).then((res) => {
             const { data, count } = res
             publications.value = data
             totalCount.value = count
             loading.value = false
         }, (error) => {
-                loading.value = false
-            })
-        }
+            loading.value = false
+        })
     }
 </script>
 
@@ -202,6 +264,54 @@
 .publication-wrapper {
     .search {
         padding: 20px 0;
+        .row-1 {
+            padding-bottom: 20px;
+            border-bottom: 1px solid #d9d9d9;
+            .label {
+                span {
+                    display: block;
+                    padding: 10px;
+                    padding-left: 0;
+                    font-size: 16px;
+                    font-weight: 700;
+                    line-height: 30px;
+                    text-align: center;
+                    color: $active-color;
+                    .category-icon {
+                        width: 30px;
+                        height: 30px;
+                        vertical-align: top;
+                    }
+                }
+            }
+            .items {
+                .category-item {
+                    font-size: 18px;
+                    padding: 10px 20px;
+                    line-height: 30px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    transition: background 0.5s;
+                    &.active, &:hover {
+                        color: #fff;
+                        background-color: $light-active-color;
+                    }
+                }
+            }
+        }
+        .row-2 {
+            margin-top: 30px;
+        }
+        :deep(.ant-select) {
+            width: 100%;
+            .ant-select-selector {
+                height: 46px;
+                font-size: 16px;
+                .ant-select-selection-item, .ant-select-selection-placeholder {
+                    line-height: 44px;
+                }
+            }
+        }
         :deep(.ant-input-group) {
             .ant-input {
                 padding-top: 8px;
@@ -356,7 +466,7 @@
 
     .pagination-top {
         padding-top: 20px;
-        border-top: 1px solid #ddd;
+        // border-top: 1px solid #ddd;
     }
 
     .ant-pagination {
@@ -364,4 +474,12 @@
     }
 }
 
+:global(.ant-select-dropdown .ant-select-item) {
+    padding: 12px;
+    font-size: 16px;
+}
+
+:global(.ant-select-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled)) {
+    color: $active-color;
+}
 </style>

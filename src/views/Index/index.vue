@@ -22,6 +22,59 @@
             </a-row>
         </div>
 
+        <div class="modules">
+            <a-row>
+                <a-col>
+                    <h2>Modules</h2>
+                    <a-tabs v-model:activeKey="activeKey" centered>
+                        <!-- <a-tab-pane key="1">
+                            <template #tab>
+                                <span class="tab-tittle">
+                                    <div>
+                                        <SvgIcon iconName="icon-ziyuan" className="icon-tab" />
+                                    </div>
+                                    <div class="text">Molecule optimization</div>
+                                </span>
+                            </template>
+                            <div class="tab-content">
+                                <div class="img">
+                                    <img src="/src/assets/images/molecule-optimization.png" alt="">
+                                </div>
+                                <div class="desc">
+                                    <h3>Molecule optimization</h3>
+                                    <p>
+                                        Molecule optimization is a key step in the development of new drugs, where the goal is to improve the properties of the lead compound while maintaining high molecular similarity. AI technologies—especially deep learning, machine learning, and evolutionary algorithms—show immense potential here. Deep learning captures molecular interactions and predicts properties, fostering drug discovery. Machine learning rapidly screens candidates, cutting costs and time. Evolutionary algorithms excel in structure optimization, pushing performance limits. These AI advancements enhance optimization efficiency and accuracy, fueling new drug development and material innovation, with profound impacts on economic growth and societal progress.
+                                    </p>
+                                </div>
+                            </div>
+                        </a-tab-pane> -->
+                        <a-tab-pane key="2">
+                            <template #tab>
+                                <span class="tab-tittle">
+                                    <div>
+                                        <SvgIcon iconName="icon-Medicine" className="icon-tab" />
+                                    </div>
+                                    <div class="text">Drug combinations prediction</div>
+                                </span>
+                            </template>
+                            <div class="tab-content">
+                                <div class="img">
+                                    <img src="/src/assets/images/drug-combination.png" alt="">
+                                </div>
+                                <div class="desc">
+                                    <h3>Drug combinations prediction</h3>
+                                    <p>
+                                        Drug synergy prediction technology delves into the intricate relationships between drugs and their targets, as well as the interactions among drugs, to accurately forecast combinations that exhibit synergistic effects, resulting in enhanced therapeutic outcomes for diseases. Compared to traditional wet-lab experiments, this technology significantly shortens the research and development cycle, reduces costs, and mitigates the risks associated with clinical trials.
+In the field of oncology, drug synergy prediction has facilitated the discovery of numerous drug combinations that significantly improve tumor treatment outcomes, offering new hope to patients. Additionally, in public health areas such as antiparasitic therapy, this technology demonstrates immense potential, aiding in the development of more effective and safer treatment protocols. As technology advances and data accumulates, drug synergy prediction models will become increasingly precise, providing a more solid and scientific foundation for clinical drug development and treatment strategy formulation.
+                                    </p>
+                                </div>
+                            </div>
+                        </a-tab-pane>
+                    </a-tabs>
+                </a-col>
+            </a-row>
+        </div>
+
         <div class="reserch">
             <a-row>
                 <a-col>
@@ -47,7 +100,7 @@
 </template>
 
 <script setup>
-
+const activeKey = ref('2');
 </script>
 
 <style lang="scss" scoped>
@@ -86,45 +139,6 @@
             height: 100%;
             // background-color: #9DDBF8;
         }
-    }
-
-    @media screen and (max-width: 1200px) {
-        .introducation {
-            h2 {
-                font-size: 46px;
-                padding-bottom: 10px;
-            }
-            p {
-                font-size: 16px;
-            }
-        }
-
-    }
-
-    @media screen and (max-width: 1000px) {
-        .introducation {
-            h2 {
-                font-size: 40px;
-                padding-bottom: 10px;
-            }
-            p {
-                font-size: 14px;
-            }
-        }
-
-    }
-
-    @media screen and (max-width: 860px) {
-        .introducation {
-            h2 {
-                font-size: 26px;
-            }
-            p {
-                margin-bottom: 10px;
-                line-height: 1.4;
-            }
-        }
-
     }
 
     .reserch {
@@ -169,6 +183,158 @@
                 border-radius: 6px;
                 color: #fff;
                 background-color: #EB9794;
+            }
+        }
+    }
+
+    .modules {
+        background: #f8f9fa; 
+        .ant-row {
+            height: 100%;
+        }
+        .ant-col {
+            width: 100%;
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 50px;
+        }
+        h2 {
+            margin: 0;
+            padding: 20px 0;
+            font-size: 56px;
+            font-family: Rubik,sans-serif;
+            color: #003366;
+        }
+        :deep(.ant-tabs) {
+            .ant-tabs-ink-bar {
+                background-color: #548DD4;
+            }
+            .ant-tabs-tab {
+                color: rgba(102, 102, 102);
+                &:hover {
+                    color: #548DD4;
+                }
+                &.ant-tabs-tab-active {
+                    .ant-tabs-tab-btn {
+                        color: #548DD4;
+                    }
+                }
+                .ant-tabs-tab-btn {
+                    &:active, &:focus {
+                        color: #548DD4;
+                    }
+                }
+            }
+            .ant-tabs-content {
+                padding: 30px 0;
+            }
+            .tab-tittle {
+                text-align: center;
+                .text {
+                    margin-top: 10px;
+                    font-size: 18px;
+                    font-weight: 600;
+                }
+                .icon-tab {
+                    width: 50px;
+                    height: 50px;
+                }
+            }
+            .tab-content {
+                display: flex;
+                align-items: center;
+                .img {
+                    width: 40%;
+                }
+                .desc {
+                    width: 60%;
+                    margin-left: 10px;
+                    border-radius: 8px; 
+                    padding: 20px;
+                    transition: all 0.5s ease;
+                    cursor: pointer;
+                    box-shadow: 0 4px 8px rgb(157, 219, 248, 0.3); 
+                    &:hover {
+                        box-shadow: 0 4px 8px rgb(157, 219, 248, 0.8); 
+                    }
+                    h3 {
+                        font-size: 28px;
+                        font-weight: 700;
+                        line-height: 1.5;
+                        color: #003366;
+                    }
+                    p {
+                        margin-top: 10px;
+                        color: #333; 
+                        font-family: 'Courier New', Courier, monospace; 
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        .introducation {
+            h2 {
+                font-size: 46px;
+                padding-bottom: 10px;
+            }
+            p {
+                font-size: 16px;
+            }
+        }
+
+        .modules, .reserch {
+            h2 {
+                font-size: 46px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 1000px) {
+        .introducation {
+            h2 {
+                font-size: 40px;
+                padding-bottom: 10px;
+            }
+            p {
+                font-size: 14px;
+            }
+        }
+        .modules, .reserch {
+            h2 {
+                font-size: 40px;
+            }
+        }
+        .modules {
+            .ant-col {
+                padding: 30px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 860px) {
+        .introducation {
+            h2 {
+                font-size: 26px;
+            }
+            p {
+                margin-bottom: 10px;
+                line-height: 1.4;
+            }
+        }
+        .modules, .reserch {
+            h2 {
+                font-size: 26px;
+            }
+            
+        }
+        .modules {
+            .ant-col {
+                padding: 25px;
+            }
+            :deep(.ant-tabs) .tab-content .desc h3 {
+                font-size: 20px;
             }
         }
     }

@@ -9,7 +9,7 @@
         Sorry, the page you requested does not exist.
       </p>
       <div class="btn">
-        <router-link :to="{ name: 'ErrorPage' }" >
+        <router-link :to="{ name: 'IndexPage' }" >
             <HappyButton text="Back Home" />
         </router-link>
       </div>

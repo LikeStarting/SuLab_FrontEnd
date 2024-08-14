@@ -153,6 +153,7 @@
                 }
                 .ant-table {
                     .ant-tag {
+                        margin-left: 6px;
                         font-size: 14px;
                         line-height: 24px;
                         cursor: pointer;
@@ -281,6 +282,9 @@
     .drug-name {
         font-weight: 700;
         color: #00A65A;
+        &.drug_a {
+            color: $theme-color;
+        }
     }
     .type_one {
         font-weight: 700;
@@ -307,7 +311,7 @@
             &.all {
                 background-color: $active-color;
                 &:hover {
-                    background-color: $light-activate-color;
+                    background-color: $light-active-color;
                 }
             }
         }

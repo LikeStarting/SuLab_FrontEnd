@@ -5,13 +5,12 @@ import { ACCESS_TOKEN, CURRENT_USER } from '@/store/mutation-types'
 import { ResultEnum } from '@/enums/httpEnum'
 import { logout, getUserInfo, login } from '@/api/user'
 // import { PageEnum } from '@/enums/pageEnum'
-import router from '@/router'
 
 const Storage = createStorage({ storage: localStorage })
 
 interface UserInfo {
   // userId: string | number
-  username: string
+  userName: string
   avatar: string
 }
 
@@ -37,7 +36,7 @@ export const useUserStore = defineStore({
   }),
   getters: {
     getUserInfo(): UserInfo {
-      return this.userInfo || Storage.get(CURRENT_USER, '') || Storage.getSession(CURRENT_USER, '') ||  null
+      return this.userInfo || Storage.get(CURRENT_USER, null) || Storage.getSession(CURRENT_USER, null) ||  null
     },
     getToken(): string {
       return this.token || Storage.get(ACCESS_TOKEN, '') || Storage.getSession(ACCESS_TOKEN, '')
@@ -56,7 +55,7 @@ export const useUserStore = defineStore({
       }
     },
     setUserInfo(info: UserInfo | null, expire: string, remember: boolean) {
-      this.userInfo = info
+      this.userInfo = info || null
       this.lastUpdateTime = new Date().getTime()
 
       if (remember) {
@@ -64,6 +63,12 @@ export const useUserStore = defineStore({
       } else {
         Storage.setSession(CURRENT_USER, info, expire)
       }
+    },
+
+    removeUserInfo() {
+      this.userInfo = null
+      Storage.remove(CURRENT_USER)
+      Storage.removeSession(CURRENT_USER)
     },
 
     async Login(params: LoginParams, remember: boolean) {
@@ -100,10 +105,9 @@ export const useUserStore = defineStore({
           this.token = ''
           this.userInfo = null
           Storage.remove(ACCESS_TOKEN)
-          Storage.remove(CURRENT_USER)
           Storage.removeSession(ACCESS_TOKEN)
-          Storage.removeSession(CURRENT_USER)
-          location.reload()
+          this.removeUserInfo()
+          // location.reload()
           return Promise.resolve(response)
         } catch(error) {
           return Promise.reject(error)
