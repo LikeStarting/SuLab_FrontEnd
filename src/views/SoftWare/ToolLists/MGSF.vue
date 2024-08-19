@@ -201,7 +201,7 @@
                 }
             }
 
-            const colors = ['#87d068', '#FFA15A', '#9DDBF8', '4581B2', '6a737b', 'FDC4C5', 'C4A9DC']
+            const colors = ['#87d068', '#FFA15A', '#9DDBF8', '#4581B2', '#6a737b', '#FDC4C5', '#C4A9DC']
 
             if (value == 'Side_Effect') {
                 customRender = ({ text }) => {

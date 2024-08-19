@@ -195,6 +195,20 @@
                 }
             }
 
+            const colors = ['#87d068', '#FFA15A', '#9DDBF8', '#4581B2', '#6a737b', '#FDC4C5', '#C4A9DC']
+
+            if (value == 'Key_Genes') {
+                customRender = ({ text }) => {
+                    const tooltip = text.map((v, i) => {
+                        const randomIndex = Math.floor(Math.random() * colors.length)
+                        const color = colors[randomIndex]
+                        return h('div', { class: 'item' }, [h(Tag, { color }, () => v)])
+                    })
+                    const vnode = h('div', { class: 'gene-box' }, tooltip)
+                    return vnode
+                }
+            }
+
             if (value === 'Pred_Score') {
                 title = 'Synergy Score'
                 customRender = ({ text }) => {
@@ -384,6 +398,12 @@
                 .ant-form {
                     .ant-form-item {
                         // margin-bottom: 10px;
+                    }
+                }
+                :deep(.ant-table) {
+                    height: auto;
+                    .item {
+                        margin-top: 5px;
                     }
                 }
             }
